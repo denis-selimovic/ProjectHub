@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS "tasks" (
     priority_id uuid NOT NULL,
     status_id uuid NOT NULL,
     type_id uuid NOT NULL,
+    created_at timestamptz,
+    updated_at timestamptz,
     CONSTRAINT pkey_tasks PRIMARY KEY (id),
     CONSTRAINT fkey_task_priorities FOREIGN KEY (priority_id) REFERENCES priorities(id),
     CONSTRAINT fkey_task_statuses FOREIGN KEY (status_id) REFERENCES statuses(id),
