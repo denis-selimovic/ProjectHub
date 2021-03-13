@@ -24,8 +24,7 @@ public class DatabaseSeeder {
     }
 
     private void seedProjectsTable() {
-        List<Project> existingProjects = projectRepository.findAll();
-        if (existingProjects.isEmpty()) {
+        if (projectRepository.count() == 0) {
             Project p1 = createProject("Microservices Project", UUID.randomUUID());
             Project p2 = createProject("Reddit clone", UUID.randomUUID());
             Project p3 = createProject("Zamger API", UUID.randomUUID());
