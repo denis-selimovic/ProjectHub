@@ -3,7 +3,7 @@ package ba.unsa.etf.nwt.notificationservice.seed;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
-import ba.unsa.etf.nwt.notificationservice.repository.NotificationSubscriptionRepository;
+import ba.unsa.etf.nwt.notificationservice.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DatabaseSeeder {
     private final NotificationRepository notificationRepository;
-    private final NotificationSubscriptionRepository subscriptionRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     @EventListener
     public void seed(final ContextRefreshedEvent event) {

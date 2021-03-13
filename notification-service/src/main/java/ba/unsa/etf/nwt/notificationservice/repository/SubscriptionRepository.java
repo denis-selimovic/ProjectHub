@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface NotificationSubscriptionRepository extends PagingAndSortingRepository<Subscription, UUID> {
+public interface SubscriptionRepository extends PagingAndSortingRepository<Subscription, UUID> {
 }
