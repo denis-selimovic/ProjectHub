@@ -1,16 +1,21 @@
 package ba.unsa.etf.nwt.userservice.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,7 +35,6 @@ public class User {
     private String lastName;
 
     @CreationTimestamp
-    @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
@@ -38,6 +42,6 @@ public class User {
     private Instant updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Token> tokens;
+    private final Set<Token> tokens = new HashSet<>();
 
 }
