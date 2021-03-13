@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE IF NOT EXISTS "email_subsrciptions" (
+CREATE TABLE IF NOT EXISTS "email_subscriptions" (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     task_id uuid NOT NULL,
     config_id uuid NOT NULL,
