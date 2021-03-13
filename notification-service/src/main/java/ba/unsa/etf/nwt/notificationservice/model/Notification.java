@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.notificationservice.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,6 +12,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "notifications")
+@Data
+@NoArgsConstructor
 public class Notification {
     @Id
     @GeneratedValue(generator = "UUID")
