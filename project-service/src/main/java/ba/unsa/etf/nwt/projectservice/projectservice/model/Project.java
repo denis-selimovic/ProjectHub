@@ -44,8 +44,4 @@ public class Project {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
-
-    public void addCollaborator(final ProjectCollaborator projectCollaborator) {
-        projectCollaborators.add(projectCollaborator);
-    }
 }
