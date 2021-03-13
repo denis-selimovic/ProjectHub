@@ -44,7 +44,7 @@ public class DatabaseSeeder {
     private void seedEmailSubscriptionsTable(List<EmailConfig> configs) {
         emailSubscriptionRepository.save(createEmailSubscription(configs.get(0), UUID.randomUUID()));
         emailSubscriptionRepository.save(createEmailSubscription(configs.get(1), UUID.randomUUID()));
-//        emailSubscriptionRepository.save(createEmailSubscription(configs.get(2), UUID.randomUUID()));
+        emailSubscriptionRepository.save(createEmailSubscription(configs.get(2), UUID.randomUUID()));
     }
 
     private EmailConfig createEmailConfig(final String email, final UUID userId) {
