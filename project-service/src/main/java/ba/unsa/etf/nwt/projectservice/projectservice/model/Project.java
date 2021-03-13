@@ -32,7 +32,7 @@ public class Project {
     private String name;
 
     @Column(name = "owner_id", nullable = false)
-    private UUID owner_id;
+    private UUID ownerId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private Set<ProjectCollaborator> projectCollaborators = new HashSet<>();
@@ -44,11 +44,6 @@ public class Project {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
-
-    public Project(final String name, final UUID ownerId) {
-        this.name = name;
-        this.owner_id = ownerId;
-    }
 
     public void addCollaborator(final ProjectCollaborator projectCollaborator) {
         projectCollaborators.add(projectCollaborator);

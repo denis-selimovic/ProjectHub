@@ -31,9 +31,4 @@ public class ProjectCollaborator {
 
     @Column(name = "collaborator_id", nullable = false)
     private UUID collaboratorId;
-
-    public ProjectCollaborator(final Project project, final UUID collaboratorId) {
-        this.project = project;
-        this.collaboratorId = collaboratorId;
-    }
 }

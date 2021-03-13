@@ -2,7 +2,8 @@ package ba.unsa.etf.nwt.projectservice.projectservice.seed;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
-import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
+import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
+import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -14,7 +15,8 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class DatabaseSeeder {
-    private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
+    private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
     @EventListener
     public void seed(final ContextRefreshedEvent event) {
@@ -22,15 +24,15 @@ public class DatabaseSeeder {
     }
 
     private void seedProjectsTable() {
-        List<Project> existingProjects = projectService.findAll();
+        List<Project> existingProjects = projectRepository.findAll();
         if (existingProjects.isEmpty()) {
-            Project p1 = new Project("Microservices Project", UUID.randomUUID());
-            Project p2 = new Project("Reddit clone", UUID.randomUUID());
-            Project p3 = new Project("Zamger API", UUID.randomUUID());
+            Project p1 = createProject("Microservices Project", UUID.randomUUID());
+            Project p2 = createProject("Reddit clone", UUID.randomUUID());
+            Project p3 = createProject("Zamger API", UUID.randomUUID());
 
-            projectService.saveProject(p1);
-            projectService.saveProject(p2);
-            projectService.saveProject(p3);
+            projectRepository.save(p1);
+            projectRepository.save(p2);
+            projectRepository.save(p3);
 
             seedProjectCollaboratorsTable(List.of(p1, p2, p3));
         } else {
@@ -47,19 +49,29 @@ public class DatabaseSeeder {
         UUID collaborator6 = UUID.randomUUID();
         UUID collaborator7 = UUID.randomUUID();
 
-        projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator1));
-        projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator2));
-        projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator3));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(0), collaborator1));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(0), collaborator2));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(0), collaborator3));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(1), collaborator1));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(1), collaborator4));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(1), collaborator5));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(2), collaborator3));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(2), collaborator4));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(2), collaborator6));
+        projectCollaboratorRepository.save(createProjectCollaborator(projects.get(2), collaborator7));
+    }
 
-        projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator1));
-        projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator4));
-        projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator5));
+    private Project createProject(final String name, final UUID ownerId) {
+        Project project = new Project();
+        project.setName(name);
+        project.setOwnerId(ownerId);
+        return project;
+    }
 
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator3));
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator4));
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator6));
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator7));
-
-        projects.forEach(projectService::saveProject);
+    private ProjectCollaborator createProjectCollaborator(final Project project, final UUID collaboratorId) {
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
+        projectCollaborator.setProject(project);
+        projectCollaborator.setCollaboratorId(collaboratorId);
+        return projectCollaborator;
     }
 }
