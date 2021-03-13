@@ -52,12 +52,6 @@ public class Project {
         this.owner_id = ownerId;
     }
 
-    public Project(final UUID id, final String name, final UUID ownerId) {
-        this.id = id;
-        this.name = name;
-        this.owner_id = ownerId;
-    }
-
     public void addCollaborator(final ProjectCollaborator projectCollaborator) {
         projectCollaborators.add(projectCollaborator);
     }
