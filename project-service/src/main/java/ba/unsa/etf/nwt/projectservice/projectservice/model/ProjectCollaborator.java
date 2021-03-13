@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,6 +26,7 @@ public class ProjectCollaborator {
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @EqualsAndHashCode.Exclude
     private Project project;
 
     @Column(name = "collaborator_id", nullable = false)
