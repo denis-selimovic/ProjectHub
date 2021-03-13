@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class Project {
     private UUID owner_id;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
-    private Set<ProjectCollaborator> projectCollaborators;
+    private Set<ProjectCollaborator> projectCollaborators = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -43,4 +44,13 @@ public class Project {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    public Project(final String name, final UUID owner_id) {
+        this.name = name;
+        this.owner_id = owner_id;
+    }
+
+    public void addCollaborator(final ProjectCollaborator projectCollaborator) {
+        projectCollaborators.add(projectCollaborator);
+    }
 }
