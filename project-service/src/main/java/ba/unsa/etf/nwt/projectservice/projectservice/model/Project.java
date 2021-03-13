@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @Table(name = "projects")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Project {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -45,9 +47,15 @@ public class Project {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    public Project(final String name, final UUID owner_id) {
+    public Project(final String name, final UUID ownerId) {
         this.name = name;
-        this.owner_id = owner_id;
+        this.owner_id = ownerId;
+    }
+
+    public Project(final UUID id, final String name, final UUID ownerId) {
+        this.id = id;
+        this.name = name;
+        this.owner_id = ownerId;
     }
 
     public void addCollaborator(final ProjectCollaborator projectCollaborator) {

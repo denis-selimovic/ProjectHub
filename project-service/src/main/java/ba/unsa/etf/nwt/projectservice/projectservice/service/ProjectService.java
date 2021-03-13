@@ -1,7 +1,7 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.services;
+package ba.unsa.etf.nwt.projectservice.projectservice.service;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
-import ba.unsa.etf.nwt.projectservice.projectservice.repositories.ProjectRepository;
+import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.repositories;
+package ba.unsa.etf.nwt.projectservice.projectservice.repository;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
