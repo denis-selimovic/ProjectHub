@@ -44,19 +44,44 @@ public class DatabaseSeeder {
         UUID collaborator3 = UUID.randomUUID();
         UUID collaborator4 = UUID.randomUUID();
         UUID collaborator5 = UUID.randomUUID();
+        UUID collaborator6 = UUID.randomUUID();
+        UUID collaborator7 = UUID.randomUUID();
 
         projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator1));
         projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator2));
         projects.get(0).addCollaborator(new ProjectCollaborator(projects.get(0), collaborator3));
 
+        System.out.printf("Adding collaborators to project with id %s:\n%s\n%s\n%s.%n",
+                projects.get(0).getId(),
+                collaborator1,
+                collaborator3,
+                collaborator4
+        );
+
         projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator1));
         projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator4));
         projects.get(1).addCollaborator(new ProjectCollaborator(projects.get(1), collaborator5));
 
+        System.out.printf("Adding collaborators to project with id %s:\n%s\n%s\n%s.\n",
+                projects.get(1).getId(),
+                collaborator1,
+                collaborator4,
+                collaborator5
+        );
+
         projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator3));
         projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator4));
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), UUID.randomUUID()));
-        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), UUID.randomUUID()));
+        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator6));
+        projects.get(2).addCollaborator(new ProjectCollaborator(projects.get(2), collaborator7));
+
+        System.out.printf("Adding collaborators to project with id %s:\n%s\n%s\n%s\n%s\n%s.\n",
+                projects.get(2).getId(),
+                collaborator3,
+                collaborator4,
+                collaborator5,
+                collaborator6,
+                collaborator7
+        );
 
         projects.forEach(projectService::saveProject);
     }
