@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +22,6 @@ import java.util.UUID;
 @Table(name = "projects")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Project {
     @Id
     @GeneratedValue(generator = "UUID")
