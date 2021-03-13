@@ -1,11 +1,15 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "email_subscriptions")
+@Data
+@NoArgsConstructor
 public class EmailSubscription {
 
     @Id
