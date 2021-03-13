@@ -35,6 +35,7 @@ public class User {
     private String lastName;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
