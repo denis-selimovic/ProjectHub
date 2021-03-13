@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "tasks" (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    user_id uuid NOT NULL,
+    user_id uuid,
     project_id uuid NOT NULL,
     priority_id uuid NOT NULL,
     status_id uuid NOT NULL,
