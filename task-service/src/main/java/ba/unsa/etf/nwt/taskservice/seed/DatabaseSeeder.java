@@ -8,6 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static ba.unsa.etf.nwt.taskservice.model.Priority.PriorityType.*;
@@ -24,6 +25,10 @@ public class DatabaseSeeder {
     private final StatusRepository statusRepository;
     private final TypeRepository typeRepository;
 
+    Optional<Priority> criticalPriority, highPriority, mediumPriority, lowPriority;
+    Optional<Status> open, inProgress, inReview, inTesting, done;
+    Optional<Type> spike, bug, epic, story, change;
+
     @EventListener
     public void seed(final ContextRefreshedEvent event) {
         if(issueRepository.count() == 0)
@@ -33,61 +38,43 @@ public class DatabaseSeeder {
     }
 
     private void seedIssuesTable() {
-        Priority criticalPriority = priorityRepository.findByPriorityType(CRITICAL).get(0);
-        Priority highPriority = priorityRepository.findByPriorityType(HIGH).get(0);
-        Priority mediumPriority = priorityRepository.findByPriorityType(MEDIUM).get(0);
-        Priority lowPriority = priorityRepository.findByPriorityType(LOW).get(0);
+        if(fetchPriorities()) {
+            Issue i1 = createIssue("Prvo ime", "Prvi opis", UUID.randomUUID(), criticalPriority.get());
+            Issue i2 = createIssue("Drugo ime", "Drugi opis", UUID.randomUUID(), highPriority.get());
+            Issue i3 = createIssue("Trece ime", "Treci opis", UUID.randomUUID(), mediumPriority.get());
+            Issue i4 = createIssue("Cetvrto ime", "Cetvrti opis", UUID.randomUUID(), lowPriority.get());
+            Issue i5 = createIssue("Peto ime", "Peti opis", UUID.randomUUID(), criticalPriority.get());
+            Issue i6 = createIssue("Sesto ime", "Sesti opis", UUID.randomUUID(), highPriority.get());
+            Issue i7 = createIssue("Sedmo ime", "Sedmi opis", UUID.randomUUID(), mediumPriority.get());
+            Issue i8 = createIssue("Osmo ime", "Osmi opis", UUID.randomUUID(), lowPriority.get());
 
-        Issue i1 = createIssue("Prvo ime", "Prvi opis", UUID.randomUUID(), criticalPriority);
-        Issue i2 = createIssue("Drugo ime", "Drugi opis", UUID.randomUUID(), highPriority);
-        Issue i3 = createIssue("Trece ime", "Treci opis", UUID.randomUUID(), mediumPriority);
-        Issue i4 = createIssue("Cetvrto ime", "Cetvrti opis", UUID.randomUUID(), lowPriority);
-        Issue i5 = createIssue("Peto ime", "Peti opis", UUID.randomUUID(), criticalPriority);
-        Issue i6 = createIssue("Sesto ime", "Sesti opis", UUID.randomUUID(), highPriority);
-        Issue i7 = createIssue("Sedmo ime", "Sedmi opis", UUID.randomUUID(), mediumPriority);
-        Issue i8 = createIssue("Osmo ime", "Osmi opis", UUID.randomUUID(), lowPriority);
-
-        issueRepository.save(i1);
-        issueRepository.save(i2);
-        issueRepository.save(i3);
-        issueRepository.save(i4);
-        issueRepository.save(i5);
-        issueRepository.save(i6);
-        issueRepository.save(i7);
-        issueRepository.save(i8);
+            issueRepository.save(i1);
+            issueRepository.save(i2);
+            issueRepository.save(i3);
+            issueRepository.save(i4);
+            issueRepository.save(i5);
+            issueRepository.save(i6);
+            issueRepository.save(i7);
+            issueRepository.save(i8);
+        }
     }
 
     private void seedTasksTable() {
-        Priority criticalPriority = priorityRepository.findByPriorityType(CRITICAL).get(0);
-        Priority highPriority = priorityRepository.findByPriorityType(HIGH).get(0);
-        Priority mediumPriority = priorityRepository.findByPriorityType(MEDIUM).get(0);
-        Priority lowPriority = priorityRepository.findByPriorityType(LOW).get(0);
+        if(fetchPriorities() && fetchStatuses() && fetchTypes()) {
+            Task t1 = createTask("Task1", "Prvi task", UUID.randomUUID(), UUID.randomUUID(), criticalPriority.get(), open.get(), spike.get());
+            Task t2 = createTask("Task2", "Drugi task", UUID.randomUUID(), UUID.randomUUID(), highPriority.get(), inProgress.get(), bug.get());
+            Task t3 = createTask("Task3", "Treci task", UUID.randomUUID(), UUID.randomUUID(), mediumPriority.get(), inReview.get(), epic.get());
+            Task t4 = createTask("Task4", "Cetvrti task", UUID.randomUUID(), UUID.randomUUID(), lowPriority.get(), inTesting.get(), story.get());
+            Task t5 = createTask("Task5", "Peti task", UUID.randomUUID(), UUID.randomUUID(), criticalPriority.get(), done.get(), change.get());
 
-        Status open = statusRepository.findByStatus(OPEN).get(0);
-        Status inProgress = statusRepository.findByStatus(IN_PROGRESS).get(0);
-        Status inReview = statusRepository.findByStatus(IN_REVIEW).get(0);
-        Status inTesting = statusRepository.findByStatus(IN_TESTING).get(0);
-        Status done = statusRepository.findByStatus(DONE).get(0);
+            taskRepository.save(t1);
+            taskRepository.save(t2);
+            taskRepository.save(t3);
+            taskRepository.save(t4);
+            taskRepository.save(t5);
 
-        Type spike = typeRepository.findByType(SPIKE).get(0);
-        Type bug = typeRepository.findByType(BUG).get(0);
-        Type epic = typeRepository.findByType(EPIC).get(0);
-        Type story = typeRepository.findByType(STORY).get(0);
-        Type change = typeRepository.findByType(CHANGE).get(0);
-
-        Task t1 = createTask("Task1", "Prvi task", UUID.randomUUID(), UUID.randomUUID(), criticalPriority, open, spike);
-        Task t2 = createTask("Task2", "Drugi task", UUID.randomUUID(), UUID.randomUUID(), highPriority, inProgress, bug);
-        Task t3 = createTask("Task3", "Treci task", UUID.randomUUID(), UUID.randomUUID(), mediumPriority, inReview, epic);
-        Task t4 = createTask("Task4", "Cetvrti task", UUID.randomUUID(), UUID.randomUUID(), lowPriority, inTesting, story);
-        Task t5 = createTask("Task5", "Peti task", UUID.randomUUID(), UUID.randomUUID(), criticalPriority, done, change);
-
-        taskRepository.save(t1);
-        taskRepository.save(t2);
-        taskRepository.save(t3);
-        taskRepository.save(t4);
-        taskRepository.save(t5);
-
-        seedCommentsTable(List.of(t1, t2, t3, t4, t5));
+            seedCommentsTable(List.of(t1, t2, t3, t4, t5));
+        }
     }
 
     private void seedCommentsTable(List<Task> tasks) {
@@ -131,6 +118,32 @@ public class DatabaseSeeder {
         c.setUser_id(user_id);
         c.setTask(task);
         return c;
+    }
+
+    private boolean fetchPriorities() {
+        criticalPriority = priorityRepository.findByPriorityType(CRITICAL);
+        highPriority = priorityRepository.findByPriorityType(HIGH);
+        mediumPriority = priorityRepository.findByPriorityType(MEDIUM);
+        lowPriority = priorityRepository.findByPriorityType(LOW);
+        return criticalPriority.isPresent() && highPriority.isPresent() && mediumPriority.isPresent() && lowPriority.isPresent();
+    }
+
+    private boolean fetchStatuses() {
+        open = statusRepository.findByStatus(OPEN);
+        inProgress = statusRepository.findByStatus(IN_PROGRESS);
+        inReview = statusRepository.findByStatus(IN_REVIEW);
+        inTesting = statusRepository.findByStatus(IN_TESTING);
+        done = statusRepository.findByStatus(DONE);
+        return open.isPresent() && inProgress.isPresent() && inReview.isPresent() && inTesting.isPresent() && done.isPresent();
+    }
+
+    private boolean fetchTypes() {
+        spike = typeRepository.findByType(SPIKE);
+        bug = typeRepository.findByType(BUG);
+        epic = typeRepository.findByType(EPIC);
+        story = typeRepository.findByType(STORY);
+        change = typeRepository.findByType(CHANGE);
+        return spike.isPresent() && bug.isPresent() && epic.isPresent() && story.isPresent() && change.isPresent();
     }
 
 
