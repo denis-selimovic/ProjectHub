@@ -5,8 +5,3 @@ CREATE TABLE IF NOT EXISTS "priorities" (
     priority VARCHAR(100) NOT NULL UNIQUE,
     CONSTRAINT pkey_priorities PRIMARY KEY (id)
 );
-
-INSERT INTO priorities (priority) VALUES ('CRITICAL');
-INSERT INTO priorities (priority) VALUES ('HIGH');
-INSERT INTO priorities (priority) VALUES ('MEDIUM');
-INSERT INTO priorities (priority) VALUES ('LOW');
