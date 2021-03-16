@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,10 +30,12 @@ public class Project {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotBlank(message = "Project name can't be blank")
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "owner_id", nullable = false)
+    @NotNull(message = "Project must have an owner")
     private UUID ownerId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
