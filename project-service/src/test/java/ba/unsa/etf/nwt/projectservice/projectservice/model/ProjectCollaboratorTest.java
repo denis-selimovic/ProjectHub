@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
-public class ProjectTest {
+public class ProjectCollaboratorTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
@@ -34,57 +35,54 @@ public class ProjectTest {
     }
 
     @Test
-    public void testBlankName() {
-        Project project = new Project();
-        project.setName("");
-        project.setOwnerId(UUID.randomUUID());
+    public void testProjectNull() {
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
+        projectCollaborator.setCollaboratorId(UUID.randomUUID());
 
-        List<ConstraintViolation<Project>> violations = new ArrayList<>(validator.validate(project));
+        List<ConstraintViolation<ProjectCollaborator>> violations = new ArrayList<>(validator.validate(projectCollaborator));
         assertEquals(1, violations.size());
-        assertEquals("Project name can't be blank", violations.get(0).getMessage());
+        assertEquals("Project can't be null", violations.get(0).getMessage());
     }
 
     @Test
-    public void testNoName() {
+    public void testCollaboratorNull() {
         Project project = new Project();
         project.setOwnerId(UUID.randomUUID());
-
-        List<ConstraintViolation<Project>> violations = new ArrayList<>(validator.validate(project));
-        assertEquals(1, violations.size());
-        assertEquals("Project name can't be blank", violations.get(0).getMessage());
-    }
-
-    @Test
-    public void testNoOwner() {
-        Project project = new Project();
         project.setName("Ime projekta");
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
 
-        List<ConstraintViolation<Project>> violations = new ArrayList<>(validator.validate(project));
+        projectCollaborator.setProject(project);
+
+        List<ConstraintViolation<ProjectCollaborator>> violations = new ArrayList<>(validator.validate(projectCollaborator));
         assertEquals(1, violations.size());
-        assertEquals("Project must have an owner", violations.get(0).getMessage());
-    }
-
-    @Test
-    public void testMultipleViolations() {
-        Project project = new Project();
-        List<String> violations = validator
-                .validate(project)
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
-
-        assertEquals(2, violations.size());
-        assertTrue(violations.contains("Project must have an owner"));
-        assertTrue(violations.contains("Project name can't be blank"));
+        assertEquals("Collaborator id can't be null", violations.get(0).getMessage());
     }
 
     @Test
     public void testNoViolations() {
         Project project = new Project();
-        project.setName("Ime projekta");
         project.setOwnerId(UUID.randomUUID());
+        project.setName("Ime projekta");
+        ProjectCollaborator projectCollaborator = new ProjectCollaborator();
 
-        List<ConstraintViolation<Project>> violations = new ArrayList<>(validator.validate(project));
-        assertTrue(violations.isEmpty());
+        projectCollaborator.setProject(project);
+        projectCollaborator.setCollaboratorId(UUID.randomUUID());
+
+        Set<ConstraintViolation<ProjectCollaborator>> violations = validator.validate(projectCollaborator);
+        assertTrue( violations.isEmpty());
+    }
+
+    @Test
+    public void testMultipleViolations() {
+        ProjectCollaborator projectCollaborator= new ProjectCollaborator();
+        List<String> violations = validator
+                .validate(projectCollaborator)
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
+
+        assertEquals(2, violations.size());
+        assertTrue(violations.contains("Project can't be null"));
+        assertTrue(violations.contains("Collaborator id can't be null"));
     }
 }
