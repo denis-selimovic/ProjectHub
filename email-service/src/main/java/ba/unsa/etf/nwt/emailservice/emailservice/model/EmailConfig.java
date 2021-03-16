@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "email_configs")
@@ -18,10 +21,13 @@ public class EmailConfig {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotBlank(message = "Email can't be blank")
+    @Email(message = "Email is invalid")
     @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "user_id", nullable = false)
+    @NotNull(message = "User can't be null")
     private UUID userId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "config")
