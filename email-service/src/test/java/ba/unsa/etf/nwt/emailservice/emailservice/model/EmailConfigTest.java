@@ -49,7 +49,7 @@ public class EmailConfigTest {
     }
 
     @Test
-    public void testNoTask() {
+    public void testNoUser() {
         EmailConfig emailConfig = new EmailConfig();
         emailConfig.setEmail("ajsa@projecthub.com");
 
