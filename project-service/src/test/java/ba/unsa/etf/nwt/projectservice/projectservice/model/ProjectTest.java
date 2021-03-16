@@ -55,6 +55,17 @@ public class ProjectTest {
     }
 
     @Test
+    public void testNameTooLong() {
+        Project project = new Project();
+        project.setOwnerId(UUID.randomUUID());
+        project.setName("a".repeat(60));
+
+        List<ConstraintViolation<Project>> violations = new ArrayList<>(validator.validate(project));
+        assertEquals(1, violations.size());
+        assertEquals("Project name can contain at most 50 characters", violations.get(0).getMessage());
+    }
+
+    @Test
     public void testNoOwner() {
         Project project = new Project();
         project.setName("Ime projekta");
