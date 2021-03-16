@@ -7,6 +7,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -20,9 +23,13 @@ public class Notification {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotBlank(message = "Notification title can't be blank")
+    @Size(max = 50, message = "Notification title can have at most 50 characters")
     @Column(name = "title", nullable = false)
     private String title;
 
+    @NotBlank(message = "Notification description can't be blank")
+    @Size(max=200, message = "Notification description can have at most 200 characters")
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -37,6 +44,7 @@ public class Notification {
     @Column(name = "read", nullable = false)
     private Boolean read;
 
+    @NotNull(message = "User id can't be null")
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 }
