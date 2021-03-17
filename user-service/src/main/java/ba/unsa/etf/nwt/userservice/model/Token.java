@@ -20,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Token {
 
-    public enum TokenType { RESET_PASSWORD, ACTIVATE_ACCOUNT }
+    public enum TokenType { ACTIVATE_ACCOUNT, RESET_PASSWORD }
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -51,7 +51,7 @@ public class Token {
 
     @Column(name = "valid", nullable = false)
     @NotNull(message = "Valid flag can't be null")
-    private Boolean valid;
+    private Boolean valid = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
