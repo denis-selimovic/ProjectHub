@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 public class CommentTest {
@@ -37,24 +39,40 @@ public class CommentTest {
     }
 
     @Test
-    public void testLongComment() {
-        Task task = new Task();
-        task.setName("Task name");
-        task.setDescription("Task description");
-        task.setUser_id(UUID.randomUUID());
-        task.setProject_id(UUID.randomUUID());
-        task.setPriority(criticalPriority.get());
-        task.setStatus(open.get());
-        task.setType(bug.get());
-
+    public void testMultipleViolations() {
         Comment comment = new Comment();
-        comment.setText("a".repeat(256));
-        comment.setUser_id(UUID.randomUUID());
-        comment.setTask(task);
+        List<String> violations = validator
+                .validate(comment)
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
 
-        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
-        assertEquals(1, violations.size());
-        assertEquals("Comment can contain at most 255 characters", violations.get(0).getMessage());
+        assertEquals(3, violations.size());
+        assertTrue(violations.contains("Comment can't be blank"));
+        assertTrue(violations.contains("User id can't be null"));
+        assertTrue(violations.contains("Task id can't be null"));
     }
+
+//    @Test
+//    public void testLongComment() {
+//        Task task = new Task();
+//        task.setName("Task name");
+//        task.setDescription("Task description");
+//        task.setUser_id(UUID.randomUUID());
+//        task.setProject_id(UUID.randomUUID());
+//
+//        task.setPriority(criticalPriority.get());
+//        task.setStatus(open.get());
+//        task.setType(bug.get());
+//
+//        Comment comment = new Comment();
+//        comment.setText("a".repeat(256));
+//        comment.setUser_id(UUID.randomUUID());
+//        comment.setTask(task);
+//
+//        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+//        assertEquals(1, violations.size());
+//        assertEquals("Comment can contain at most 255 characters", violations.get(0).getMessage());
+//    }
 
 }
