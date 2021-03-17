@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    serialization:
+      WRAP_ROOT_VALUE: true
+    deserialization:
+      UNWRAP_ROOT_VALUE: true

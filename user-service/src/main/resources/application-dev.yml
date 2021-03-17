@@ -11,3 +11,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/user-service-dev
     user: projecthub
     password: password
+
+token:
+  private-key: projecthub.jks
+  password: projecthub
+  alias: projecthub
