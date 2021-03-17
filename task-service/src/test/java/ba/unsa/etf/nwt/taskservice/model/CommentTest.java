@@ -22,11 +22,6 @@ public class CommentTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
-    private enum PriorityType { CRITICAL, HIGH, MEDIUM, LOW }
-    private enum TaskType { SPIKE, BUG, EPIC, STORY, CHANGE }
-    private enum StatusType { OPEN, IN_PROGRESS, IN_REVIEW, IN_TESTING, DONE }
-
-
     @BeforeAll
     public static void createValidator() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -111,7 +106,7 @@ public class CommentTest {
         assertEquals("Task id can't be null", violations.get(0).getMessage());
     }
 
-    private static Task createTask() {
+    public static Task createTask() {
         Task task = new Task();
         task.setName("Task name");
         task.setDescription("Task description");
@@ -133,5 +128,4 @@ public class CommentTest {
 
         return task;
     }
-
 }
