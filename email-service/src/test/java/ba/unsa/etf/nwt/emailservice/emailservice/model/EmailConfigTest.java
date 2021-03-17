@@ -1,7 +1,5 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.model;
 
-import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailConfigRepository;
-import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailSubscriptionRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,8 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EmailConfigTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
-    private static EmailConfigRepository emailConfigRepository;
-    private static EmailSubscriptionRepository emailSubscriptionRepository;
 
     @BeforeAll
     public static void createValidator() {
@@ -55,7 +51,7 @@ public class EmailConfigTest {
 
         List<ConstraintViolation<EmailConfig>> violations = new ArrayList<>(validator.validate(emailConfig));
         assertEquals(1, violations.size());
-        assertEquals("User can't be null", violations.get(0).getMessage());
+        assertEquals("User id can't be null", violations.get(0).getMessage());
     }
 
     @Test
@@ -80,18 +76,18 @@ public class EmailConfigTest {
                 .collect(Collectors.toList());
 
         assertEquals(2, violations.size());
-        assertTrue(violations.contains("User can't be null"));
+        assertTrue(violations.contains("User id can't be null"));
         assertTrue(violations.contains("Email can't be blank"));
     }
 
-//    @Test
-//    public void delete() {
-//        Page<EmailConfig> emailConfigs = emailConfigRepository.findAll(PageRequest.of(0, 3));
-//        Page<EmailSubscription> emailSubscriptions = emailSubscriptionRepository.findAll(PageRequest.of(0, 3));
-//        EmailConfig emailConfig = emailConfigs.toList().get(0);
-//        EmailSubscription toDelete = emailSubscriptions.toList().get(0);
-//        emailConfig.getEmailSubscriptions().remove(toDelete);
-//
-//        Assert.isNull();
-//    }
+    @Test
+    public void testNoViolations() {
+        EmailConfig emailConfig = new EmailConfig();
+        emailConfig.setEmail("a@projecthub.com");
+        emailConfig.setUserId(UUID.randomUUID());
+
+        List<ConstraintViolation<EmailConfig>> violations = new ArrayList<>(validator.validate(emailConfig));
+        assertTrue(violations.isEmpty());
+    }
+
 }

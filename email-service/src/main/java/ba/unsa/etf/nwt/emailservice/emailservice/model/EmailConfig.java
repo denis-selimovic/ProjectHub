@@ -27,7 +27,7 @@ public class EmailConfig {
     private String email;
 
     @Column(name = "user_id", nullable = false)
-    @NotNull(message = "User can't be null")
+    @NotNull(message = "User id can't be null")
     private UUID userId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "config")

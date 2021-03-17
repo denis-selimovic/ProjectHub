@@ -24,6 +24,6 @@ public class EmailSubscription {
     private EmailConfig config;
 
     @Column(name = "task_id", nullable = false)
-    @NotNull(message = "Task can't be null")
+    @NotNull(message = "Task id can't be null")
     private UUID task;
 }
