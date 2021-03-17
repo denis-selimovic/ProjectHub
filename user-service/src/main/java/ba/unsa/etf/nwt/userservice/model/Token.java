@@ -45,7 +45,7 @@ public class Token {
     private Integer duration;
 
     @Column(name = "token", unique = true, nullable = false)
-    @NotBlank(message = "Token can't be blank")
+    @NotNull(message = "Token can't be null")
     @Size(min = 8, message = "Token must have at least 8 characters")
     private String token;
 
@@ -57,4 +57,9 @@ public class Token {
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull(message = "Token must have a user")
     private User user;
+
+    public Boolean isExpired() {
+        Instant expiryTime = createdAt.plusSeconds(duration);
+        return Instant.now().compareTo(expiryTime) > 0;
+    }
 }
