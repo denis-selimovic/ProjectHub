@@ -53,7 +53,7 @@ public class AuthService implements UserDetailsService {
 
             @Override
             public boolean isEnabled() {
-                return true;
+                return user.getEnabled();
             }
         };
     }

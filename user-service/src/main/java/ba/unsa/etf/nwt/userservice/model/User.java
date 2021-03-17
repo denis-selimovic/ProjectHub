@@ -42,6 +42,9 @@ public class User {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = false;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private final Set<Token> tokens = new HashSet<>();
 
