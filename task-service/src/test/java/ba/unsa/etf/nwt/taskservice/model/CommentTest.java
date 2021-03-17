@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,9 +22,10 @@ public class CommentTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
-    Optional<Priority> criticalPriority, highPriority, mediumPriority, lowPriority;
-    Optional<Status> open, inProgress, inReview, inTesting, done;
-    Optional<Type> spike, bug, epic, story, change;
+    private enum PriorityType { CRITICAL, HIGH, MEDIUM, LOW }
+    private enum TaskType { SPIKE, BUG, EPIC, STORY, CHANGE }
+    private enum StatusType { OPEN, IN_PROGRESS, IN_REVIEW, IN_TESTING, DONE }
+
 
     @BeforeAll
     public static void createValidator() {
@@ -53,26 +53,85 @@ public class CommentTest {
         assertTrue(violations.contains("Task id can't be null"));
     }
 
-//    @Test
-//    public void testLongComment() {
-//        Task task = new Task();
-//        task.setName("Task name");
-//        task.setDescription("Task description");
-//        task.setUser_id(UUID.randomUUID());
-//        task.setProject_id(UUID.randomUUID());
-//
-//        task.setPriority(criticalPriority.get());
-//        task.setStatus(open.get());
-//        task.setType(bug.get());
-//
-//        Comment comment = new Comment();
-//        comment.setText("a".repeat(256));
-//        comment.setUser_id(UUID.randomUUID());
-//        comment.setTask(task);
-//
-//        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
-//        assertEquals(1, violations.size());
-//        assertEquals("Comment can contain at most 255 characters", violations.get(0).getMessage());
-//    }
+    @Test
+    public void testNoViolations() {
+        Comment comment = new Comment();
+        comment.setText("This is a comment.");
+        comment.setUser_id(UUID.randomUUID());
+        comment.setTask(createTask());
+
+        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+        assertTrue(violations.isEmpty());
+    }
+
+
+    @Test
+    public void testBlankComment() {
+        Comment comment = new Comment();
+        comment.setText("");
+        comment.setUser_id(UUID.randomUUID());
+        comment.setTask(createTask());
+
+        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+        assertEquals(1, violations.size());
+        assertEquals("Comment can't be blank", violations.get(0).getMessage());
+    }
+
+    @Test
+    public void testLongComment() {
+        Comment comment = new Comment();
+        comment.setText("a".repeat(256));
+        comment.setUser_id(UUID.randomUUID());
+        comment.setTask(createTask());
+
+        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+        assertEquals(1, violations.size());
+        assertEquals("Comment can contain at most 255 characters", violations.get(0).getMessage());
+    }
+
+    @Test
+    public void testNoUser() {
+        Comment comment = new Comment();
+        comment.setText("This is a comment.");
+        comment.setTask(createTask());
+
+        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+        assertEquals(1, violations.size());
+        assertEquals("User id can't be null", violations.get(0).getMessage());
+    }
+
+    @Test
+    public void testNoTask() {
+        Comment comment = new Comment();
+        comment.setText("This is a comment.");
+        comment.setUser_id(UUID.randomUUID());
+
+        List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
+        assertEquals(1, violations.size());
+        assertEquals("Task id can't be null", violations.get(0).getMessage());
+    }
+
+    private static Task createTask() {
+        Task task = new Task();
+        task.setName("Task name");
+        task.setDescription("Task description");
+        task.setUser_id(UUID.randomUUID());
+        task.setProject_id(UUID.randomUUID());
+
+        Priority priority = new Priority();
+        priority.setPriorityType(Priority.PriorityType.CRITICAL);
+
+        Status status = new Status();
+        status.setStatus(Status.StatusType.IN_PROGRESS);
+
+        Type type = new Type();
+        type.setType(Type.TaskType.BUG);
+
+        task.setPriority(priority);
+        task.setStatus(status);
+        task.setType(type);
+
+        return task;
+    }
 
 }
