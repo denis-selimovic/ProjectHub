@@ -7,9 +7,9 @@ import ba.unsa.etf.nwt.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
 import java.util.UUID;
 
 @Component
@@ -18,6 +18,7 @@ public class DatabaseSeeder {
 
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @EventListener
     public void seed(final ContextRefreshedEvent event) {
@@ -26,14 +27,14 @@ public class DatabaseSeeder {
 
     private void seedUsersTable() {
         if (userRepository.count() == 0) {
-            User first = createUser("admin@projecthub.com", "password1", "Admin", "Admin");
-            User second = createUser("info@projecthub.com", "password2", "Info", "Info");
-            User third = createUser("suppport@projecthub.com", "password3", "Support", "Support");
-            createToken(Token.TokenType.ACCESS, 15, first);
-            createToken(Token.TokenType.RESEND_EMAIL, 20, first);
+            User first = createUser("admin@projecthub.com", passwordEncoder.encode("password"), "Admin", "Admin");
+            User second = createUser("info@projecthub.com", passwordEncoder.encode("password"), "Info", "Info");
+            User third = createUser("suppport@projecthub.com", passwordEncoder.encode("password"), "Support", "Support");
+            createToken(Token.TokenType.ACTIVATE_ACCOUNT, 15, first);
+            createToken(Token.TokenType.ACTIVATE_ACCOUNT, 20, first);
             createToken(Token.TokenType.RESET_PASSWORD, 30, second);
-            createToken(Token.TokenType.ACCESS, 20, third);
-            createToken(Token.TokenType.RESEND_EMAIL, 20, third);
+            createToken(Token.TokenType.ACTIVATE_ACCOUNT, 20, third);
+            createToken(Token.TokenType.ACTIVATE_ACCOUNT, 20, third);
             createToken(Token.TokenType.RESET_PASSWORD, 30, third);
         }
     }

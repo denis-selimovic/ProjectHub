@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Token {
 
-    public enum TokenType { ACCESS, REFRESH, RESET_PASSWORD, RESEND_EMAIL }
+    public enum TokenType { RESET_PASSWORD, ACTIVATE_ACCOUNT }
 
     @Id
     @GeneratedValue(generator = "UUID")
