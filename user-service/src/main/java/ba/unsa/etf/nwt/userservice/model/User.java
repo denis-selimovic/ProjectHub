@@ -39,10 +39,12 @@ public class User {
     private String password;
 
     @Column(name = "first_name", nullable = false)
+    @Size(max = 32, message = "First name can't be longer than thirty two characters")
     @NotBlank(message = "First name can't be blank")
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
+    @Size(max = 32, message = "Last name can't be longer than thirty two characters")
     @NotBlank(message = "Last name can't be blank")
     private String lastName;
 
