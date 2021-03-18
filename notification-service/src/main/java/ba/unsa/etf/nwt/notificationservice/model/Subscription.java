@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -28,9 +29,11 @@ public class Subscription {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @NotNull(message = "User id can't be null")
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
+    @NotNull(message = "Task id can't be null")
     @Column(name = "task_id", nullable = false)
     private UUID taskId;
 }
