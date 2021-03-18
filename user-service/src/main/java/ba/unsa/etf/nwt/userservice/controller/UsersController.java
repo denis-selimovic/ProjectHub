@@ -1,8 +1,12 @@
 package ba.unsa.etf.nwt.userservice.controller;
 
 import ba.unsa.etf.nwt.userservice.dto.UserDTO;
+import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
+import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
+import ba.unsa.etf.nwt.userservice.response.base.Response;
+import ba.unsa.etf.nwt.userservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.userservice.service.TokenService;
 import ba.unsa.etf.nwt.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +31,13 @@ public class UsersController {
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody @Valid CreateUserRequest request) {
         User user = userService.create(request);
-        tokenService.generateActivationToken(user);
+        tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(user));
+    }
+
+    @PostMapping("/confirm-email")
+    public ResponseEntity<Response> confirmEmail(@RequestBody @Valid ConfirmEmailRequest request) {
+        tokenService.confirmActivation(request);
+        return ResponseEntity.ok(new Response(new SimpleResponse("Account successfully activated")));
     }
 }
