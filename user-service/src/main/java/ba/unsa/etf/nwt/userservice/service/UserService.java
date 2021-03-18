@@ -4,6 +4,7 @@ import ba.unsa.etf.nwt.userservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.UserRepository;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
+import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ public class UserService {
         userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
             throw new UnprocessableEntityException("Request body can not be processed");
         });
+        return userRepository.save(user);
+    }
+
+    public User resetPassword(User user, ResetPasswordRequest request) {
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);
     }
 

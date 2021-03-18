@@ -7,6 +7,7 @@ import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.TokenRepository;
 import ba.unsa.etf.nwt.userservice.repository.UserRepository;
 import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
+import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import ba.unsa.etf.nwt.userservice.utility.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,19 @@ public class TokenService {
         return token;
     }
 
-    public void confirmActivation(ConfirmEmailRequest request) {
+    public User confirmActivation(ConfirmEmailRequest request) {
         Token token = checkTokenValidity(request.getToken(), Token.TokenType.ACTIVATE_ACCOUNT);
         User user = token.getUser();
         if (user.getEnabled()) throw new UnprocessableEntityException("User already confirmed email");
         activateUserAccount(user);
+        return user;
+    }
+
+    public User confirmResetPassword(ResetPasswordRequest request) {
+        Token token = checkTokenValidity(request.getToken(), Token.TokenType.RESET_PASSWORD);
+        User user = token.getUser();
+        if (!user.getEnabled()) throw new UnprocessableEntityException("User email not confirmed");
+        return user;
     }
 
     private Token checkTokenValidity(String tokenPayload, Token.TokenType type) {

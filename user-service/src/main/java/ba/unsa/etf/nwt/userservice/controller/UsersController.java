@@ -5,6 +5,7 @@ import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
+import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import ba.unsa.etf.nwt.userservice.response.base.Response;
 import ba.unsa.etf.nwt.userservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.userservice.service.TokenService;
@@ -39,5 +40,12 @@ public class UsersController {
     public ResponseEntity<Response> confirmEmail(@RequestBody @Valid ConfirmEmailRequest request) {
         tokenService.confirmActivation(request);
         return ResponseEntity.ok(new Response(new SimpleResponse("Account successfully activated")));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Response> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        User user = tokenService.confirmResetPassword(request);
+        userService.resetPassword(user, request);
+        return ResponseEntity.ok(new Response(new SimpleResponse("Password successfully changed")));
     }
 }
