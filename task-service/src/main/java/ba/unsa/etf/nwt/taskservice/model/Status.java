@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.taskservice.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "statuses")
+@Data
+@NoArgsConstructor
 public class Status {
 
     public enum StatusType { OPEN, IN_PROGRESS, IN_REVIEW, IN_TESTING, DONE }
