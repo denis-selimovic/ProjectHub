@@ -5,9 +5,11 @@ import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
+import ba.unsa.etf.nwt.userservice.request.user.RequestPasswordResetRequest;
 import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import ba.unsa.etf.nwt.userservice.response.base.Response;
 import ba.unsa.etf.nwt.userservice.response.base.SimpleResponse;
+import ba.unsa.etf.nwt.userservice.service.EmailService;
 import ba.unsa.etf.nwt.userservice.service.TokenService;
 import ba.unsa.etf.nwt.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +30,23 @@ public class UsersController {
 
     private final UserService userService;
     private final TokenService tokenService;
+    private final EmailService emailService;
 
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody @Valid CreateUserRequest request) {
         User user = userService.create(request);
-        tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
+        Token token = tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
+        emailService.sendEmail(user, token);
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(user));
+    }
+
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<Response> requestPasswordReset(@RequestBody @Valid RequestPasswordResetRequest request) {
+        userService.findByEmail(request.getEmail()).ifPresent(user -> {
+            Token token = tokenService.generateToken(user, Token.TokenType.RESET_PASSWORD);
+            emailService.sendEmail(user, token);
+        });
+        return ResponseEntity.ok(new Response(new SimpleResponse("Email successfully sent")));
     }
 
     @PostMapping("/confirm-email")

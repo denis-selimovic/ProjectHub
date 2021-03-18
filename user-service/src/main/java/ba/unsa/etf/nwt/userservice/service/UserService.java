@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -27,6 +29,10 @@ public class UserService {
     public User resetPassword(User user, ResetPasswordRequest request) {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userRepository.save(user);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     private User createUserFromRequest(CreateUserRequest request) {
