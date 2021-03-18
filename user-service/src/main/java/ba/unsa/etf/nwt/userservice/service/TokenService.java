@@ -44,8 +44,8 @@ public class TokenService {
 
     private Token useToken(String tokenPayload, Token.TokenType type) {
         Token token = tokenRepository.findTokenByTokenAndType(tokenPayload, type)
-                .orElseThrow(() -> new NotFoundException("Token doesn't exist"));
-        if (token.isExpired()) throw new UnprocessableEntityException("Expired token");
+                .orElseThrow(() -> new NotFoundException("Invalid token"));
+        if (token.isExpired()) throw new UnprocessableEntityException("Invalid token");
         token.setValid(false);
         return tokenRepository.save(token);
     }
