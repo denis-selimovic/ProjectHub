@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.userservice.exception;
 
+import ba.unsa.etf.nwt.userservice.exception.base.BaseException;
 import ba.unsa.etf.nwt.userservice.response.ErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -24,6 +26,13 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
         return handleMethodArgumentNotValid(ex);
+    }
+
+    @ExceptionHandler(BaseException.class)
+    protected ResponseEntity<ErrorResponse> handleBadRequest(final BaseException ex) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.addError(ex.getMessage());
+        return new ResponseEntity<>(errorResponse, ex.getHttpStatus());
     }
 
     public static ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex){
