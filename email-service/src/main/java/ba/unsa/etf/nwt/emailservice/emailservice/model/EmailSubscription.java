@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity
@@ -17,10 +18,12 @@ public class EmailSubscription {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotNull(message = "Email configuration can't be null")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "config_id", nullable = false)
     private EmailConfig config;
 
     @Column(name = "task_id", nullable = false)
+    @NotNull(message = "Task id can't be null")
     private UUID task;
 }

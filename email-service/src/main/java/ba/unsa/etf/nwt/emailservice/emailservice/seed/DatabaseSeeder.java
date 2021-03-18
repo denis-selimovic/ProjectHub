@@ -4,7 +4,6 @@ import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailConfig;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailSubscription;
 import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailConfigRepository;
 import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailSubscriptionRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
