@@ -28,7 +28,7 @@ public class TokenService {
     }
 
     public User confirmActivation(ConfirmEmailRequest request) {
-        Token token = checkTokenValidity(request.getToken(), Token.TokenType.ACTIVATE_ACCOUNT);
+        Token token = useToken(request.getToken(), Token.TokenType.ACTIVATE_ACCOUNT);
         User user = token.getUser();
         if (user.getEnabled()) throw new UnprocessableEntityException("User already confirmed email");
         activateUserAccount(user);
@@ -36,17 +36,18 @@ public class TokenService {
     }
 
     public User confirmResetPassword(ResetPasswordRequest request) {
-        Token token = checkTokenValidity(request.getToken(), Token.TokenType.RESET_PASSWORD);
+        Token token = useToken(request.getToken(), Token.TokenType.RESET_PASSWORD);
         User user = token.getUser();
         if (!user.getEnabled()) throw new UnprocessableEntityException("User email not confirmed");
         return user;
     }
 
-    private Token checkTokenValidity(String tokenPayload, Token.TokenType type) {
+    private Token useToken(String tokenPayload, Token.TokenType type) {
         Token token = tokenRepository.findTokenByTokenAndType(tokenPayload, type)
                 .orElseThrow(() -> new NotFoundException("Token doesn't exist"));
         if (token.isExpired()) throw new UnprocessableEntityException("Expired token");
-        return token;
+        token.setValid(false);
+        return tokenRepository.save(token);
     }
 
     private void activateUserAccount(User user) {
