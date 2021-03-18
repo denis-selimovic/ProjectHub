@@ -1,7 +1,7 @@
 package ba.unsa.etf.nwt.userservice.exception;
 
 import ba.unsa.etf.nwt.userservice.exception.base.BaseException;
-import ba.unsa.etf.nwt.userservice.response.error.ErrorResponse;
+import ba.unsa.etf.nwt.userservice.response.base.ErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;

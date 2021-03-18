@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.userservice.response.error;
+package ba.unsa.etf.nwt.userservice.response.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

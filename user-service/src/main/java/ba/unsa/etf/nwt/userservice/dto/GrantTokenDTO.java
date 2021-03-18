@@ -1,5 +1,6 @@
-package ba.unsa.etf.nwt.userservice.response.token;
+package ba.unsa.etf.nwt.userservice.dto;
 
+import ba.unsa.etf.nwt.userservice.response.interfaces.Resource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,7 +8,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class GrantTokenResponse{
+public class GrantTokenDTO implements Resource {
 
     @JsonProperty("token_type")
     private final String tokenType;
@@ -24,7 +25,7 @@ public class GrantTokenResponse{
     @JsonProperty("expires_in")
     private final Integer expiresIn;
 
-    public GrantTokenResponse(OAuth2AccessToken oauthResponse) {
+    public GrantTokenDTO(OAuth2AccessToken oauthResponse) {
         tokenType = oauthResponse.getTokenType();
         accessToken = oauthResponse.getValue();
         refreshToken = oauthResponse.getRefreshToken().getValue();
