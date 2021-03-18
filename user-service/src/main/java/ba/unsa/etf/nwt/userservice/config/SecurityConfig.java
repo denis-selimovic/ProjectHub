@@ -21,7 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthService authService;
 
     private final String[] unprotectedEndpoints = {
-            "/oauth/token"
+            "/oauth/token",
+            "/api/v1/users/**"
     };
 
     @Override
