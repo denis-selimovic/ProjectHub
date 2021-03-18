@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.userservice.request.user;
 
-import ba.unsa.etf.nwt.userservice.request.BaseRequest;
 import ba.unsa.etf.nwt.userservice.validation.annotation.FieldMatch;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -16,7 +15,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @FieldMatch(first = "password", second = "confirmPassword", message = "Password doesn't much confirmation")
-public class CreateUserRequest extends BaseRequest {
+public class CreateUserRequest {
 
     @NotBlank(message = "Email can't be blank")
     @Email(message = "Invalid email format")

@@ -1,8 +1,8 @@
 package ba.unsa.etf.nwt.userservice.controller;
 
+import ba.unsa.etf.nwt.userservice.dto.UserDTO;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
-import ba.unsa.etf.nwt.userservice.response.user.CreateUserResponse;
 import ba.unsa.etf.nwt.userservice.service.TokenService;
 import ba.unsa.etf.nwt.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +25,9 @@ public class UsersController {
     private final TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<CreateUserResponse> create(@RequestBody @Valid CreateUserRequest request) {
+    public ResponseEntity<UserDTO> create(@RequestBody @Valid CreateUserRequest request) {
         User user = userService.create(request);
         tokenService.generateActivationToken(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreateUserResponse(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(user));
     }
 }
