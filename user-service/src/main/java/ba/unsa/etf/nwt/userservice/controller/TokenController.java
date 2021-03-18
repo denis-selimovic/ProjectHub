@@ -2,7 +2,7 @@ package ba.unsa.etf.nwt.userservice.controller;
 
 import ba.unsa.etf.nwt.userservice.dto.GrantTokenDTO;
 import ba.unsa.etf.nwt.userservice.exception.ExceptionsHandler;
-import ba.unsa.etf.nwt.userservice.request.GrantTokenRequest;
+import ba.unsa.etf.nwt.userservice.request.token.GrantTokenRequest;
 import ba.unsa.etf.nwt.userservice.response.base.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
