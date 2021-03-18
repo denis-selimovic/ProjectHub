@@ -1,13 +1,14 @@
 package ba.unsa.etf.nwt.userservice.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -56,10 +57,12 @@ public class Token {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull(message = "Token must have a user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private User user;
 
     public Boolean isExpired() {
         Instant expiryTime = createdAt.plusSeconds(duration);
-        return Instant.now().compareTo(expiryTime) > 0;
+        return Instant.now().compareTo(expiryTime) > 0 || !valid;
     }
 }

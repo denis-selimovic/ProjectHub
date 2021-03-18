@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.userservice.request;
+package ba.unsa.etf.nwt.userservice.request.token;
 
 import ba.unsa.etf.nwt.userservice.validation.annotation.Conditional;
 import com.fasterxml.jackson.annotation.JsonProperty;
