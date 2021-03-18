@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.userservice.exception;
+package ba.unsa.etf.nwt.userservice.exception.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
