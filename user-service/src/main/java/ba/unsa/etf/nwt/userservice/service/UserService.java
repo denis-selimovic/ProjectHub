@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.userservice.service;
 
+import ba.unsa.etf.nwt.userservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.UserRepository;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
@@ -16,6 +17,9 @@ public class UserService {
 
     public User create(CreateUserRequest request) {
         User user = createUserFromRequest(request);
+        userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
+            throw new UnprocessableEntityException("Request body can not be processed");
+        });
         return userRepository.save(user);
     }
 
