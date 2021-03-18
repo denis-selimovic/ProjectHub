@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.userservice.response.token;
 
-import ba.unsa.etf.nwt.userservice.response.BaseResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,7 +7,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class GrantTokenResponse extends BaseResponse {
+public class GrantTokenResponse{
 
     @JsonProperty("token_type")
     private final String tokenType;

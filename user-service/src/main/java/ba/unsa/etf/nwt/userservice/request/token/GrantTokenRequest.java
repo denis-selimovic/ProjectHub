@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.userservice.request.token;
 
-import ba.unsa.etf.nwt.userservice.request.BaseRequest;
 import ba.unsa.etf.nwt.userservice.validation.annotation.Conditional;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,7 +18,7 @@ import java.util.Map;
         required = {"email", "password"}, message = "You must specify username and/or password")
 @Conditional(property = "grantType", values = {"refresh_token"},
         required = {"refreshToken"}, message = "You must specify refresh token")
-public class GrantTokenRequest extends BaseRequest {
+public class GrantTokenRequest {
 
     @NotNull(message = "Grant type can't be null")
     @Pattern(regexp = "password|refresh_token", message = "OAuth2 grant not supported")
