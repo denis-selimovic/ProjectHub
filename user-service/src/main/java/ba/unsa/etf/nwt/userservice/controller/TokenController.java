@@ -30,6 +30,6 @@ public class TokenController extends TokenEndpoint {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodNotValid(MethodArgumentNotValidException ex) {
-        return ExceptionsHandler.handleMethodArgNotValid(ex);
+        return ExceptionsHandler.handleMethodArgumentNotValid(ex);
     }
 }

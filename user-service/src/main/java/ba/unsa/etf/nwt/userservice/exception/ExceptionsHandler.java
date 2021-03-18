@@ -23,10 +23,10 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpHeaders headers,
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
-        return handleMethodArgNotValid(ex);
+        return handleMethodArgumentNotValid(ex);
     }
 
-    public static ResponseEntity<Object> handleMethodArgNotValid(MethodArgumentNotValidException ex){
+    public static ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex){
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = toSnakeCase(((FieldError) error).getField());
