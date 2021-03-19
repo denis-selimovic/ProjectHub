@@ -11,11 +11,3 @@ spring:
     url: jdbc:postgresql://localhost:5432/user-service-dev
     user: projecthub
     password: password
-
-token:
-  private-key: projecthub.jks
-  password: projecthub
-  alias: projecthub
-  activation-token-duration: 1800
-  reset-password-token-duration: 1200
-  length: 12

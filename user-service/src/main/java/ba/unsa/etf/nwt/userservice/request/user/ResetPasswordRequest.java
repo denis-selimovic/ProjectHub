@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 public class ResetPasswordRequest {
 
     @Size(min = 8, message = "Password must contain at least eight characters")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{8,}",
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}",
             message = "Password must contain at least one lowercase, one uppercase, one digit and one special character")
     @JsonProperty("password")
     private final String password;
