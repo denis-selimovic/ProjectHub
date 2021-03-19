@@ -12,3 +12,6 @@ token:
   activation-token-duration: 1800
   reset-password-token-duration: 1200
   length: 12
+
+server:
+  port: 8000
