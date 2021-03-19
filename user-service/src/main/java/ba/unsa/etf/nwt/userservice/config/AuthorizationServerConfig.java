@@ -1,7 +1,10 @@
 package ba.unsa.etf.nwt.userservice.config;
 
 import ba.unsa.etf.nwt.userservice.controller.TokenController;
+import ba.unsa.etf.nwt.userservice.security.CustomTokenEnhancer;
 import ba.unsa.etf.nwt.userservice.service.AuthService;
+import ba.unsa.etf.nwt.userservice.service.UserService;
+import ba.unsa.etf.nwt.userservice.utility.OAuth2Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,35 +20,32 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
 @RequiredArgsConstructor
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${token.private-key}")
-    private String privateKey;
-    @Value("${token.password}")
-    private String password;
-    @Value("${token.alias}")
-    private String alias;
-
     private final AuthenticationManager authenticationManager;
     private final DataSource dataSource;
     private final AuthService authService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final OAuth2Utils oAuth2Utils;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(authService)
-                .accessTokenConverter(jwtAccessTokenConverter());
+                .tokenEnhancer(tokenEnhancerChain());
     }
 
     @Override
@@ -75,9 +75,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(
-                new ClassPathResource(privateKey), password.toCharArray()
+                new ClassPathResource(oAuth2Utils.privateKey),
+                oAuth2Utils.password.toCharArray()
         );
-        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(alias));
+        accessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(oAuth2Utils.alias));
         return accessTokenConverter;
+    }
+
+    public TokenEnhancerChain tokenEnhancerChain() {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(List.of(
+                new CustomTokenEnhancer(userService),
+                jwtAccessTokenConverter()
+        ));
+        return tokenEnhancerChain;
     }
 }
