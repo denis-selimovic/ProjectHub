@@ -33,11 +33,11 @@ public class UsersController {
     private final EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> create(@RequestBody @Valid CreateUserRequest request) {
+    public ResponseEntity<Response> create(@RequestBody @Valid CreateUserRequest request) {
         User user = userService.create(request);
         Token token = tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
         emailService.sendEmail(user, token);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new UserDTO(user)));
     }
 
     @PostMapping("/request-password-reset")

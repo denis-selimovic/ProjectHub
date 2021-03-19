@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 public class RequestPasswordResetRequest {
 
     @Email(message = "Invalid email format")
-    @NotNull(message = "Email can't be null")
+    @NotBlank(message = "Email can't be blank")
     private String email;
 }

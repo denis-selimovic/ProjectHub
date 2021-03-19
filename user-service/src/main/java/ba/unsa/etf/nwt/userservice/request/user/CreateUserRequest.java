@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-@FieldMatch(first = "password", second = "confirmPassword", message = "Password doesn't much confirmation")
+@FieldMatch(first = "password", second = "confirmPassword", message = "Password doesn't match confirmation")
 public class CreateUserRequest {
 
     @NotBlank(message = "Email can't be blank")
@@ -23,7 +23,7 @@ public class CreateUserRequest {
     private final String email;
 
     @Size(min = 8, message = "Password must contain at least eight characters")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{8,}",
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}",
             message = "Password must contain at least one lowercase, one uppercase, one digit and one special character")
     @JsonProperty("password")
     private final String password;

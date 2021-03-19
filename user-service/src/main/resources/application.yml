@@ -5,3 +5,10 @@ spring:
     allow-bean-definition-overriding: true
   jackson:
     property-naming-strategy: SNAKE_CASE
+token:
+  private-key: projecthub.jks
+  password: projecthub
+  alias: projecthub
+  activation-token-duration: 1800
+  reset-password-token-duration: 1200
+  length: 12
