@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.taskservice.service;
 
 import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
+import ba.unsa.etf.nwt.taskservice.exception.base.UnpocessableEntityException;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
@@ -17,6 +18,9 @@ public class IssueService {
     private final PriorityService priorityService;
 
     public Issue create(final CreateIssueRequest request) {
+        issueRepository.findByNameAndProjectId(request.getName(), request.getProjectId()).ifPresent(i -> {
+            throw new UnpocessableEntityException("Request body can't be processed");
+        });
         Issue issue = createIssueFromRequest(request);
         return issueRepository.save(issue);
     }
