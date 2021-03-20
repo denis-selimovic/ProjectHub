@@ -33,7 +33,7 @@ public class ProjectService {
     public Project findById(UUID projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         if (project.isEmpty())
-            throw new UnprocessableEntityException("Request body can not be processed. Project with this is doesn't exist");
+            throw new UnprocessableEntityException("Request body can not be processed. Project with this id doesn't exist");
         return project.get();
     }
 

@@ -5,8 +5,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.Optional;
 import java.util.UUID;
 

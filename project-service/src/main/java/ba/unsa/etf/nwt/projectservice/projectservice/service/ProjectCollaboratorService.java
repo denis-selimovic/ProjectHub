@@ -8,6 +8,8 @@ import ba.unsa.etf.nwt.projectservice.projectservice.request.AddCollaboratorRequ
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,18 +18,26 @@ public class ProjectCollaboratorService {
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
 
-    public ProjectCollaborator createCollaborator(AddCollaboratorRequest request, Project project) {
+    public ProjectCollaborator createCollaborator(UUID collaboratorId, Project project) {
         projectCollaboratorRepository.findByProject(project).ifPresent(pc -> {
             throw new UnprocessableEntityException("Request body can not be processed. This collaborator is already added");
         });
 
         ProjectCollaborator projectCollaborator = new ProjectCollaborator();
         projectCollaborator.setProject(project);
-        projectCollaborator.setCollaboratorId(request.getCollaboratorId());
+        projectCollaborator.setCollaboratorId(collaboratorId);
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
-    public boolean existsById(UUID collaboratorId) {
-        return projectCollaboratorRepository.existsById(collaboratorId);
+    public ProjectCollaborator findById(UUID collaboratorId) {
+        Optional<ProjectCollaborator> projectCollaborator = projectCollaboratorRepository.findById(collaboratorId);
+        if (projectCollaborator.isEmpty())
+            throw new UnprocessableEntityException("Request body can not be processed. This collaborator doesn't exist");
+        return projectCollaborator.get();
     }
+
+    public void delete(ProjectCollaborator projectCollaborator) {
+        projectCollaboratorRepository.delete(projectCollaborator);
+    }
+
 }

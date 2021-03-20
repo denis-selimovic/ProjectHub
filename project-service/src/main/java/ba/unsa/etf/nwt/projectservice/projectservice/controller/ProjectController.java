@@ -29,7 +29,6 @@ import java.util.UUID;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final ProjectCollaboratorService projectCollaboratorService;
 
     @PostMapping("/add")
     public ResponseEntity<Response> create(@RequestBody @Valid CreateProjectRequest request, ResourceOwner resourceOwner) {
@@ -38,13 +37,21 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Response> delete(@PathVariable UUID projectId) {
+    public ResponseEntity<Response> delete(@PathVariable UUID projectId, ResourceOwner resourceOwner) {
 
-        if (!projectService.existsById(projectId))
-            throw new UnprocessableEntityException("Request body can not be processed. This project doesn't exist");
+        Project project = projectService.findById(projectId);
+
+        if (!project.getOwnerId().equals(resourceOwner.getId()))
+            throw new ForbiddenException("You don't have permission for this activity");
+
         projectService.delete(projectId);
         // todo vidjeti sta se desava sa kolaboratorima
         return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Project successfully deleted")));
     }
+
+//    @GetMapping("/{projectId}")
+//    public ResponseEntity<Response> allCollaborators(@PathVariable UUID projectId) {
+//
+//    }
 
 }

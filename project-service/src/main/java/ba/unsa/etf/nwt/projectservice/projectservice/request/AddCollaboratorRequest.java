@@ -17,4 +17,8 @@ public class AddCollaboratorRequest {
     @NotNull(message = "Collaborator id can't be null")
     @JsonProperty("collaborator_id")
     private UUID collaboratorId;
+
+    @NotNull(message = "Project id can't be null")
+    @JsonProperty("project_id")
+    private UUID projectId;
 }
