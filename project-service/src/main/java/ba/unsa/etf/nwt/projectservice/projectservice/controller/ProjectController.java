@@ -45,7 +45,6 @@ public class ProjectController {
             throw new ForbiddenException("You don't have permission for this activity");
 
         projectService.delete(projectId);
-        // todo vidjeti sta se desava sa kolaboratorima
         return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Project successfully deleted")));
     }
 

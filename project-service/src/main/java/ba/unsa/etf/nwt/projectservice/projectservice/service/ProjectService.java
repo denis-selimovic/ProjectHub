@@ -21,7 +21,7 @@ public class ProjectService {
         project.setName(request.getName());
         project.setOwnerId(resourceOwner.getId());
         projectRepository.findByOwnerIdAndName(project.getOwnerId(), project.getName()).ifPresent(p -> {
-            throw new UnprocessableEntityException("Request body can not be processed. This project already exists");
+            throw new UnprocessableEntityException("Request body can not be processed.");
         });
         return projectRepository.save(project);
     }
@@ -33,12 +33,8 @@ public class ProjectService {
     public Project findById(UUID projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         if (project.isEmpty())
-            throw new UnprocessableEntityException("Request body can not be processed. Project with this id doesn't exist");
+            throw new UnprocessableEntityException("Request body can not be processed.");
         return project.get();
-    }
-
-    public boolean existsById(UUID id) {
-        return projectRepository.existsById(id);
     }
 
 }

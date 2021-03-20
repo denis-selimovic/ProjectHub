@@ -14,12 +14,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectCollaboratorDTO implements Resource {
     private UUID id;
-    private Project projectId;
+    private ProjectDTO project;
     private UUID collaboratorId;
 
     public ProjectCollaboratorDTO(ProjectCollaborator projectCollaborator) {
         id = projectCollaborator.getId();
-        projectId = projectCollaborator.getProject();
+        project = new ProjectDTO(projectCollaborator.getProject());
         collaboratorId = projectCollaborator.getCollaboratorId();
     }
 }
