@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -58,6 +60,7 @@ public class Task {
     private Type type;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Comment> comments = new HashSet<>();
 
     @CreationTimestamp

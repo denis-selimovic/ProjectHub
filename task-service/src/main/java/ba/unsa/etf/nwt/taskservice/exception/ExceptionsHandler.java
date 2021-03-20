@@ -28,6 +28,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return handleMethodArgumentNotValid(ex);
     }
 
+
     @ExceptionHandler(BaseException.class)
     protected ResponseEntity<ErrorResponse> handleBadRequest(final BaseException ex) {
         ErrorResponse errorResponse = new ErrorResponse();

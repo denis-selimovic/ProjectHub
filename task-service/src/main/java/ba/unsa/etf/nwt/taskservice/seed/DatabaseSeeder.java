@@ -115,7 +115,7 @@ public class DatabaseSeeder {
     private Comment createComment(String text, UUID user_id, Task task) {
         Comment c = new Comment();
         c.setText(text);
-        c.setUser_id(user_id);
+        c.setUserId(user_id);
         c.setTask(task);
         return c;
     }

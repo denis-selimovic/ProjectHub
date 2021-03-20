@@ -44,7 +44,7 @@ public class CommentController {
     public ResponseEntity<Response> delete(ResourceOwner resourceOwner, @PathVariable UUID commentId) {
         Comment comment = commentService.findById(commentId);
         if(!comment.getUserId().equals(resourceOwner.getId())) {
-            throw new ForbiddenException("Request can't be processed");
+            throw new ForbiddenException("You don't have permission for this action");
         }
         commentService.delete(comment);
         return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Comment successfully deleted")));
