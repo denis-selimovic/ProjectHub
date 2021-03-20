@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.config.CustomTokenEnhancer;
+import ba.unsa.etf.nwt.projectservice.projectservice.config.TokenGenerator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,10 +9,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.Serializable;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,6 +42,8 @@ public class ProjectControllerTest {
     private ProjectService projectService;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private TokenGenerator tokenGenerator;
 
     @BeforeEach
     public void setUp() {
@@ -37,13 +54,17 @@ public class ProjectControllerTest {
     public void testBlankName() throws Exception {
         String error = "Project name can't be blank";
         mockMvc.perform(post("/api/projects/add")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
                             "name": ""
                         }"""))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.error.name").value(hasItem(error)));
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -95,6 +116,4 @@ public class ProjectControllerTest {
                 .andExpect(jsonPath("$.data.created_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
     }
-
-
 }
