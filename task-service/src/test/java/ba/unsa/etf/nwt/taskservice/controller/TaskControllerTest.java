@@ -1,7 +1,10 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
 import ba.unsa.etf.nwt.taskservice.config.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.repository.PriorityRepository;
+import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
+import ba.unsa.etf.nwt.taskservice.repository.TypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -26,75 +31,13 @@ public class TaskControllerTest {
     private TaskRepository taskRepository;
     @Autowired
     private TokenGenerator tokenGenerator;
-//    @Autowired
-//    private static StatusRepository statusRepository;
-//    @Autowired
-//    private static TypeRepository typeRepository;
-//    @Autowired
-//    private static PriorityRepository priorityRepository;
-//
-//    private static List<Priority> priorities = new ArrayList<>();
-//    private static List<Status> statuses = new ArrayList<>();
-//    private static List<Type> types = new ArrayList<>();
+    @Autowired
+    private PriorityRepository priorityRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+    @Autowired
+    private TypeRepository typeRepository;
 
-//    @BeforeAll
-//    public static void setupClass() {
-//        insertTypes();
-//        insertPriorities();
-//        insertStatuses();
-//    }
-//
-//    private static  void insertTypes() {
-//        Type bug = new Type();
-//        bug.setType(Type.TaskType.BUG);
-//        types.add(bug);
-//        Type change = new Type();
-//        change.setType(Type.TaskType.CHANGE);
-//        types.add(change);
-//        Type epic = new Type();
-//        epic.setType(Type.TaskType.EPIC);
-//        types.add(epic);
-//        Type story = new Type();
-//        story.setType(Type.TaskType.STORY);
-//        types.add(story);
-//        Type spike = new Type();
-//        spike.setType(Type.TaskType.SPIKE);
-//        types.add(spike);
-//    }
-//
-//    private static void insertPriorities() {
-//        Priority critical = new Priority();
-//        critical.setPriorityType(Priority.PriorityType.CRITICAL);
-//        priorities.add(critical);
-//        Priority high = new Priority();
-//        high.setPriorityType(Priority.PriorityType.HIGH);
-//        priorities.add(high);
-//        Priority medium = new Priority();
-//        medium.setPriorityType(Priority.PriorityType.MEDIUM);
-//        priorities.add(medium);
-//        Priority low = new Priority();
-//        low.setPriorityType(Priority.PriorityType.LOW);
-//        priorities.add(low);
-//    }
-//
-//    private static void insertStatuses() {
-//        Status open = new Status();
-//        open.setStatus(Status.StatusType.OPEN);
-//        statuses.add(open);
-//        Status inProgress = new Status();
-//        inProgress.setStatus(Status.StatusType.IN_PROGRESS);
-//        statuses.add(inProgress);
-//        Status inReview = new Status();
-//        inReview.setStatus(Status.StatusType.IN_REVIEW);
-//        statuses.add(inReview);
-//        Status inTesting = new Status();
-//        inTesting.setStatus(Status.StatusType.IN_TESTING);
-//        statuses.add(inTesting);
-//        Status done = new Status();
-//        done.setStatus(Status.StatusType.DONE);
-//        statuses.add(done);
-//    }
-//
     @BeforeEach
     public void setUpTest() {
         taskRepository.deleteAll();
@@ -102,6 +45,18 @@ public class TaskControllerTest {
 
 //    @Test
 //    public void createTaskSuccess() throws Exception {
+//        Priority critical = new Priority();
+//        critical.setPriorityType(Priority.PriorityType.CRITICAL);
+//        critical = priorityRepository.save(critical);
+//
+//        Type bug = new Type();
+//        bug.setType(Type.TaskType.BUG);
+//        bug = typeRepository.save(bug);
+//
+//        Status open = new Status();
+//        open.setStatus(Status.StatusType.OPEN);
+//        open = statusRepository.save(open);
+//
 //        mockMvc.perform(post("/api/v1/tasks")
 //                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
 //                        "client",
@@ -109,14 +64,14 @@ public class TaskControllerTest {
 //                        "email@email.com"
 //                ).getValue())
 //                .contentType(MediaType.APPLICATION_JSON)
-//                .content("""
+//                .content(String.format("""
 //                        {
 //                            "name": "Task microservice crud",
 //                            "description": "This is a description",
-//                            "project_id": "d1c18630-ba07-470d-aa81-592c554dbe62",
-//                            "priority_id": "d1c18630-ba07-470d-aa81-592c554dbe62",
-//                            "type_id": "6acd9c39-a245-4985-aee5-2b217e159336"
-//                        }"""))
+//                            "project_id": "%s",
+//                            "priority_id": "%s",
+//                            "type_id": "%s"
+//                        }""", UUID.randomUUID(), critical.getId(), bug.getId())))
 //                .andExpect(status().isCreated())
 //                .andExpect(jsonPath("$.data.id").hasJsonPath())
 //                .andExpect(jsonPath("$.data.name").hasJsonPath())
@@ -132,10 +87,7 @@ public class TaskControllerTest {
 //    }
 
     @Test
-    public void createTaskValidationsFail() throws Exception {
-        String[] errors = {
-
-        };
+    public void createTaskValidationsBlank() throws Exception {
         mockMvc.perform(post("/api/v1/tasks")
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client",
@@ -151,6 +103,50 @@ public class TaskControllerTest {
                             "priority_id": "d1c18630-ba07-470d-aa81-592c554dbe62",
                             "type_id": "6acd9c39-a245-4985-aee5-2b217e159336"
                         }"""))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name", is("Task name can't be blank")))
+                .andExpect(jsonPath("$.errors.description", is("Task description can't be blank")));
+    }
+
+    @Test
+    public void createTaskValidationsTooLong() throws Exception {
+        String tooLong = "a".repeat(256);
+        mockMvc.perform(post("/api/v1/tasks")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "%s",
+                            "description": "%s",
+                            "project_id": "d1c18630-ba07-470d-aa81-592c554dbe62",
+                            "priority_id": "d1c18630-ba07-470d-aa81-592c554dbe62",
+                            "type_id": "6acd9c39-a245-4985-aee5-2b217e159336"
+                        }""", tooLong, tooLong)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name", is("Task name can contain at most 50 characters")))
+                .andExpect(jsonPath("$.errors.description",
+                        is("Task description can contain at most 255 characters")));
+    }
+
+    @Test
+    public void createTaskValidationsNull() throws Exception {
+        mockMvc.perform(post("/api/v1/tasks")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name", is("Task name can't be blank")))
+                .andExpect(jsonPath("$.errors.description", is("Task description can't be blank")))
+                .andExpect(jsonPath("$.errors.project_id", is("Project id can't be null")))
+                .andExpect(jsonPath("$.errors.type_id", is("Type id can't be null")))
+                .andExpect(jsonPath("$.errors.priority_id", is("Priority id can't be null")));
     }
 }
