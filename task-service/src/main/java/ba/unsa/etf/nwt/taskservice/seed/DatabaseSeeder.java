@@ -104,8 +104,8 @@ public class DatabaseSeeder {
         Task t = new Task();
         t.setName(name);
         t.setDescription(description);
-        t.setUser_id(user_id);
-        t.setProject_id(project_id);
+        t.setUserId(user_id);
+        t.setProjectId(project_id);
         t.setPriority(priority);
         t.setStatus(status);
         t.setType(type);
