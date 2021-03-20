@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: dev
-
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 token:
   public-key: -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtLJn43ZP4ioanDYkowv+4NNdcKkMMM+f+YsWof32ikWyW6gj5eMD0WQfpppXy4/d08DniZ6IcxEHbo679bNmw5+sP7S6AXWnRewbMjqNC9SkIGerPo4X8CovNXPkyC5lMvVn2m4Zbmrr49P1z4Tx465xtG87VaJ2b1/wqX+NFuChqZZNm+hNIxPOtlwsnxeAPBlWxvrEKfFXLal1L5qkfKHIeih/XfCa+B1gB9LmlxBjNl6qWd++zypzL+XPJPJFyfCJAi6QhemzYArIcoueWiqmi+tfz8NohbhOXoXuMAn5taYnpNAlZcOFn4DAsu1eN22oHqzt4uYPmeUMmTU5bwIDAQAB-----END PUBLIC KEY-----
