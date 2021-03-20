@@ -52,7 +52,7 @@ public class CommentTest {
     public void testNoViolations() {
         Comment comment = new Comment();
         comment.setText("This is a comment.");
-        comment.setUser_id(UUID.randomUUID());
+        comment.setUserId(UUID.randomUUID());
         comment.setTask(createTask());
 
         List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
@@ -64,7 +64,7 @@ public class CommentTest {
     public void testBlankComment() {
         Comment comment = new Comment();
         comment.setText("");
-        comment.setUser_id(UUID.randomUUID());
+        comment.setUserId(UUID.randomUUID());
         comment.setTask(createTask());
 
         List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
@@ -76,7 +76,7 @@ public class CommentTest {
     public void testLongComment() {
         Comment comment = new Comment();
         comment.setText("a".repeat(256));
-        comment.setUser_id(UUID.randomUUID());
+        comment.setUserId(UUID.randomUUID());
         comment.setTask(createTask());
 
         List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
@@ -99,7 +99,7 @@ public class CommentTest {
     public void testNoTask() {
         Comment comment = new Comment();
         comment.setText("This is a comment.");
-        comment.setUser_id(UUID.randomUUID());
+        comment.setUserId(UUID.randomUUID());
 
         List<ConstraintViolation<Comment>> violations = new ArrayList<>(validator.validate(comment));
         assertEquals(1, violations.size());
@@ -110,8 +110,8 @@ public class CommentTest {
         Task task = new Task();
         task.setName("Task name");
         task.setDescription("Task description");
-        task.setUser_id(UUID.randomUUID());
-        task.setProject_id(UUID.randomUUID());
+        task.setUserId(UUID.randomUUID());
+        task.setProjectId(UUID.randomUUID());
 
         Priority priority = new Priority();
         priority.setPriorityType(Priority.PriorityType.CRITICAL);

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -48,8 +47,8 @@ public class TaskTest {
         task = new Task();
         task.setName("Task1");
         task.setDescription("First task");
-        task.setUser_id(UUID.randomUUID());
-        task.setProject_id(UUID.randomUUID());
+        task.setUserId(UUID.randomUUID());
+        task.setProjectId(UUID.randomUUID());
         task.setPriority(priority);
         task.setStatus(status);
         task.setType(type);
@@ -114,7 +113,7 @@ public class TaskTest {
 
     @Test
     public void testNoUserId() {
-        task.setUser_id(null);
+        task.setUserId(null);
         List<ConstraintViolation<Task>> violations = new ArrayList<>(validator.validate(task));
         assertEquals(1, violations.size());
         assertEquals("User id can't be null", violations.get(0).getMessage());
@@ -122,7 +121,7 @@ public class TaskTest {
 
     @Test
     public void testNoProjectId() {
-        task.setProject_id(null);
+        task.setProjectId(null);
         List<ConstraintViolation<Task>> violations = new ArrayList<>(validator.validate(task));
         assertEquals(1, violations.size());
         assertEquals("Project id can't be null", violations.get(0).getMessage());
