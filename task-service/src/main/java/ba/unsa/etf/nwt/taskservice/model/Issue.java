@@ -35,7 +35,7 @@ public class Issue {
 
     @NotNull(message = "Project id can't be null")
     @Column(name = "project_id", nullable = false)
-    private UUID project_id;
+    private UUID projectId;
 
     @NotNull(message = "Priority id can't be null")
     @OneToOne

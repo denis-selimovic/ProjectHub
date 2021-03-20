@@ -18,6 +18,7 @@ public class TaskDTO implements Resource {
     private String description;
     private UUID userId;
     private UUID projectId;
+    private UUID priorityId;
     private UUID statusId;
     private UUID typeId;
     private Instant createdAt;
@@ -29,6 +30,7 @@ public class TaskDTO implements Resource {
         this.description = task.getDescription();
         this.userId = task.getUserId();
         this.projectId = task.getProjectId();
+        this.priorityId = task.getPriority().getId();
         this.statusId = task.getStatus().getId();
         this.typeId = task.getType().getId();
         this.createdAt = task.getCreatedAt();

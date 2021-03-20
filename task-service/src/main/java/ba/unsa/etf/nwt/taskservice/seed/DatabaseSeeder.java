@@ -95,7 +95,7 @@ public class DatabaseSeeder {
         Issue i = new Issue();
         i.setName(name);
         i.setDescription(description);
-        i.setProject_id(project_id);
+        i.setProjectId(project_id);
         i.setPriority(priority);
         return i;
     }
