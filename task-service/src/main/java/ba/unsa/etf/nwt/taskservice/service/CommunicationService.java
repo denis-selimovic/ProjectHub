@@ -15,4 +15,9 @@ public class CommunicationService {
         //TODO
         //if not throw 422
     }
+
+    public void checkIfOwner(final UUID id, final UUID projectId) {
+        //TODO
+        //if not throw 403
+    }
 }
