@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -37,11 +39,14 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     public static ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex){
-        Map<String, String> errors = new HashMap<>();
+        Map<String, List<String>> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = toSnakeCase(((FieldError) error).getField());
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            if(!errors.containsKey(fieldName)){
+                errors.put(fieldName, new ArrayList<>());
+            }
+            errors.get(fieldName).add(errorMessage);
         });
 
         ErrorResponse errorResponse = new ErrorResponse(errors);
