@@ -32,7 +32,7 @@ public class CommentService {
 
     public Comment findById(final UUID commentId) {
         return commentRepository.findById(commentId).orElseThrow(() -> {
-            throw new NotFoundException("Request can't be processed");
+            throw new NotFoundException("Comment not found");
         });
     }
 
@@ -46,7 +46,7 @@ public class CommentService {
 
     public Comment findByIdAndTaskId(final UUID commentId, final UUID taskId) {
         return commentRepository.findByIdAndTask_Id(commentId, taskId).orElseThrow(() -> {
-            throw new NotFoundException("Request can't be processed");
+            throw new NotFoundException("Comment not found");
         });
     }
 }

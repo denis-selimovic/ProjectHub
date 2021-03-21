@@ -19,7 +19,7 @@ public class IssueService {
 
     public Issue create(final CreateIssueRequest request) {
         issueRepository.findByNameAndProjectId(request.getName(), request.getProjectId()).ifPresent(i -> {
-            throw new UnpocessableEntityException("Request body can't be processed");
+            throw new UnpocessableEntityException("Issue with this name already exists");
         });
         Issue issue = createIssueFromRequest(request);
         return issueRepository.save(issue);
@@ -41,7 +41,7 @@ public class IssueService {
 
     public Issue findById(final UUID issueId) {
         return issueRepository.findById(issueId).orElseThrow(() -> {
-            throw new NotFoundException("Request can't be processed");
+            throw new NotFoundException("Issue not found");
         });
     }
 }

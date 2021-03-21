@@ -23,7 +23,7 @@ public class TaskService {
 
     public Task create(final CreateTaskRequest request) {
         taskRepository.findByNameAndProjectId(request.getName(), request.getProjectId()).ifPresent(t -> {
-            throw new UnpocessableEntityException("Request body can't be processed");
+            throw new UnpocessableEntityException("Task with this name already exists");
         });
         Task task = createTaskFromRequest(request);
         return taskRepository.save(task);
@@ -51,7 +51,7 @@ public class TaskService {
 
     public Task findById(final UUID taskId) {
         return taskRepository.findById(taskId).orElseThrow(() -> {
-            throw new NotFoundException("Request can't be processed");
+            throw new NotFoundException("Task not found");
         });
     }
 }

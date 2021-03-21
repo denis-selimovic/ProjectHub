@@ -63,10 +63,9 @@ public class TaskTest {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
-        assertEquals(7, violations.size());
+        assertEquals(6, violations.size());
         assertTrue(violations.contains("Task name can't be blank"));
         assertTrue(violations.contains("Task description can't be blank"));
-        assertTrue(violations.contains("User id can't be null"));
         assertTrue(violations.contains("Project id can't be null"));
         assertTrue(violations.contains("Priority id can't be null"));
         assertTrue(violations.contains("Status id can't be null"));
@@ -109,14 +108,6 @@ public class TaskTest {
         List<ConstraintViolation<Task>> violations = new ArrayList<>(validator.validate(task));
         assertEquals(1, violations.size());
         assertEquals("Task description can contain at most 255 characters", violations.get(0).getMessage());
-    }
-
-    @Test
-    public void testNoUserId() {
-        task.setUserId(null);
-        List<ConstraintViolation<Task>> violations = new ArrayList<>(validator.validate(task));
-        assertEquals(1, violations.size());
-        assertEquals("User id can't be null", violations.get(0).getMessage());
     }
 
     @Test
