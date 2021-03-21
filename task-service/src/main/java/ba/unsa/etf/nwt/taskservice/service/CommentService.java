@@ -43,4 +43,10 @@ public class CommentService {
     public Page<Comment> getCommentsForTask(final Task task, final Pageable pageable) {
         return commentRepository.findAllByTask(task, pageable);
     }
+
+    public Comment findByIdAndTaskId(final UUID commentId, final UUID taskId) {
+        return commentRepository.findByIdAndTask_Id(commentId, taskId).orElseThrow(() -> {
+            throw new NotFoundException("Response can't be processed");
+        });
+    }
 }
