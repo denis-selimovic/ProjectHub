@@ -36,6 +36,13 @@ public class ProjectCollaboratorService {
         return projectCollaborator.get();
     }
 
+    public ProjectCollaborator findByIdAndAndProjectId(UUID id, UUID projectId) {
+        Optional<ProjectCollaborator> projectCollaborator = projectCollaboratorRepository.findByIdAndProjectId(id, projectId);
+        if (projectCollaborator.isEmpty())
+            throw new UnprocessableEntityException("Request body can not be processed");
+        return projectCollaborator.get();
+    }
+
     public void delete(ProjectCollaborator projectCollaborator) {
         projectCollaboratorRepository.delete(projectCollaborator);
     }

@@ -12,24 +12,26 @@ import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectCollaboratorService;
 import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/v1/collaborators")
+@RequestMapping("/api/v1/projects/{projectId}/collaborators")
 @RequiredArgsConstructor
 public class ProjectCollaboratorController {
 
     private final ProjectService projectService;
     private final ProjectCollaboratorService projectCollaboratorService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Response> addCollaborator(@RequestBody @Valid AddCollaboratorRequest request, ResourceOwner resourceOwner) {
-        Project project = projectService.findById(request.getProjectId());
+    @PostMapping
+    public ResponseEntity<Response> create(@PathVariable UUID projectId, @RequestBody @Valid AddCollaboratorRequest request, ResourceOwner resourceOwner) {
+        Project project = projectService.findById(projectId);
 
         if (!project.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
@@ -39,8 +41,8 @@ public class ProjectCollaboratorController {
     }
 
     @DeleteMapping("/{collaboratorId}")
-    public ResponseEntity<Response> deleteCollaborator(@PathVariable UUID collaboratorId, ResourceOwner resourceOwner) {
-        ProjectCollaborator projectCollaborator = projectCollaboratorService.findById(collaboratorId);
+    public ResponseEntity<Response> delete(@PathVariable UUID projectId, @PathVariable UUID collaboratorId, ResourceOwner resourceOwner) {
+        ProjectCollaborator projectCollaborator = projectCollaboratorService.findByIdAndAndProjectId(projectId, collaboratorId);
 
         if (!projectCollaborator.getProject().getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");

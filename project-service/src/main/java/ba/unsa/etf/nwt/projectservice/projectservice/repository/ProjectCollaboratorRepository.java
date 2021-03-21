@@ -12,4 +12,5 @@ import java.util.UUID;
 @Repository
 public interface ProjectCollaboratorRepository extends PagingAndSortingRepository<ProjectCollaborator, UUID> {
     Optional<ProjectCollaborator> findByProject(Project project);
+    Optional<ProjectCollaborator> findByIdAndProjectId(UUID id, UUID projectId);
 }

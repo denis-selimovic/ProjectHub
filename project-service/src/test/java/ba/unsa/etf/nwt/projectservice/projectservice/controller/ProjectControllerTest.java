@@ -3,7 +3,10 @@ package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 import ba.unsa.etf.nwt.projectservice.projectservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.projectservice.projectservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
+import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
+import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ public class ProjectControllerTest {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
+    private ProjectCollaboratorRepository projectCollaboratorRepository;
+    @Autowired
     private TokenGenerator tokenGenerator;
 
     private String token;
@@ -47,7 +52,7 @@ public class ProjectControllerTest {
 
     @Test
     public void createProjectValidationBlank() throws Exception {
-        mockMvc.perform(post("/api/v1/projects/add")
+        mockMvc.perform(post("/api/v1/projects")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -60,7 +65,7 @@ public class ProjectControllerTest {
 
     @Test
     public void createProjectValidationTooLong() throws Exception {
-        mockMvc.perform(post("/api/v1/projects/add")
+        mockMvc.perform(post("/api/v1/projects")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -75,7 +80,7 @@ public class ProjectControllerTest {
     public void addExistentProject() throws Exception {
         createProjectInDB(ResourceOwnerInjector.id);
 
-        mockMvc.perform(post("/api/v1/projects/add")
+        mockMvc.perform(post("/api/v1/projects")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -83,12 +88,12 @@ public class ProjectControllerTest {
                             "name": "Projekat 1"
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.message", hasItem("Request body can not be processed")));
+                .andExpect(jsonPath("$.errors.message", hasItem("Project with this name already exists")));
     }
 
     @Test
     public void addProjectSuccess() throws Exception {
-        mockMvc.perform(post("/api/v1/projects/add")
+        mockMvc.perform(post("/api/v1/projects")
                 .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -98,21 +103,21 @@ public class ProjectControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.name").hasJsonPath())
-                .andExpect(jsonPath("$.data.ownerId").hasJsonPath())
-                .andExpect(jsonPath("$.data.createdAt").hasJsonPath())
-                .andExpect(jsonPath("$.data.updatedAt").hasJsonPath());
+                .andExpect(jsonPath("$.data.owner_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
+                .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
     }
 
     @Test
     public void deleteNonexistentProject() throws Exception {
         mockMvc.perform(delete("/api/v1/projects/" + UUID.randomUUID())
                 .header("Authorization", token))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.message", hasItem("Request body can not be processed")));
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Project not found")));
     }
 
     @Test
-    public void deleteForeignProject() throws Exception {
+    public void deleteProjectNotOwner() throws Exception {
         Project project = createProjectInDB(UUID.randomUUID());
 
         mockMvc.perform(delete("/api/v1/projects/" + project.getId())
@@ -128,6 +133,29 @@ public class ProjectControllerTest {
                 .header("Authorization", token))
                 .andExpect(status().isOk());
         assertEquals(0, projectRepository.count());
+    }
+
+    @Test
+    public void deleteProjectAndCollaborators() throws Exception {
+        Project project = createProjectInDB(ResourceOwnerInjector.id);
+        ProjectCollaborator collaborator1 = new ProjectCollaborator();
+        collaborator1.setProject(project);
+        collaborator1.setCollaboratorId(UUID.randomUUID());
+        projectCollaboratorRepository.save(collaborator1);
+
+        ProjectCollaborator collaborator2 = new ProjectCollaborator();
+        collaborator2.setProject(project);
+        collaborator2.setCollaboratorId(UUID.randomUUID());
+        projectCollaboratorRepository.save(collaborator2);
+        assertEquals(1, projectRepository.count());
+        assertEquals(2, projectCollaboratorRepository.count());
+
+        mockMvc.perform(delete("/api/v1/projects/" + project.getId())
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.message", Matchers.is("Project successfully deleted")));
+        assertEquals(0, projectRepository.count());
+        assertEquals(0, projectCollaboratorRepository.count());
     }
 
     private Project createProjectInDB(UUID ownerID) {

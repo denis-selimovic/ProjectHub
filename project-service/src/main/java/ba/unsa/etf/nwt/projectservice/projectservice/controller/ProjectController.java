@@ -24,7 +24,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<Response> create(@RequestBody @Valid CreateProjectRequest request, ResourceOwner resourceOwner) {
         Project project = projectService.create(request, resourceOwner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new ProjectDTO(project)));
@@ -32,9 +32,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Response> delete(@PathVariable UUID projectId, ResourceOwner resourceOwner) {
-
         Project project = projectService.findById(projectId);
-
         if (!project.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
 
