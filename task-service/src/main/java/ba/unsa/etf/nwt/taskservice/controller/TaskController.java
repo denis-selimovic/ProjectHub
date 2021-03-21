@@ -49,7 +49,7 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<PaginatedResponse> getTasks(ResourceOwner resourceOwner,
                                                       Pageable pageable,
-                                                      @RequestParam(name = "priority_id") UUID projectId,
+                                                      @RequestParam(name = "project_id") UUID projectId,
                                                       @RequestParam(required = false, name = "priority_id") UUID priorityId,
                                                       @RequestParam(required = false, name = "status_id") UUID statusId,
                                                       @RequestParam(required = false, name = "type_id") UUID typeId) {
