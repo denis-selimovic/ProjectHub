@@ -74,7 +74,7 @@ public class ProjectControllerTest {
 
     @Test
     public void testProjectExists() throws Exception {
-        MockHttpServletRequestBuilder request = post("/api/projects/add")
+        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
                                                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                                                         "client1",
                                                         UUID.randomUUID(),
@@ -152,7 +152,7 @@ public class ProjectControllerTest {
         JSONObject resultContentJson = new JSONObject(resultContent);
         UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
 
-        mockMvc.perform(delete("/api/projects/" + projectId)
+        mockMvc.perform(delete("/api/v1/projects/" + projectId)
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client2",
                         UUID.randomUUID(),
@@ -182,7 +182,7 @@ public class ProjectControllerTest {
         JSONObject resultContentJson = new JSONObject(resultContent);
         UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
 
-        mockMvc.perform(delete("/api/projects/" + projectId)
+        mockMvc.perform(delete("/api/v1/projects/" + projectId)
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client2",
                         UUID.randomUUID(),
