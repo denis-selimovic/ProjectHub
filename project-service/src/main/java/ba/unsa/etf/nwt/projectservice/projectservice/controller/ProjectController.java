@@ -25,13 +25,15 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<Response> create(@RequestBody @Valid CreateProjectRequest request, ResourceOwner resourceOwner) {
+    public ResponseEntity<Response> create(@RequestBody @Valid CreateProjectRequest request,
+                                           ResourceOwner resourceOwner) {
         Project project = projectService.create(request, resourceOwner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new ProjectDTO(project)));
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Response> delete(@PathVariable UUID projectId, ResourceOwner resourceOwner) {
+    public ResponseEntity<Response> delete(@PathVariable UUID projectId,
+                                           ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
         if (!project.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
@@ -39,10 +41,4 @@ public class ProjectController {
         projectService.delete(projectId);
         return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Project successfully deleted")));
     }
-
-//    @GetMapping("/{projectId}")
-//    public ResponseEntity<Response> allCollaborators(@PathVariable UUID projectId) {
-//
-//    }
-
 }
