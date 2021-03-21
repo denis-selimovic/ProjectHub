@@ -7,6 +7,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class ProjectControllerTest {
     @BeforeEach
     public void setUp() {
         projectRepository.deleteAll();
+        projectCollaboratorRepository.deleteAll();
         token = "Bearer " + tokenGenerator.createAccessToken(
                 ResourceOwnerInjector.clientId,
                 ResourceOwnerInjector.id,
