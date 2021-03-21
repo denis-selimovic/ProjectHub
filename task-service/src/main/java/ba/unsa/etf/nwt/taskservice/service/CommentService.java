@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.service;
 
+import ba.unsa.etf.nwt.taskservice.dto.CommentDTO;
 import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
 import ba.unsa.etf.nwt.taskservice.model.Task;
@@ -40,7 +41,7 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    public Page<Comment> getCommentsForTask(final Task task, final Pageable pageable) {
+    public Page<CommentDTO> getCommentsForTask(final Task task, final Pageable pageable) {
         return commentRepository.findAllByTask(task, pageable);
     }
 

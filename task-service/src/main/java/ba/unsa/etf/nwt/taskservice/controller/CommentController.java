@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/tasks/{taskId}/comments")
@@ -54,10 +53,9 @@ public class CommentController {
                                                                 Pageable pageable) {
         Task task = taskService.findById(taskId);
         communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
-        Page<Comment> commentPage = commentService.getCommentsForTask(task, pageable);
+        Page<CommentDTO> commentPage = commentService.getCommentsForTask(task, pageable);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new PaginatedResponse(new MetadataDTO(commentPage),
-                        commentPage.getContent().stream().map(CommentDTO::new).collect(Collectors.toList())));
+                .body(new PaginatedResponse(new MetadataDTO(commentPage), commentPage.getContent()));
     }
 
     @DeleteMapping("/{commentId}")
