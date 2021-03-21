@@ -13,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class PaginatedResponse {
     private Metadata metadata;
-    private List<Resource> data;
+    private List<? extends Resource> data;
 }

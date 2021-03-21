@@ -57,7 +57,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("Issue 1");
         issue.setDescription("Issue description");
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
         issue.setPriority(priority);
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
         assertTrue(violations.isEmpty());
@@ -71,7 +71,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("");
         issue.setDescription("Issue description");
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
         issue.setPriority(priority);
 
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
@@ -87,7 +87,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("a".repeat(60));
         issue.setDescription("Issue description");
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
         issue.setPriority(priority);
 
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
@@ -103,7 +103,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("Issue 1");
         issue.setDescription("");
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
         issue.setPriority(priority);
 
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
@@ -119,7 +119,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("Issue name");
         issue.setDescription("a".repeat(260));
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
         issue.setPriority(priority);
 
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
@@ -150,7 +150,7 @@ public class IssueTest {
         Issue issue = new Issue();
         issue.setName("Issue name");
         issue.setDescription("Issue description");
-        issue.setProject_id(UUID.randomUUID());
+        issue.setProjectId(UUID.randomUUID());
 
         List<ConstraintViolation<Issue>> violations = new ArrayList<>(validator.validate(issue));
         assertEquals(1, violations.size());

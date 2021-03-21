@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,13 +37,12 @@ public class Task {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotNull(message = "User id can't be null")
     @Column(name = "user_id")
-    private UUID user_id;
+    private UUID userId;
 
     @NotNull(message = "Project id can't be null")
     @Column(name = "project_id", nullable = false)
-    private UUID project_id;
+    private UUID projectId;
 
     @NotNull(message = "Priority id can't be null")
     @OneToOne
@@ -58,7 +60,8 @@ public class Task {
     private Type type;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
-    private Set<Comment> comments;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<Comment> comments = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at")

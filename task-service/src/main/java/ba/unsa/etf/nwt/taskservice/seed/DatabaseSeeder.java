@@ -95,7 +95,7 @@ public class DatabaseSeeder {
         Issue i = new Issue();
         i.setName(name);
         i.setDescription(description);
-        i.setProject_id(project_id);
+        i.setProjectId(project_id);
         i.setPriority(priority);
         return i;
     }
@@ -104,8 +104,8 @@ public class DatabaseSeeder {
         Task t = new Task();
         t.setName(name);
         t.setDescription(description);
-        t.setUser_id(user_id);
-        t.setProject_id(project_id);
+        t.setUserId(user_id);
+        t.setProjectId(project_id);
         t.setPriority(priority);
         t.setStatus(status);
         t.setType(type);
@@ -115,7 +115,7 @@ public class DatabaseSeeder {
     private Comment createComment(String text, UUID user_id, Task task) {
         Comment c = new Comment();
         c.setText(text);
-        c.setUser_id(user_id);
+        c.setUserId(user_id);
         c.setTask(task);
         return c;
     }
