@@ -7,12 +7,15 @@ import ba.unsa.etf.nwt.taskservice.model.Comment;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.request.CreateCommentRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
+import ba.unsa.etf.nwt.taskservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.taskservice.service.CommentService;
 import ba.unsa.etf.nwt.taskservice.service.CommunicationService;
 import ba.unsa.etf.nwt.taskservice.service.TaskService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -38,6 +42,12 @@ public class CommentController {
     private final TaskService taskService;
 
     @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Comment created"),
+            @ApiResponse(code = 422, message = "Unprocessable entity: Validation fail", response = ErrorResponse.class),
+            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<CommentDTO>> create(ResourceOwner resourceOwner,
                                            @PathVariable UUID taskId,
                                            @RequestBody @Valid CreateCommentRequest request) {
@@ -48,6 +58,11 @@ public class CommentController {
     }
 
     @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Task not found", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<CommentDTO, MetadataDTO>> getCommentsForTask(ResourceOwner resourceOwner,
                                                                 @PathVariable UUID taskId,
                                                                 Pageable pageable) {
@@ -59,6 +74,12 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment deleted"),
+            @ApiResponse(code = 403, message = "Forbidden: Only the author can delete the comment", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Comment not found", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner,
                                            @PathVariable UUID taskId,
                                            @PathVariable UUID commentId) {

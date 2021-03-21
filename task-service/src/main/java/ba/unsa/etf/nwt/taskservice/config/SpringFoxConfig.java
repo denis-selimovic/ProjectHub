@@ -24,6 +24,7 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ba.unsa.etf.nwt.taskservice.controller"))
                 .paths(PathSelectors.any())
