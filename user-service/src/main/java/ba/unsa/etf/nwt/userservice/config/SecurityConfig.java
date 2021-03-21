@@ -22,7 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final String[] unprotectedEndpoints = {
             "/oauth/token",
-            "/api/v1/users/**"
+            "/api/v1/users/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
     };
 
     @Override
