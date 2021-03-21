@@ -20,6 +20,7 @@ public class NotificationDTO implements Resource {
     private Instant createdAt;
     private Instant updatedAt;
     private UUID userId;
+    private boolean read;
 
     public NotificationDTO(Notification notification) {
         id = notification.getId();
@@ -28,6 +29,7 @@ public class NotificationDTO implements Resource {
         createdAt = notification.getCreatedAt();
         updatedAt = notification.getUpdatedAt();
         userId = notification.getUserId();
+        read = notification.getRead();
     }
 
 }
