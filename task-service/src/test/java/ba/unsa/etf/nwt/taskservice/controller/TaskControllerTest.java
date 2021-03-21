@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,7 +58,7 @@ public class TaskControllerTest {
 //        open = statusRepository.save(open);
 //
 //        mockMvc.perform(post("/api/v1/tasks")
-//                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenGenerator.createAccessToken(
 //                        "client",
 //                        UUID.randomUUID(),
 //                        "email@email.com"
@@ -71,7 +71,7 @@ public class TaskControllerTest {
 //                            "project_id": "%s",
 //                            "priority_id": "%s",
 //                            "type_id": "%s"
-//                        }""", UUID.randomUUID(), critical.getId(), bug.getId())))
+//                        }""", UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())))
 //                .andExpect(status().isCreated())
 //                .andExpect(jsonPath("$.data.id").hasJsonPath())
 //                .andExpect(jsonPath("$.data.name").hasJsonPath())
@@ -104,8 +104,8 @@ public class TaskControllerTest {
                             "type_id": "6acd9c39-a245-4985-aee5-2b217e159336"
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name", is("Task name can't be blank")))
-                .andExpect(jsonPath("$.errors.description", is("Task description can't be blank")));
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Task name can't be blank")))
+                .andExpect(jsonPath("$.errors.description").value(hasItem("Task description can't be blank")));
     }
 
     @Test
@@ -127,9 +127,9 @@ public class TaskControllerTest {
                             "type_id": "6acd9c39-a245-4985-aee5-2b217e159336"
                         }""", tooLong, tooLong)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name", is("Task name can contain at most 50 characters")))
-                .andExpect(jsonPath("$.errors.description",
-                        is("Task description can contain at most 255 characters")));
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Task name can contain at most 50 characters")))
+                .andExpect(jsonPath("$.errors.description")
+                        .value(hasItem("Task description can contain at most 255 characters")));
     }
 
     @Test
@@ -143,10 +143,10 @@ public class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name", is("Task name can't be blank")))
-                .andExpect(jsonPath("$.errors.description", is("Task description can't be blank")))
-                .andExpect(jsonPath("$.errors.project_id", is("Project id can't be null")))
-                .andExpect(jsonPath("$.errors.type_id", is("Type id can't be null")))
-                .andExpect(jsonPath("$.errors.priority_id", is("Priority id can't be null")));
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Task name can't be blank")))
+                .andExpect(jsonPath("$.errors.description").value(hasItem("Task description can't be blank")))
+                .andExpect(jsonPath("$.errors.project_id").value(hasItem("Project id can't be null")))
+                .andExpect(jsonPath("$.errors.type_id").value(hasItem("Type id can't be null")))
+                .andExpect(jsonPath("$.errors.priority_id").value(hasItem("Priority id can't be null")));
     }
 }
