@@ -1,22 +1,21 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.dto.TaskDTO;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.request.CreateTaskRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
+import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.taskservice.service.CommunicationService;
 import ba.unsa.etf.nwt.taskservice.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -45,5 +44,17 @@ public class TaskController {
         communicationService.checkIfOwner(resourceOwner.getId(), task.getProjectId());
         taskService.delete(task);
         return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Task successfully deleted")));
+    }
+
+    @GetMapping
+    public ResponseEntity<PaginatedResponse> getTasks(ResourceOwner resourceOwner,
+                                                      Pageable pageable,
+                                                      @RequestParam(name = "priority_id") UUID projectId,
+                                                      @RequestParam(required = false, name = "priority_id") UUID priorityId,
+                                                      @RequestParam(required = false, name = "status_id") UUID statusId,
+                                                      @RequestParam(required = false, name = "type_id") UUID typeId) {
+        communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
+        Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
+        return ResponseEntity.ok(new PaginatedResponse(new MetadataDTO(taskPage), taskPage.getContent()));
     }
 }
