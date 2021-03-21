@@ -1,9 +1,8 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
-import ba.unsa.etf.nwt.projectservice.projectservice.config.CustomTokenEnhancer;
 import ba.unsa.etf.nwt.projectservice.projectservice.config.TokenGenerator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
-import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.*;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ProjectService projectService;
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
@@ -41,7 +40,7 @@ public class ProjectControllerTest {
 
     @Test
     public void testBlankName() throws Exception {
-        mockMvc.perform(post("/api/projects/add")
+        mockMvc.perform(post("/api/v1/projects/add")
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client",
                         UUID.randomUUID(),
@@ -58,7 +57,7 @@ public class ProjectControllerTest {
     @Test
     public void testLongName() throws Exception {
         String error = "Project name can contain at most 50 characters";
-        mockMvc.perform(post("/api/projects/add")
+        mockMvc.perform(post("/api/v1/projects/add")
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client0",
                         UUID.randomUUID(),
@@ -69,8 +68,8 @@ public class ProjectControllerTest {
                         {
                             "name": "projekatprojekatprojekatprojekatprojekatprojekatprojekatprojekat"
                         }"""))
-                .andExpect(status().isUnprocessableEntity());
-//                .andExpect(jsonPath("$.errors.name").value(hasItem(error)));
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name").value(hasItem(error)));
     }
 
     @Test
@@ -102,7 +101,7 @@ public class ProjectControllerTest {
 
     @Test
     public void testAddProjectSuccess() throws Exception {
-        mockMvc.perform(post("/api/projects/add")
+        mockMvc.perform(post("/api/v1/projects/add")
                 .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
                         "client2",
                         UUID.randomUUID(),
@@ -113,11 +112,82 @@ public class ProjectControllerTest {
                         {
                             "name": "Project name"
                         }"""))
-                .andExpect(status().isCreated());
-//                .andExpect(jsonPath("$.data.id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.nam").hasJsonPath())
-//                .andExpect(jsonPath("$.data.owner_id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
-//                .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").hasJsonPath())
+                .andExpect(jsonPath("$.data.nam").hasJsonPath())
+                .andExpect(jsonPath("$.data.owner_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
+                .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
+    }
+
+    @Test
+    public void testDeleteNonexistentProject() throws Exception {
+        mockMvc.perform(delete("/api/v1/projects/" + UUID.randomUUID())
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue()))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testDeleteForeignProject() throws Exception {
+        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue());
+
+        MvcResult result = mockMvc.perform(request
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": "Project name"
+                        }"""))
+                .andReturn();
+
+        String resultContent = result.getResponse().getContentAsString();
+        JSONObject resultContentJson = new JSONObject(resultContent);
+        UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
+
+        mockMvc.perform(delete("/api/projects/" + projectId)
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client2",
+                        UUID.randomUUID(),
+                        "email2@email.com"
+                ).getValue()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testSuccessfulDeletion() throws Exception {
+        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client",
+                        UUID.randomUUID(),
+                        "email@email.com"
+                ).getValue());
+
+        MvcResult result = mockMvc.perform(request
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": "Project name"
+                        }"""))
+                .andReturn();
+
+        String resultContent = result.getResponse().getContentAsString();
+        JSONObject resultContentJson = new JSONObject(resultContent);
+        UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
+
+        mockMvc.perform(delete("/api/projects/" + projectId)
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        "client2",
+                        UUID.randomUUID(),
+                        "email2@email.com"
+                ).getValue()))
+                .andExpect(status().isOk());
     }
 }
