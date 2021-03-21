@@ -11,3 +11,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/project-service-dev
     user: projecthub
     password: password
+server:
+  port : 8082

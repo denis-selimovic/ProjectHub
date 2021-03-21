@@ -44,10 +44,8 @@ public class ProjectCollaboratorController {
         if (!project.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
 
-        ProjectCollaborator projectCollaborator =
-                projectCollaboratorService.createCollaborator(request.getCollaboratorId(), project);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new Response(new ProjectCollaboratorDTO(projectCollaborator)));
+        ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(request.getCollaboratorId(), project);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new ProjectCollaboratorDTO(projectCollaborator)));
     }
 
     @DeleteMapping("/{collaboratorId}")
@@ -60,8 +58,7 @@ public class ProjectCollaboratorController {
             throw new ForbiddenException("You don't have permission for this activity");
 
         projectCollaboratorService.delete(projectCollaborator);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new Response(new SimpleResponse("Project collaborator successfully deleted")));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Project collaborator successfully deleted")));
     }
 
     @GetMapping
