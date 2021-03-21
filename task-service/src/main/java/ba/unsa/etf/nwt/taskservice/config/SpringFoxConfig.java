@@ -37,7 +37,7 @@ public class SpringFoxConfig {
         return new HandlerMethodResolver(typeResolver) {
             @Override
             public ResolvedType methodReturnType(HandlerMethod handlerMethod) {
-                var returnType = super.methodReturnType(handlerMethod);
+                ResolvedType returnType = super.methodReturnType(handlerMethod);
                 while (returnType.getErasedType() == ResponseEntity.class){
                     returnType = returnType.getTypeBindings().getBoundType(0);
                 }
