@@ -32,6 +32,4 @@ public class NotificationControllerTest {
         notificationRepository.deleteAll();
     }
 
-
-
 }
