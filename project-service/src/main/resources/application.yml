@@ -1,8 +1,6 @@
 spring:
   profiles:
     active: dev
-  main:
-    allow-bean-definition-overriding: true
   jackson:
     property-naming-strategy: SNAKE_CASE
 token:
