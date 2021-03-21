@@ -11,6 +11,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreateSubscriptionRequest {
     @NotNull(message = "Task id can't be null")
-    @JsonProperty("taskId")
+    @JsonProperty("task_id")
     private UUID taskId;
 }

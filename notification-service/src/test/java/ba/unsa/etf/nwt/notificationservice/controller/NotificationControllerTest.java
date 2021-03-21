@@ -2,6 +2,8 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.notificationservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
+import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasItem;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -160,6 +166,33 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("Title")))
                 .andExpect(jsonPath("$.data.description", is("Description")));
+    }
+
+    @Test
+    public void deleteNotificationSuccess() throws Exception {
+        Notification notification = createNotificationInDb();
+        mockMvc.perform(delete(String.format("/api/notifications/%s", notification.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.message", is("Notification successfully deleted")));
+    }
+
+    @Test
+    public void deleteNotificationBadId() throws Exception {
+        mockMvc.perform(delete(String.format("/api/notifications/%s", UUID.randomUUID().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof UnprocessableEntityException))
+                .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. This notification doesn't exist")));
+    }
+
+    private Notification createNotificationInDb() {
+        Notification notification = new Notification();
+        notification.setTitle("Title");
+        notification.setDescription("Description");
+        notification.setUserId(ResourceOwnerInjector.id);
+        notification.setRead(false);
+        notificationRepository.save(notification);
+        return notification;
     }
 
 

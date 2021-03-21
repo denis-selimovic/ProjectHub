@@ -21,7 +21,7 @@ public class SubscriptionService {
     public Subscription create(@RequestBody @Valid CreateSubscriptionRequest request, ResourceOwner resourceOwner) {
 
         subscriptionRepository.findByTaskIdAndUserId(request.getTaskId(), resourceOwner.getId()).ifPresent(p -> {
-            throw new UnprocessableEntityException("Request body can not be processed. This user is already subscribed to the task.");
+            throw new UnprocessableEntityException("Request body can not be processed. You are already subscribed to the task.");
         });
 
         Subscription subscription = new Subscription();
