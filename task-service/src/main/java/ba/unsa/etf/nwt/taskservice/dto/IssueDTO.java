@@ -17,7 +17,7 @@ public class IssueDTO implements Resource {
     private String name;
     private String description;
     private UUID projectId;
-    private UUID priorityId;
+    private PriorityDTO priority;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -26,7 +26,7 @@ public class IssueDTO implements Resource {
         this.name = issue.getName();
         this.description = issue.getDescription();
         this.projectId = issue.getProjectId();
-        this.priorityId = issue.getPriority().getId();
+        this.priority = new PriorityDTO(issue.getPriority());
         this.createdAt = issue.getCreatedAt();
         this.updatedAt = issue.getUpdatedAt();
     }
