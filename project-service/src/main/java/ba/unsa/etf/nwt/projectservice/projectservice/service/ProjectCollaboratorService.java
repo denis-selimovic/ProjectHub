@@ -1,14 +1,16 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.service;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
-import ba.unsa.etf.nwt.projectservice.projectservice.request.AddCollaboratorRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ public class ProjectCollaboratorService {
 
     public ProjectCollaborator createCollaborator(UUID collaboratorId, Project project) {
         projectCollaboratorRepository.findByProject(project).ifPresent(pc -> {
-            throw new UnprocessableEntityException("Request body can not be processed");
+            throw new UnprocessableEntityException("Collaborator already added to this project");
         });
 
         ProjectCollaborator projectCollaborator = new ProjectCollaborator();
@@ -37,14 +39,20 @@ public class ProjectCollaboratorService {
     }
 
     public ProjectCollaborator findByIdAndAndProjectId(UUID id, UUID projectId) {
-        Optional<ProjectCollaborator> projectCollaborator = projectCollaboratorRepository.findByIdAndProjectId(id, projectId);
-        if (projectCollaborator.isEmpty())
-            throw new UnprocessableEntityException("Request body can not be processed");
-        return projectCollaborator.get();
+        return projectCollaboratorRepository.findByIdAndProjectId(id, projectId).orElseThrow(() -> {
+            throw new NotFoundException("Collaborator not found");
+        });
+    }
+
+    public boolean existsByCollaboratorIdAndProjectId(UUID userId, UUID projectId) {
+        return projectCollaboratorRepository.findByCollaboratorIdAndProjectId(userId, projectId).isEmpty();
     }
 
     public void delete(ProjectCollaborator projectCollaborator) {
         projectCollaboratorRepository.delete(projectCollaborator);
     }
 
+    public Page<ProjectCollaboratorDTO> getCollaboratorsForProject(Project project, Pageable pageable) {
+        return projectCollaboratorRepository.findAllByProject(project, pageable);
+    }
 }
