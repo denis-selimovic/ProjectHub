@@ -1,6 +1,10 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
-import ba.unsa.etf.nwt.taskservice.config.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
+import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.model.Priority;
+import ba.unsa.etf.nwt.taskservice.model.Status;
+import ba.unsa.etf.nwt.taskservice.model.Type;
 import ba.unsa.etf.nwt.taskservice.repository.PriorityRepository;
 import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
@@ -16,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,53 +43,52 @@ public class TaskControllerTest {
     @Autowired
     private TypeRepository typeRepository;
 
+
     @BeforeEach
     public void setUpTest() {
         taskRepository.deleteAll();
     }
 
-//    @Test
-//    public void createTaskSuccess() throws Exception {
-//        Priority critical = new Priority();
-//        critical.setPriorityType(Priority.PriorityType.CRITICAL);
-//        critical = priorityRepository.save(critical);
-//
-//        Type bug = new Type();
-//        bug.setType(Type.TaskType.BUG);
-//        bug = typeRepository.save(bug);
-//
-//        Status open = new Status();
-//        open.setStatus(Status.StatusType.OPEN);
-//        open = statusRepository.save(open);
-//
-//        mockMvc.perform(post("/api/v1/tasks")
-//                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenGenerator.createAccessToken(
-//                        "client",
-//                        UUID.randomUUID(),
-//                        "email@email.com"
-//                ).getValue())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(String.format("""
-//                        {
-//                            "name": "Task microservice crud",
-//                            "description": "This is a description",
-//                            "project_id": "%s",
-//                            "priority_id": "%s",
-//                            "type_id": "%s"
-//                        }""", UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.data.id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.name").hasJsonPath())
-//                .andExpect(jsonPath("$.data.description").hasJsonPath())
-//                .andExpect(jsonPath("$.data.user_id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.project_id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.status_id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.type_id").hasJsonPath())
-//                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
-//                .andExpect(jsonPath("$.data.updated_at").hasJsonPath())
-//                .andExpect(jsonPath("$.data.name", is("Task microservice crud")))
-//                .andExpect(jsonPath("$.data.description", is("This is a description")));
-//    }
+    @Test
+    public void createTaskSuccess() throws Exception {
+        Priority critical = new Priority();
+        critical.setPriorityType(Priority.PriorityType.CRITICAL);
+        critical = priorityRepository.save(critical);
+
+        Type bug = new Type();
+        bug.setType(Type.TaskType.BUG);
+        bug = typeRepository.save(bug);
+
+        Status open = new Status();
+        open.setStatus(Status.StatusType.OPEN);
+        open = statusRepository.save(open);
+
+        mockMvc.perform(post("/api/v1/tasks")
+                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
+                        ResourceOwnerInjector.clientId,
+                        ResourceOwnerInjector.id,
+                        ResourceOwnerInjector.clientId
+                ).getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "Task microservice crud",
+                            "description": "This is a description",
+                            "project_id": "%s",
+                            "priority_id": "%s",
+                            "type_id": "%s"
+                        }""", UUID.randomUUID(), critical.getId(), bug.getId())))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").hasJsonPath())
+                .andExpect(jsonPath("$.data.name").hasJsonPath())
+                .andExpect(jsonPath("$.data.description").hasJsonPath())
+                .andExpect(jsonPath("$.data.user_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.project_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.status").hasJsonPath())
+                .andExpect(jsonPath("$.data.type").hasJsonPath())
+                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
+                .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
+    }
 
     @Test
     public void createTaskValidationsBlank() throws Exception {

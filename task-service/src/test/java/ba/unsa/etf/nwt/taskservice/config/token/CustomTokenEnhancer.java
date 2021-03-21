@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.taskservice.config;
+package ba.unsa.etf.nwt.taskservice.config.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
