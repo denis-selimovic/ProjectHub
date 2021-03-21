@@ -51,7 +51,7 @@ public class TaskService {
 
     public Task findById(final UUID taskId) {
         return taskRepository.findById(taskId).orElseThrow(() -> {
-            throw new NotFoundException("Response can't be processed");
+            throw new NotFoundException("Request can't be processed");
         });
     }
 }

@@ -41,7 +41,7 @@ public class IssueService {
 
     public Issue findById(final UUID issueId) {
         return issueRepository.findById(issueId).orElseThrow(() -> {
-            throw new NotFoundException("Response can't be processed");
+            throw new NotFoundException("Request can't be processed");
         });
     }
 }

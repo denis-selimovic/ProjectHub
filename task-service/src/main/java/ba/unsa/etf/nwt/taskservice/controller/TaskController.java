@@ -6,7 +6,6 @@ import ba.unsa.etf.nwt.taskservice.request.CreateTaskRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
-import ba.unsa.etf.nwt.taskservice.service.CommentService;
 import ba.unsa.etf.nwt.taskservice.service.CommunicationService;
 import ba.unsa.etf.nwt.taskservice.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import java.util.UUID;
 public class TaskController {
     private final TaskService taskService;
     private final CommunicationService communicationService;
-    private final CommentService commentService;
 
     @PostMapping
     public ResponseEntity<Response> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
