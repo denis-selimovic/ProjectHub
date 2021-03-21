@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class GenericSpecificationBuilder<T> {
     private final List<SearchCriteria> criteria = new ArrayList<>();
     private final List<Specification<T>> specifications = new ArrayList<>();

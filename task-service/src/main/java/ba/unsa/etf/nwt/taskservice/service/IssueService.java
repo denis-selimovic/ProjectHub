@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class IssueService {
 
-    private final GenericSpecificationBuilder<Issue> specificationBuilder;
+    private final GenericSpecificationBuilder<Issue> specificationBuilder = new GenericSpecificationBuilder<>();
 
     private final IssueRepository issueRepository;
     private final PriorityService priorityService;
@@ -40,7 +40,7 @@ public class IssueService {
                 .with("project_id", projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
                 .with("priority_id", priorityId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
                 .build();
-        return issueRepository.findAll(pageable, specification);
+        return issueRepository.findAll(specification, pageable);
     }
 
     private Issue createIssueFromRequest(final CreateIssueRequest request) {

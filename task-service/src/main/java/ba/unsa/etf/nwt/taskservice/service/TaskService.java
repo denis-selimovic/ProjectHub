@@ -23,7 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final GenericSpecificationBuilder<Task> specificationBuilder;
+    private final GenericSpecificationBuilder<Task> specificationBuilder = new GenericSpecificationBuilder<>();
 
     private final TaskRepository taskRepository;
     private final PriorityService priorityService;
@@ -71,6 +71,6 @@ public class TaskService {
                 .with("status_id", statusId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
                 .with("type_id", typeId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
                 .build();
-        return taskRepository.findAll(pageable, specification);
+        return taskRepository.findAll(specification, pageable);
     }
 }
