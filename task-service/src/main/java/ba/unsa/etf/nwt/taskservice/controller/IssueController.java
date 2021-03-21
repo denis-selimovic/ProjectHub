@@ -47,7 +47,7 @@ public class IssueController {
     public ResponseEntity<PaginatedResponse> getIssues(ResourceOwner resourceOwner,
                                                        Pageable pageable,
                                                        @RequestParam(name = "project_id") UUID projectId,
-                                                       @RequestParam(required = false, name = "priority_id") UUID priorityId) {
+                                                       @RequestParam(required = false, name = "priority_id") String priorityId) {
         communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<IssueDTO> issuePage = issueService.filter(pageable, projectId, priorityId);
         return ResponseEntity.ok(new PaginatedResponse(new MetadataDTO(issuePage), issuePage.getContent()));

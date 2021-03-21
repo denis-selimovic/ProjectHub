@@ -7,22 +7,25 @@ import ba.unsa.etf.nwt.taskservice.filter.GenericSpecificationBuilder;
 import ba.unsa.etf.nwt.taskservice.filter.SearchCriteria;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
-import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
 import ba.unsa.etf.nwt.taskservice.request.CreateIssueRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class IssueService {
 
-    private final GenericSpecificationBuilder<Issue> specificationBuilder = new GenericSpecificationBuilder<>();
+    private final GenericSpecificationBuilder<Issue> builder;
 
     private final IssueRepository issueRepository;
     private final PriorityService priorityService;
@@ -35,10 +38,11 @@ public class IssueService {
         return issueRepository.save(issue);
     }
 
-    public Page<IssueDTO> filter(Pageable pageable, UUID projectId, UUID priorityId) {
-        Specification<Issue> specification = specificationBuilder
-                .with("project_id", projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
-                .with("priority_id", priorityId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
+    public Page<IssueDTO> filter(Pageable pageable, UUID projectId, String priorityId) {
+        Root<Issue> root = builder.setup(Issue.class);
+        Specification<Issue> specification = builder
+                .with(root.get("projectId"), projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
+                .with(root.get("priority").get("id"), priorityId, SearchCriteria.SearchCriteriaOperation.EQ)
                 .build();
         return issueRepository.findAll(specification, pageable);
     }
