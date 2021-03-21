@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.config;
+package ba.unsa.etf.nwt.projectservice.projectservice.config.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

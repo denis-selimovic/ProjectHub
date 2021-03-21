@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.config;
+package ba.unsa.etf.nwt.projectservice.projectservice.config.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.config;
+package ba.unsa.etf.nwt.projectservice.projectservice.config.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +25,15 @@ public class TokenGenerator {
     private JwtAccessTokenConverter jwtAccessTokenConverter;
 
     public OAuth2AccessToken createAccessToken(final String clientId, final UUID id, final String email) {
+        OAuth2Authentication auth = oAuth2Authentication(clientId, id, email);
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(new JwtTokenStore(jwtAccessTokenConverter));
+        tokenServices.setTokenEnhancer(tokenEnhancer(id, email));
+        tokenServices.setAccessTokenValiditySeconds(600);
+        return tokenServices.createAccessToken(auth);
+    }
+
+    public OAuth2Authentication oAuth2Authentication(String clientId, UUID id, String email) {
         Collection<GrantedAuthority> authorities = Collections.emptySet();
         Set<String> resourceIds = Set.of("oauth2-resource");
         Set<String> scopes = Set.of("read", "write");
@@ -41,14 +50,8 @@ public class TokenGenerator {
                 null, authorities);
         OAuth2Authentication auth = new OAuth2Authentication(oAuth2Request, authenticationToken);
         auth.setAuthenticated(true);
-
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(new JwtTokenStore(jwtAccessTokenConverter));
-        tokenServices.setTokenEnhancer(tokenEnhancer(id, email));
-        tokenServices.setAccessTokenValiditySeconds(600);
-        return tokenServices.createAccessToken(auth);
+        return auth;
     }
-
 
     private TokenEnhancer tokenEnhancer(UUID id, String email) {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();

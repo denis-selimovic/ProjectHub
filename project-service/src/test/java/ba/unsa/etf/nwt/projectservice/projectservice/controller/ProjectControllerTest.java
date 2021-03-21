@@ -1,8 +1,9 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
-import ba.unsa.etf.nwt.projectservice.projectservice.config.TokenGenerator;
+import ba.unsa.etf.nwt.projectservice.projectservice.config.token.ResourceOwnerInjector;
+import ba.unsa.etf.nwt.projectservice.projectservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.*;
 
@@ -33,80 +32,63 @@ public class ProjectControllerTest {
     @Autowired
     private TokenGenerator tokenGenerator;
 
+    private String token;
+
     @BeforeEach
     public void setUp() {
         projectRepository.deleteAll();
+        token = "Bearer " + tokenGenerator.createAccessToken(
+                ResourceOwnerInjector.clientId,
+                ResourceOwnerInjector.id,
+                ResourceOwnerInjector.email)
+                .getValue();
     }
 
     @Test
-    public void testBlankName() throws Exception {
+    public void createProjectValidationBlank() throws Exception {
         mockMvc.perform(post("/api/v1/projects/add")
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client",
-                        UUID.randomUUID(),
-                        "email@email.com"
-                ))
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
                             "name": ""
                         }"""))
-                .andExpect(status().isUnprocessableEntity());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Project name can't be blank")));;
     }
 
     @Test
-    public void testLongName() throws Exception {
-        String error = "Project name can contain at most 50 characters";
+    public void createProjectValidationTooLong() throws Exception {
         mockMvc.perform(post("/api/v1/projects/add")
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client0",
-                        UUID.randomUUID(),
-                        "email0@email.com"
-                ).getValue())
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
                             "name": "projekatprojekatprojekatprojekatprojekatprojekatprojekatprojekat"
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name").value(hasItem(error)));
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Project name can contain at most 50 characters")));
     }
 
     @Test
-    public void testProjectExists() throws Exception {
-        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
-                                                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                                                        "client1",
-                                                        UUID.randomUUID(),
-                                                        "email1@email.com"
-                                                ).getValue());
-        mockMvc.perform(request
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                            "name": "Project name"
-                        }"""
-                )
-        );
+    public void addExistentProject() throws Exception {
+        createProjectInDB(ResourceOwnerInjector.id);
 
-        mockMvc.perform(request
+        mockMvc.perform(post("/api/v1/projects/add")
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                            "name": "Project name"
+                            "name": "Projekat 1"
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errors.message", hasItem("Request body can not be processed")));
     }
 
     @Test
-    public void testAddProjectSuccess() throws Exception {
+    public void addProjectSuccess() throws Exception {
         mockMvc.perform(post("/api/v1/projects/add")
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client2",
-                        UUID.randomUUID(),
-                        "email2@email.com"
-                ).getValue())
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -114,80 +96,42 @@ public class ProjectControllerTest {
                         }"""))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
-                .andExpect(jsonPath("$.data.nam").hasJsonPath())
-                .andExpect(jsonPath("$.data.owner_id").hasJsonPath())
-                .andExpect(jsonPath("$.data.created_at").hasJsonPath())
-                .andExpect(jsonPath("$.data.updated_at").hasJsonPath());
+                .andExpect(jsonPath("$.data.name").hasJsonPath())
+                .andExpect(jsonPath("$.data.ownerId").hasJsonPath())
+                .andExpect(jsonPath("$.data.createdAt").hasJsonPath())
+                .andExpect(jsonPath("$.data.updatedAt").hasJsonPath());
     }
 
     @Test
     public void testDeleteNonexistentProject() throws Exception {
         mockMvc.perform(delete("/api/v1/projects/" + UUID.randomUUID())
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client",
-                        UUID.randomUUID(),
-                        "email@email.com"
-                ).getValue()))
-                .andExpect(status().isUnprocessableEntity());
+                .header("Authorization", token))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.message", hasItem("Request body can not be processed")));
     }
 
     @Test
     public void testDeleteForeignProject() throws Exception {
-        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client",
-                        UUID.randomUUID(),
-                        "email@email.com"
-                ).getValue());
+        Project project = createProjectInDB(UUID.randomUUID());
 
-        MvcResult result = mockMvc.perform(request
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                            "name": "Project name"
-                        }"""))
-                .andReturn();
-
-        String resultContent = result.getResponse().getContentAsString();
-        JSONObject resultContentJson = new JSONObject(resultContent);
-        UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
-
-        mockMvc.perform(delete("/api/v1/projects/" + projectId)
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client2",
-                        UUID.randomUUID(),
-                        "email2@email.com"
-                ).getValue()))
-                .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/api/v1/projects/" + project.getId())
+                .header("Authorization", token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
     }
 
     @Test
     public void testSuccessfulDeletion() throws Exception {
-        MockHttpServletRequestBuilder request = post("/api/v1/projects/add")
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client",
-                        UUID.randomUUID(),
-                        "email@email.com"
-                ).getValue());
-
-        MvcResult result = mockMvc.perform(request
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                            "name": "Project name"
-                        }"""))
-                .andReturn();
-
-        String resultContent = result.getResponse().getContentAsString();
-        JSONObject resultContentJson = new JSONObject(resultContent);
-        UUID projectId = UUID.fromString(resultContentJson.getJSONObject("data").getString("id"));
-
-        mockMvc.perform(delete("/api/v1/projects/" + projectId)
-                .header("Authorization", "Bearer " + tokenGenerator.createAccessToken(
-                        "client2",
-                        UUID.randomUUID(),
-                        "email2@email.com"
-                ).getValue()))
+        Project project = createProjectInDB(ResourceOwnerInjector.id);
+        mockMvc.perform(delete("/api/v1/projects/" + project.getId())
+                .header("Authorization", token))
                 .andExpect(status().isOk());
+    }
+
+    private Project createProjectInDB(UUID ownerID) {
+        Project project = new Project();
+        project.setName("Projekat 1");
+        project.setOwnerId(ownerID);
+        return projectRepository.save(project);
     }
 }
