@@ -1,6 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
-import ba.unsa.etf.nwt.taskservice.config.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

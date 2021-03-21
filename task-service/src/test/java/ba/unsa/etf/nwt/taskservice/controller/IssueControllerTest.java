@@ -1,6 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
-import ba.unsa.etf.nwt.taskservice.config.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
