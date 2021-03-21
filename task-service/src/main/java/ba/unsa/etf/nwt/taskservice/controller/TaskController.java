@@ -29,21 +29,21 @@ public class TaskController {
     private final CommunicationService communicationService;
 
     @PostMapping
-    public ResponseEntity<Response> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
+    public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
         communicationService.checkIfProjectExists(request.getProjectId());
         communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         if (request.getUserId() != null) {
             communicationService.checkIfCollaborator(request.getUserId(), request.getProjectId());
         }
         Task task = taskService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new TaskDTO(task)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Response> delete(ResourceOwner resourceOwner, @PathVariable UUID taskId) {
+    public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID taskId) {
         Task task = taskService.findById(taskId);
         communicationService.checkIfOwner(resourceOwner.getId(), task.getProjectId());
         taskService.delete(task);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Task successfully deleted")));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Task successfully deleted")));
     }
 }

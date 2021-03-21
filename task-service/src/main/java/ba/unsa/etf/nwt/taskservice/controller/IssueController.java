@@ -29,18 +29,18 @@ public class IssueController {
     private final CommunicationService communicationService;
 
     @PostMapping
-    public ResponseEntity<Response> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
+    public ResponseEntity<Response<IssueDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
         communicationService.checkIfProjectExists(request.getProjectId());
         communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         Issue issue = issueService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new IssueDTO(issue)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new IssueDTO(issue)));
     }
 
     @DeleteMapping("/{issueId}")
-    public ResponseEntity<Response> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
+    public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
         Issue issue = issueService.findById(issueId);
         communicationService.checkIfOwner(resourceOwner.getId(), issue.getProjectId());
         issueService.delete(issue);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Issue successfully deleted")));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Issue successfully deleted")));
     }
 }

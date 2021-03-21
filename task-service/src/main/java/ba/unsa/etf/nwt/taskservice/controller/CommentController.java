@@ -38,28 +38,28 @@ public class CommentController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Response> create(ResourceOwner resourceOwner,
+    public ResponseEntity<Response<CommentDTO>> create(ResourceOwner resourceOwner,
                                            @PathVariable UUID taskId,
                                            @RequestBody @Valid CreateCommentRequest request) {
         Task task = taskService.findById(taskId);
         communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         Comment comment = commentService.create(request, task, resourceOwner.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response(new CommentDTO(comment)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment)));
     }
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse> getCommentsForTask(ResourceOwner resourceOwner,
+    public ResponseEntity<PaginatedResponse<CommentDTO, MetadataDTO>> getCommentsForTask(ResourceOwner resourceOwner,
                                                                 @PathVariable UUID taskId,
                                                                 Pageable pageable) {
         Task task = taskService.findById(taskId);
         communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         Page<CommentDTO> commentPage = commentService.getCommentsForTask(task, pageable);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new PaginatedResponse(new MetadataDTO(commentPage), commentPage.getContent()));
+                .body(new PaginatedResponse<>(new MetadataDTO(commentPage), commentPage.getContent()));
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Response> delete(ResourceOwner resourceOwner,
+    public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner,
                                            @PathVariable UUID taskId,
                                            @PathVariable UUID commentId) {
         Comment comment = commentService.findByIdAndTaskId(commentId, taskId);
@@ -67,6 +67,6 @@ public class CommentController {
             throw new ForbiddenException("You don't have permission for this action");
         }
         commentService.delete(comment);
-        return ResponseEntity.status(HttpStatus.OK).body(new Response(new SimpleResponse("Comment successfully deleted")));
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Comment successfully deleted")));
     }
 }
