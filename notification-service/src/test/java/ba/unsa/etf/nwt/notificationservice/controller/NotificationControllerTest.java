@@ -151,11 +151,11 @@ public class NotificationControllerTest {
         mockMvc.perform(post("/api/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.format("""
+                .content("""
                         {
                             "title": "Title",
                             "description": "Description"
-                        }""")))
+                        }"""))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.title").hasJsonPath())
