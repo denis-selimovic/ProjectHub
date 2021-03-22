@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.taskservice.request;
+package ba.unsa.etf.nwt.taskservice.request.create;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

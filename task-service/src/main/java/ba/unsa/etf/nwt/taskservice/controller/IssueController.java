@@ -3,7 +3,7 @@ package ba.unsa.etf.nwt.taskservice.controller;
 import ba.unsa.etf.nwt.taskservice.dto.IssueDTO;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
-import ba.unsa.etf.nwt.taskservice.request.CreateIssueRequest;
+import ba.unsa.etf.nwt.taskservice.request.create.CreateIssueRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;

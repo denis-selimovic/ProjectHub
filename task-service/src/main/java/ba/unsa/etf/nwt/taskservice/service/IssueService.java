@@ -8,14 +8,13 @@ import ba.unsa.etf.nwt.taskservice.filter.SearchCriteria;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
-import ba.unsa.etf.nwt.taskservice.request.CreateIssueRequest;
+import ba.unsa.etf.nwt.taskservice.request.create.CreateIssueRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Root;
 import java.util.*;
 
 @Service

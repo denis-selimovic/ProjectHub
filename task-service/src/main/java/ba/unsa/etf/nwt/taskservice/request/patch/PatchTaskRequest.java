@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.taskservice.request;
+package ba.unsa.etf.nwt.taskservice.request.patch;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

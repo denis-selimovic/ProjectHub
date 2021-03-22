@@ -5,7 +5,7 @@ import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.repository.CommentRepository;
-import ba.unsa.etf.nwt.taskservice.request.CreateCommentRequest;
+import ba.unsa.etf.nwt.taskservice.request.create.CreateCommentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
