@@ -11,8 +11,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaginatedResponse {
+public class PaginatedResponse<T extends Resource, MT extends Metadata> {
 
-    private Metadata metadata;
-    private List<Resource> data;
+    private MT metadata;
+    private List<T> data;
 }
