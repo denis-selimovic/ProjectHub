@@ -2,11 +2,12 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.notificationservice.config.token.TokenGenerator;
-import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,8 +36,6 @@ public class NotificationControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private TokenGenerator tokenGenerator;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -254,12 +254,23 @@ public class NotificationControllerTest {
 
     @Test
     public void getNotifications5() throws Exception {
-        mockMvc.perform(get("/api/notifications")
-                .header(HttpHeaders.AUTHORIZATION, token))
-                .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(jsonPath("$.errors.message").value(hasItem("There are no notifications for this user.")));
+        var result = mockMvc.perform(get("/api/notifications")
+                                        .header(HttpHeaders.AUTHORIZATION, token))
+                                        .andExpect(status().isOk())
+                                        .andExpect(jsonPath("$.metadata").hasJsonPath())
+                                        .andExpect(jsonPath("$.metadata.page_number", is(0)))
+                                        .andExpect(jsonPath("$.metadata.total_elements", is(0)))
+                                        .andExpect(jsonPath("$.metadata.page_size", is(0)))
+                                        .andExpect(jsonPath("$.metadata.has_next", is(false)))
+                                        .andExpect(jsonPath("$.metadata.has_previous", is(false)))
+                                        .andExpect(jsonPath("$.data", hasSize(0)))
+                                        .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 0);
     }
+
+
 
     private Notification createNotificationInDb() {
         Notification notification = new Notification();

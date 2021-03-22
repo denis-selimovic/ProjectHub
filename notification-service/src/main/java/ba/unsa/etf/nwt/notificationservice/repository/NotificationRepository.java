@@ -14,6 +14,5 @@ import java.util.UUID;
 public interface NotificationRepository extends PagingAndSortingRepository<Notification, UUID> {
 
     boolean existsById(@NonNull UUID notificationId);
-    boolean existsNotificationByUserId(@NonNull UUID userId);
     Page<NotificationDTO> findAllByUserId(@NonNull UUID userId, @NonNull Pageable pageable);
 }

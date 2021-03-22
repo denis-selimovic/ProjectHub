@@ -36,10 +36,6 @@ public class NotificationService {
         notificationRepository.deleteById(notificationId);
     }
 
-    public boolean existByUserId(UUID userId) {
-        return notificationRepository.existsNotificationByUserId(userId);
-    }
-
     public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
         return notificationRepository.findAllByUserId(userId, pageable);
     }

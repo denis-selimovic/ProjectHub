@@ -2,7 +2,6 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
-import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
@@ -61,16 +60,10 @@ public class NotificationController {
     }
 
     @GetMapping
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "Notifications doesn't exist for this user")
-    })
+    @ApiResponse(code = 200, message = "Success")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
                                                                                             Pageable pageable) {
-
-        if(!notificationService.existByUserId(resourceOwner.getId()))
-            throw new NotFoundException("There are no notifications for this user.");
 
         Page<NotificationDTO> notificationPage = notificationService.getNotificationsForUser(
                                                                             resourceOwner.getId(),
