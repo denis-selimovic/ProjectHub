@@ -4,10 +4,9 @@ import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
-import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
-import ba.unsa.etf.nwt.taskservice.repository.PriorityRepository;
-import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
-import ba.unsa.etf.nwt.taskservice.repository.TypeRepository;
+import ba.unsa.etf.nwt.taskservice.repository.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,12 +41,19 @@ public class IssueControllerTest {
     private TypeRepository typeRepository;
     @Autowired
     private IssueRepository issueRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     private Priority critical;
+    private Priority medium;
     private String token;
 
     @BeforeEach
     public void setUpTest() {
+        commentRepository.deleteAll();
+        taskRepository.deleteAll();
         issueRepository.deleteAll();
         typeRepository.deleteAll();
         statusRepository.deleteAll();
@@ -56,6 +62,10 @@ public class IssueControllerTest {
         critical = new Priority();
         critical.setPriorityType(Priority.PriorityType.CRITICAL);
         critical = priorityRepository.save(critical);
+
+        medium = new Priority();
+        medium.setPriorityType(Priority.PriorityType.MEDIUM);
+        medium = priorityRepository.save(medium);
 
         token = "Bearer " + tokenGenerator.createAccessToken(
                 ResourceOwnerInjector.clientId,
@@ -177,10 +187,74 @@ public class IssueControllerTest {
     }
 
     @Test
+    public void testIssueFiltersWithPaginationAndCriticalPriority() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 20; ++i) createIssueInDb(medium, projectId);
+        for (int i = 0; i < 20; ++i) createIssueInDb(critical, projectId);
+        var result = mockMvc.perform(get(String.format("/api/v1/issues?page=2&size=5&project_id=%s&priority_id=%s", projectId, critical.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 5);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "CRITICAL");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+    @Test
+    public void testIssueFiltersWithPaginationAndMediumPriority() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 20; ++i) createIssueInDb(medium, projectId);
+        for (int i = 0; i < 20; ++i) createIssueInDb(critical, projectId);
+        var result = mockMvc.perform(get(String.format("/api/v1/issues?page=1&size=7&project_id=%s&priority_id=%s", projectId, medium.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 7);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "MEDIUM");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+    @Test
+    public void testIssueFiltersWithDefaultPagination() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 20; ++i) createIssueInDb(medium, projectId);
+        for (int i = 0; i < 20; ++i) createIssueInDb(critical, projectId);
+        var result = mockMvc.perform(get(String.format("/api/v1/issues?project_id=%s&priority_id=%s", projectId, medium.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 20);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "MEDIUM");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+
+    @Test
     public void deleteIssueNotFound() throws Exception {
         mockMvc.perform(delete(String.format("/api/v1/issues/%s", UUID.randomUUID()))
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.message", hasItem("Issue not found")));
+    }
+
+    private Issue createIssueInDb(Priority priority, UUID projectId) {
+        Issue issue = new Issue();
+        issue.setName("Name 1");
+        issue.setDescription("Desc");
+        issue.setPriority(priority);
+        issue.setProjectId(projectId);
+        return issueRepository.save(issue);
     }
 }
