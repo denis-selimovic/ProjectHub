@@ -7,6 +7,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.CreateProjectRequest;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.ErrorResponse;
+import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.Response;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.SimpleResponse;
