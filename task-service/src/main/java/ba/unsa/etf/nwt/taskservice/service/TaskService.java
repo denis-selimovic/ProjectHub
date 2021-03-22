@@ -17,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Root;
-import java.util.*;
-
-import static java.util.Arrays.asList;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +72,9 @@ public class TaskService {
                 .with(new String[]{"type", "id"}, typeId, SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
                 .build();
         return taskRepository.findAll(specification, pageable);
+    }
+
+    public void save(final Task task) {
+        taskRepository.save(task);
     }
 }

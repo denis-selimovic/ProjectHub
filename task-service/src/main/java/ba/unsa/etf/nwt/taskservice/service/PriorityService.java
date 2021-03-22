@@ -15,7 +15,7 @@ public class PriorityService {
 
     public Priority findById(final UUID id) {
         return priorityRepository.findById(id).orElseThrow(() -> {
-            throw new NotFoundException("Request body can not be processed");
+            throw new NotFoundException("Priority doesn't exist");
         });
     }
 }

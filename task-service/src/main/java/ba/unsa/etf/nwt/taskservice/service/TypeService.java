@@ -15,7 +15,7 @@ public class TypeService {
 
     public Type findById(final UUID id) {
         return typeRepository.findById(id).orElseThrow(() -> {
-            throw new NotFoundException("Request body can not be processed");
+            throw new NotFoundException("Type doesn't exist");
         });
     }
 }

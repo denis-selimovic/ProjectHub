@@ -4,6 +4,7 @@ import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.dto.TaskDTO;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.request.CreateTaskRequest;
+import ba.unsa.etf.nwt.taskservice.request.PatchTaskRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,5 +86,20 @@ public class TaskController {
         communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
+    }
+
+    @PatchMapping("/{taskId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Task updated"),
+            @ApiResponse(code = 404, message = "Task not found"),
+            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<TaskDTO>> patch(ResourceOwner resourceOwner,
+                                         @PathVariable UUID taskId,
+                                         @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
+        Task task = taskService.findById(taskId);
+        communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
+        return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
 }
