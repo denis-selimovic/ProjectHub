@@ -70,6 +70,10 @@ public class ProjectController {
     }
 
     @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK")
+    })
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<ProjectDTO, MetadataDTO>> getFiltered(@RequestParam String filter,
                                                                                   Pageable pageable,
                                                                                   ResourceOwner resourceOwner) {
