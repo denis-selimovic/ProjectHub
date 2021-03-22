@@ -30,8 +30,8 @@ public class ProjectCollaboratorService {
         return projectCollaboratorRepository.save(projectCollaborator);
     }
 
-    public ProjectCollaborator findByIdAndAndProjectId(UUID id, UUID projectId) {
-        return projectCollaboratorRepository.findByIdAndProjectId(id, projectId).orElseThrow(() -> {
+    public ProjectCollaborator findByCollaboratorIdAndProjectId(UUID collaboratorId, UUID projectId) {
+        return projectCollaboratorRepository.findByCollaboratorIdAndProjectId(collaboratorId, projectId).orElseThrow(() -> {
             throw new NotFoundException("Collaborator not found");
         });
     }
