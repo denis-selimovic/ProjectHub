@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response<T extends Resource> {
-    T data;
+public class SimpleResponse implements Resource {
+    private String message;
 }

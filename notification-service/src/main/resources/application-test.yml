@@ -8,3 +8,8 @@ spring:
       ddl-auto: create-drop
   flyway:
     enabled: false
+token:
+  test:
+    private-key: projecthub.jks
+    password: projecthub
+    alias: projecthub
