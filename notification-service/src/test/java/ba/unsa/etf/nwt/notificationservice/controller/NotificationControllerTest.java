@@ -2,6 +2,7 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.notificationservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
@@ -18,11 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -183,6 +182,83 @@ public class NotificationControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UnprocessableEntityException))
                 .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. This notification doesn't exist")));
+    }
+
+    @Test
+    public void getNotifications1() throws Exception {
+        for(int i = 0; i < 10; i++)
+            createNotificationInDb();
+
+        mockMvc.perform(get("/api/notifications?page=0&size=5")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata").hasJsonPath())
+                .andExpect(jsonPath("$.metadata.page_number", is(0)))
+                .andExpect(jsonPath("$.metadata.total_elements", is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.has_next", is(true)))
+                .andExpect(jsonPath("$.metadata.has_previous", is(false)))
+                .andExpect(jsonPath("$.data", hasSize(5)));
+    }
+
+    @Test
+    public void getNotifications2() throws Exception {
+        for(int i = 0; i < 10; i++)
+            createNotificationInDb();
+
+        mockMvc.perform(get("/api/notifications?page=1&size=5")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata").hasJsonPath())
+                .andExpect(jsonPath("$.metadata.page_number", is(1)))
+                .andExpect(jsonPath("$.metadata.total_elements", is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.has_next", is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", is(true)))
+                .andExpect(jsonPath("$.data", hasSize(5)));
+    }
+
+    @Test
+    public void getNotifications3() throws Exception {
+        for(int i = 0; i < 10; i++)
+            createNotificationInDb();
+
+        mockMvc.perform(get("/api/notifications")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata").hasJsonPath())
+                .andExpect(jsonPath("$.metadata.page_number", is(0)))
+                .andExpect(jsonPath("$.metadata.total_elements", is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", is(10)))
+                .andExpect(jsonPath("$.metadata.has_next", is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", is(false)))
+                .andExpect(jsonPath("$.data", hasSize(10)));
+    }
+
+    @Test
+    public void getNotifications4() throws Exception {
+        for(int i = 0; i < 15; i++)
+            createNotificationInDb();
+
+        mockMvc.perform(get("/api/notifications?page=1&size=10")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata").hasJsonPath())
+                .andExpect(jsonPath("$.metadata.page_number", is(1)))
+                .andExpect(jsonPath("$.metadata.total_elements", is(15)))
+                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.has_next", is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", is(true)))
+                .andExpect(jsonPath("$.data", hasSize(5)));
+    }
+
+    @Test
+    public void getNotifications5() throws Exception {
+        mockMvc.perform(get("/api/notifications")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(jsonPath("$.errors.message").value(hasItem("There are no notifications for this user.")));
     }
 
     private Notification createNotificationInDb() {
