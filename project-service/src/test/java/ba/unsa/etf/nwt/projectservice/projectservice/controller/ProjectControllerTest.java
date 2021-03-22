@@ -7,7 +7,8 @@ import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterAll;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +69,8 @@ public class ProjectControllerTest {
                             "name": ""
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name").value(hasItem("Project name can't be blank")));;
+                .andExpect(jsonPath("$.errors.name").value(hasItem("Project name can't be blank")));
+        ;
     }
 
     @Test
@@ -80,7 +88,7 @@ public class ProjectControllerTest {
 
     @Test
     public void addExistentProject() throws Exception {
-        createProjectInDB(ResourceOwnerInjector.id);
+        createProjectInDB(ResourceOwnerInjector.id, "Projekat 1");
 
         mockMvc.perform(post("/api/v1/projects")
                 .header("Authorization", token)
@@ -120,7 +128,7 @@ public class ProjectControllerTest {
 
     @Test
     public void deleteProjectNotOwner() throws Exception {
-        Project project = createProjectInDB(UUID.randomUUID());
+        Project project = createProjectInDB(UUID.randomUUID(), "Projekat");
 
         mockMvc.perform(delete("/api/v1/projects/" + project.getId())
                 .header("Authorization", token))
@@ -130,7 +138,7 @@ public class ProjectControllerTest {
 
     @Test
     public void successfulDeletion() throws Exception {
-        Project project = createProjectInDB(ResourceOwnerInjector.id);
+        Project project = createProjectInDB(ResourceOwnerInjector.id, "Projekat");
         mockMvc.perform(delete("/api/v1/projects/" + project.getId())
                 .header("Authorization", token))
                 .andExpect(status().isOk());
@@ -139,7 +147,7 @@ public class ProjectControllerTest {
 
     @Test
     public void deleteProjectAndCollaborators() throws Exception {
-        Project project = createProjectInDB(ResourceOwnerInjector.id);
+        Project project = createProjectInDB(ResourceOwnerInjector.id, "Projekat");
         ProjectCollaborator collaborator1 = new ProjectCollaborator();
         collaborator1.setProject(project);
         collaborator1.setCollaboratorId(UUID.randomUUID());
@@ -160,10 +168,133 @@ public class ProjectControllerTest {
         assertEquals(0, projectCollaboratorRepository.count());
     }
 
-    private Project createProjectInDB(UUID ownerID) {
+    @Test
+    public void getProjectsInvalidFilter() throws Exception {
+        mockMvc.perform(get("/api/v1/projects?filter=invalid")
+                .header("Authorization", token))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.message", hasItem("Invalid filter")));
+    }
+
+    @Test
+    public void testGetProjectsForOwner() throws Exception {
+        UUID userId = ResourceOwnerInjector.id;
+        createProjectInDB(userId, "P1");
+        createProjectInDB(userId, "P2");
+        createProjectInDB(userId, "P3");
+        createProjectInDB(UUID.randomUUID(), "P4");
+
+        var result = mockMvc.perform(get("/api/v1/projects?filter=owner")
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata.page_number", Matchers.is(0)))
+                .andExpect(jsonPath("$.metadata.total_elements", Matchers.is(3)))
+                .andExpect(jsonPath("$.metadata.page_size", Matchers.is(3)))
+                .andExpect(jsonPath("$.metadata.has_next", Matchers.is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(false)))
+                .andExpect(jsonPath("$.data", hasSize(3)))
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 3);
+        for (int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getString("owner_id"), userId.toString());
+        }
+    }
+
+    @Test
+    public void testGetProjectsForOwnerPagination() throws Exception {
+        UUID userId = ResourceOwnerInjector.id;
+        for (int i = 0; i < 10; i++) {
+            createProjectInDB(userId, "P" + i);
+        }
+        createProjectInDB(UUID.randomUUID(), "P4");
+
+        var result = mockMvc.perform(get("/api/v1/projects?filter=owner&page=1&size=4")
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata.page_number", Matchers.is(1)))
+                .andExpect(jsonPath("$.metadata.total_elements", Matchers.is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", Matchers.is(4)))
+                .andExpect(jsonPath("$.metadata.has_next", Matchers.is(true)))
+                .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(true)))
+                .andExpect(jsonPath("$.data", hasSize(4)))
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 4);
+        for (int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getString("owner_id"), userId.toString());
+        }
+    }
+
+    @Test
+    public void testGetProjectsForOwnerPagination2() throws Exception {
+        UUID userId = ResourceOwnerInjector.id;
+        for (int i = 0; i < 10; i++) {
+            createProjectInDB(userId, "P" + i);
+        }
+        createProjectInDB(UUID.randomUUID(), "P4");
+
+        mockMvc.perform(get("/api/v1/projects?filter=owner&page=2&size=4")
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata.page_number", Matchers.is(2)))
+                .andExpect(jsonPath("$.metadata.total_elements", Matchers.is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", Matchers.is(2)))
+                .andExpect(jsonPath("$.metadata.has_next", Matchers.is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(true)))
+                .andExpect(jsonPath("$.data", hasSize(2)));
+    }
+
+    @Test
+    public void testGetProjectsForCollaborator() throws Exception {
+        UUID userId = ResourceOwnerInjector.id;
+        createProjectInDB(userId, "P1");
+        createProjectInDB(userId, "P2");
+        List<Project> projects = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Project project = createProjectInDB(UUID.randomUUID(), "P" + i);
+            createCollaboratorInDB(project, ResourceOwnerInjector.id);
+            projects.add(project);
+        }
+
+        var result = mockMvc.perform(get("/api/v1/projects?filter=collaborator")
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata.page_number", Matchers.is(0)))
+                .andExpect(jsonPath("$.metadata.total_elements", Matchers.is(10)))
+                .andExpect(jsonPath("$.metadata.page_size", Matchers.is(10)))
+                .andExpect(jsonPath("$.metadata.has_next", Matchers.is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(false)))
+                .andExpect(jsonPath("$.data", hasSize(10)))
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 10);
+        for (int i = 0; i < data.length(); ++i) {
+            assertNotEquals(data.getJSONObject(i).getString("owner_id"), userId.toString());
+            var pc = projectCollaboratorRepository.findByCollaboratorIdAndProjectId(userId,
+                    projects.get(i).getId()
+            );
+            assertTrue(pc.isPresent());
+        }
+    }
+
+    private Project createProjectInDB(UUID ownerID, final String name) {
         Project project = new Project();
-        project.setName("Projekat 1");
+        project.setName(name);
         project.setOwnerId(ownerID);
         return projectRepository.save(project);
+    }
+
+    private void createCollaboratorInDB(Project project, UUID id) {
+        ProjectCollaborator collaborator = new ProjectCollaborator();
+        collaborator.setProject(project);
+        collaborator.setCollaboratorId(id);
+        projectCollaboratorRepository.save(collaborator);
     }
 }
