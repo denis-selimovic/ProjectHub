@@ -17,14 +17,24 @@ public class GenericSpecification<T> implements Specification<T> {
     public Predicate toPredicate(@NonNull Root<T> root,
                                  @NonNull CriteriaQuery<?> criteriaQuery,
                                  @NonNull CriteriaBuilder criteriaBuilder) {
-        Expression<T> path = searchCriteria.getKey();
+        String[] keys = searchCriteria.getKeys();
         String value = searchCriteria.getValue();
+        Path<T> path = null;
+        if (keys.length == 1) {
+            path = root.get(keys[0]);
+        }
+        else {
+            for (int i = 0; i < keys.length; ++i) {
+                if (i == 0) path = root.join(keys[i]);
+                else path = path.get(keys[i]);
+            }
+        }
         switch (searchCriteria.getOperation()) {
             case EQ -> {
-                return criteriaBuilder.equal(path, value);
+                return criteriaBuilder.equal(path, searchCriteria.getAction().apply(value));
             }
             case NEQ -> {
-                return criteriaBuilder.notEqual(path, value);
+                return criteriaBuilder.notEqual(path, searchCriteria.getAction().apply(value));
             }
         }
         return null;
