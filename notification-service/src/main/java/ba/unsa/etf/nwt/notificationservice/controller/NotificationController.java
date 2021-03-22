@@ -1,10 +1,13 @@
 package ba.unsa.etf.nwt.notificationservice.controller;
 
+import ba.unsa.etf.nwt.notificationservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
+import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.response.base.ErrorResponse;
+import ba.unsa.etf.nwt.notificationservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.notificationservice.response.base.Response;
 import ba.unsa.etf.nwt.notificationservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
@@ -12,6 +15,10 @@ import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +60,24 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Notification successfully deleted")));
     }
 
+    @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Notifications doesn't exist for this user")
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
+                                                                                            Pageable pageable) {
 
+        if(!notificationService.existByUserId(resourceOwner.getId()))
+            throw new NotFoundException("There are no notifications for this user.");
 
+        Page<NotificationDTO> notificationPage = notificationService.getNotificationsForUser(
+                                                                            resourceOwner.getId(),
+                                                                            PageRequest.of(pageable.getPageNumber(),
+                                                                            pageable.getPageSize(),
+                                                                            Sort.by("createdAt").descending()));
+
+        return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(notificationPage), notificationPage.getContent()));
+    }
 }

@@ -1,10 +1,13 @@
 package ba.unsa.etf.nwt.notificationservice.service;
 
+import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -31,5 +34,13 @@ public class NotificationService {
 
     public void deleteById(UUID notificationId) {
         notificationRepository.deleteById(notificationId);
+    }
+
+    public boolean existByUserId(UUID userId) {
+        return notificationRepository.existsNotificationByUserId(userId);
+    }
+
+    public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
+        return notificationRepository.findAllByUserId(userId, pageable);
     }
 }
