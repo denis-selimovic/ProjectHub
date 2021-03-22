@@ -17,13 +17,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import javax.persistence.criteria.Root;
+import java.util.*;
+
+import static java.util.Arrays.asList;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final GenericSpecificationBuilder<Task> specificationBuilder = new GenericSpecificationBuilder<>();
+    private final GenericSpecificationBuilder<Task> builder = new GenericSpecificationBuilder<>();
 
     private final TaskRepository taskRepository;
     private final PriorityService priorityService;
@@ -65,11 +68,11 @@ public class TaskService {
     }
 
     public Page<TaskDTO> filter(Pageable pageable, UUID projectId, UUID priorityId, UUID statusId, UUID typeId) {
-        Specification<Task> specification = specificationBuilder
-                .with("project_id", projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
-                .with("priority_id", priorityId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
-                .with("status_id", statusId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
-                .with("type_id", typeId.toString(), SearchCriteria.SearchCriteriaOperation.EQ)
+        Specification<Task> specification = builder
+                .with(new String[]{"projectId"}, projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"priority", "id"},priorityId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"status", "id"}, statusId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"type", "id"}, typeId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
                 .build();
         return taskRepository.findAll(specification, pageable);
     }
