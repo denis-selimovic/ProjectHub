@@ -7,11 +7,9 @@ import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.model.Status;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.model.Type;
-import ba.unsa.etf.nwt.taskservice.repository.CommentRepository;
-import ba.unsa.etf.nwt.taskservice.repository.PriorityRepository;
-import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
-import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
-import ba.unsa.etf.nwt.taskservice.repository.TypeRepository;
+import ba.unsa.etf.nwt.taskservice.repository.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,15 +46,22 @@ public class TaskControllerTest {
     private TypeRepository typeRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private IssueRepository issueRepository;
 
     private Priority critical;
+    private Priority high;
     private Type bug;
+    private Type spike;
     private Status open;
+    private Status inProgress;
     private String token;
 
 
     @BeforeEach
     public void setUpTest() {
+        commentRepository.deleteAll();
+        issueRepository.deleteAll();
         taskRepository.deleteAll();
         typeRepository.deleteAll();
         statusRepository.deleteAll();
@@ -67,14 +70,23 @@ public class TaskControllerTest {
         critical = new Priority();
         critical.setPriorityType(Priority.PriorityType.CRITICAL);
         critical = priorityRepository.save(critical);
+        high = new Priority();
+        high.setPriorityType(Priority.PriorityType.HIGH);
+        high = priorityRepository.save(high);
 
         bug = new Type();
         bug.setType(Type.TaskType.BUG);
         bug = typeRepository.save(bug);
+        spike = new Type();
+        spike.setType(Type.TaskType.SPIKE);
+        spike = typeRepository.save(spike);
 
         open = new Status();
         open.setStatus(Status.StatusType.OPEN);
         open = statusRepository.save(open);
+        inProgress = new Status();
+        inProgress.setStatus(Status.StatusType.IN_PROGRESS);
+        inProgress = statusRepository.save(inProgress);
 
         token = "Bearer " + tokenGenerator.createAccessToken(
                 ResourceOwnerInjector.clientId,
@@ -164,7 +176,7 @@ public class TaskControllerTest {
 
     @Test
     public void createTaskSameName() throws Exception {
-        Task task = createTaskInDB();
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
 
         mockMvc.perform(post("/api/v1/tasks")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -182,8 +194,81 @@ public class TaskControllerTest {
     }
 
     @Test
+    public void testDefaultPaginationWithCriticalTasks() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug);
+        var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s", projectId, critical.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 20);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "CRITICAL");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+    @Test
+    public void testDefaultPaginationWithCriticalAndInProgressTasks() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug);
+        var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&status_id=%s",
+                projectId, critical.getId().toString(), inProgress.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 10);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "CRITICAL");
+            assertEquals(data.getJSONObject(i).getJSONObject("status").get("status"), "IN_PROGRESS");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+    @Test
+    public void testDefaultPaginationWithHighPriorityAndSpikeTasks() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike);
+        var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&type_id=%s",
+                projectId, high.getId().toString(), spike.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 10);
+        for(int i = 0; i < data.length(); ++i) {
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "HIGH");
+            assertEquals(data.getJSONObject(i).getJSONObject("type").get("type"), "SPIKE");
+            assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
+        }
+    }
+
+    @Test
+    public void testPaginationNoResults() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike);
+        var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&type_id=%s",
+                projectId, critical.getId().toString(), spike.getId().toString()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 0);
+    }
+
+    @Test
     public void deleteTaskSuccess() throws Exception {
-        Task task = createTaskInDB();
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
 
         mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -200,7 +285,7 @@ public class TaskControllerTest {
 
     @Test
     public void deleteTaskWithComments() throws Exception {
-        Task task = createTaskInDB();
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
         for (int i = 0; i < 25; i++) {
             createCommentInDB(task, UUID.randomUUID());
         }
@@ -213,14 +298,13 @@ public class TaskControllerTest {
         assertEquals(0, commentRepository.count());
     }
 
-    private Task createTaskInDB() {
+    private Task createTaskInDB(UUID projectId, Priority priority, Status status, Type type) {
         Task task = new Task();
         task.setName("Task name");
         task.setDescription("Desc");
-        task.setType(bug);
-        task.setPriority(critical);
-        task.setStatus(open);
-        UUID projectId = UUID.randomUUID();
+        task.setType(type);
+        task.setPriority(priority);
+        task.setStatus(status);
         task.setProjectId(projectId);
         return taskRepository.save(task);
     }

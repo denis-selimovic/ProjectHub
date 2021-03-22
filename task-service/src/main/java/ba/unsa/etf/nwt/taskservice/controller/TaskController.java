@@ -50,9 +50,9 @@ public class TaskController {
     public ResponseEntity<PaginatedResponse> getTasks(ResourceOwner resourceOwner,
                                                       Pageable pageable,
                                                       @RequestParam(name = "project_id") UUID projectId,
-                                                      @RequestParam(required = false, name = "priority_id") UUID priorityId,
-                                                      @RequestParam(required = false, name = "status_id") UUID statusId,
-                                                      @RequestParam(required = false, name = "type_id") UUID typeId) {
+                                                      @RequestParam(required = false, name = "priority_id") String priorityId,
+                                                      @RequestParam(required = false, name = "status_id") String statusId,
+                                                      @RequestParam(required = false, name = "type_id") String typeId) {
         communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse(new MetadataDTO(taskPage), taskPage.getContent()));

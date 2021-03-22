@@ -67,12 +67,12 @@ public class TaskService {
         });
     }
 
-    public Page<TaskDTO> filter(Pageable pageable, UUID projectId, UUID priorityId, UUID statusId, UUID typeId) {
+    public Page<TaskDTO> filter(Pageable pageable, UUID projectId, String priorityId, String statusId, String typeId) {
         Specification<Task> specification = builder
                 .with(new String[]{"projectId"}, projectId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
-                .with(new String[]{"priority", "id"},priorityId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
-                .with(new String[]{"status", "id"}, statusId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
-                .with(new String[]{"type", "id"}, typeId.toString(), SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"priority", "id"}, priorityId, SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"status", "id"}, statusId, SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
+                .with(new String[]{"type", "id"}, typeId, SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
                 .build();
         return taskRepository.findAll(specification, pageable);
     }
