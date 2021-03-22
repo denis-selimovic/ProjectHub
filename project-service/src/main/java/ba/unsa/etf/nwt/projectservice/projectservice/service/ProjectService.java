@@ -5,8 +5,11 @@ import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.Unprocessabl
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.CreateProjectRequest;
+import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -36,4 +39,7 @@ public class ProjectService {
         });
     }
 
+    public Page<Project> findByFilter(final ProjectFilter filter, Pageable pageable) {
+        return projectRepository.findAllByFilter(filter, pageable);
+    }
 }
