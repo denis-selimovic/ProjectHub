@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,7 +20,7 @@ public class ProjectCollaboratorService {
 
 
     public ProjectCollaborator createCollaborator(UUID collaboratorId, Project project) {
-        projectCollaboratorRepository.findByProject(project).ifPresent(pc -> {
+        projectCollaboratorRepository.findByCollaboratorIdAndProjectId(collaboratorId, project.getId()).ifPresent(pc -> {
             throw new UnprocessableEntityException("Collaborator already added to this project");
         });
 
@@ -29,13 +28,6 @@ public class ProjectCollaboratorService {
         projectCollaborator.setProject(project);
         projectCollaborator.setCollaboratorId(collaboratorId);
         return projectCollaboratorRepository.save(projectCollaborator);
-    }
-
-    public ProjectCollaborator findById(UUID collaboratorId) {
-        Optional<ProjectCollaborator> projectCollaborator = projectCollaboratorRepository.findById(collaboratorId);
-        if (projectCollaborator.isEmpty())
-            throw new UnprocessableEntityException("Request body can not be processed");
-        return projectCollaborator.get();
     }
 
     public ProjectCollaborator findByIdAndAndProjectId(UUID id, UUID projectId) {

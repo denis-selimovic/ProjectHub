@@ -91,7 +91,7 @@ public class ProjectCollaboratorControllerTest {
                 .content(String.format("""
                         {
                             "collaborator_id": "%s"
-                        }""", collaborator.getId())))
+                        }""", collaborator.getCollaboratorId())))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errors.message", hasItem("Collaborator already added to this project")));
     }
