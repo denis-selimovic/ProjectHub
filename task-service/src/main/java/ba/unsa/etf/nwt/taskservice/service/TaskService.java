@@ -11,6 +11,8 @@ import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.model.Type;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
 import ba.unsa.etf.nwt.taskservice.request.CreateTaskRequest;
+import ba.unsa.etf.nwt.taskservice.request.PatchTaskRequest;
+import ba.unsa.etf.nwt.taskservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -76,5 +78,21 @@ public class TaskService {
 
     public void save(final Task task) {
         taskRepository.save(task);
+    }
+
+    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest) {
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getName(), task::setName);
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getDescription(), task::setDescription);
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
+        if(patchTaskRequest.getPriorityId().isPresent()){
+            task.setPriority(priorityService.findById(patchTaskRequest.getPriorityId().get()));
+        }
+        if(patchTaskRequest.getStatusId().isPresent()){
+            task.setStatus(statusService.findById(patchTaskRequest.getStatusId().get()));
+        }
+        if(patchTaskRequest.getTypeId().isPresent()){
+            task.setType(typeService.findById(patchTaskRequest.getTypeId().get()));
+        }
+        return taskRepository.save(task);
     }
 }

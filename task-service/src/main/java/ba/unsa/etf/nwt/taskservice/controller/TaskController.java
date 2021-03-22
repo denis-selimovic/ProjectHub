@@ -100,6 +100,7 @@ public class TaskController {
                                          @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
         communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
+        taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
 }
