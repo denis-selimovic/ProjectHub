@@ -23,7 +23,7 @@ public class PatchTaskRequest {
     @Size(max = 255, message = "Task description can contain at most 255 characters")
     private JsonNullable<String> description = JsonNullable.undefined();
 
-    @NotNull(message = "Project id can't be null")
+    @NotNull(message = "Priority id can't be null")
     @JsonProperty("priority_id")
     private JsonNullable<UUID> priorityId = JsonNullable.undefined();
 

@@ -3,7 +3,6 @@ package ba.unsa.etf.nwt.taskservice.controller;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
-import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.model.Status;
 import ba.unsa.etf.nwt.taskservice.model.Task;
@@ -187,7 +186,7 @@ public class TaskControllerTest {
 
     @Test
     public void createTaskSameName() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
 
         mockMvc.perform(post("/api/v1/tasks")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -207,8 +206,8 @@ public class TaskControllerTest {
     @Test
     public void testDefaultPaginationWithCriticalTasks() throws Exception {
         UUID projectId = UUID.randomUUID();
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug, UUID.randomUUID());
         var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s", projectId, critical.getId().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
@@ -225,8 +224,8 @@ public class TaskControllerTest {
     @Test
     public void testDefaultPaginationWithCriticalAndInProgressTasks() throws Exception {
         UUID projectId = UUID.randomUUID();
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, inProgress, bug, UUID.randomUUID());
         var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&status_id=%s",
                 projectId, critical.getId().toString(), inProgress.getId().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -245,8 +244,8 @@ public class TaskControllerTest {
     @Test
     public void testDefaultPaginationWithHighPriorityAndSpikeTasks() throws Exception {
         UUID projectId = UUID.randomUUID();
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike, UUID.randomUUID());
         var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&type_id=%s",
                 projectId, high.getId().toString(), spike.getId().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -265,8 +264,8 @@ public class TaskControllerTest {
     @Test
     public void testPaginationNoResults() throws Exception {
         UUID projectId = UUID.randomUUID();
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug);
-        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike);
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        for (int i = 0; i < 10; ++i) createTaskInDB(projectId, high, inProgress, spike, UUID.randomUUID());
         var result = mockMvc.perform(get(String.format("/api/v1/tasks?project_id=%s&priority_id=%s&type_id=%s",
                 projectId, critical.getId().toString(), spike.getId().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -279,7 +278,7 @@ public class TaskControllerTest {
 
     @Test
     public void deleteTaskSuccess() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
 
         mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -296,7 +295,7 @@ public class TaskControllerTest {
 
     @Test
     public void deleteTaskWithComments() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
         for (int i = 0; i < 25; i++) {
             createCommentInDB(task, UUID.randomUUID());
         }
@@ -321,8 +320,8 @@ public class TaskControllerTest {
 
     @Test
     public void testPatchTaskNoChange() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", task.getId()))
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
@@ -339,7 +338,7 @@ public class TaskControllerTest {
 
     @Test
     public void testPatchIssueChangeFew() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
         mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -360,14 +359,14 @@ public class TaskControllerTest {
 
     @Test
     public void testPatchIssueChangePriorityStatusType() throws Exception {
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", task.getId()))
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
                         {
                             "priority_id": "%s",
-                            "status": "%s",
+                            "status_id": "%s",
                             "type_id": "%s"
                         }""", high.getId(), inProgress.getId(), spike.getId())))
                 .andExpect(status().isOk())
@@ -383,8 +382,8 @@ public class TaskControllerTest {
     @Test
     public void testPatchIssueChangeUser() throws Exception {
         UUID userId = UUID.randomUUID();
-        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug);
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", task.getId()))
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -405,7 +404,7 @@ public class TaskControllerTest {
     public void testPatchIssueChangeUserToNull() throws Exception {
         UUID userId = UUID.randomUUID();
         Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, userId);
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", task.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -423,28 +422,32 @@ public class TaskControllerTest {
     }
 
     @Test
-    public void testPatchIssueNullAndBlank() throws Exception {
-        Issue issue = createIssueInDb(critical, UUID.randomUUID());
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+    public void testPatchTaskNullAndBlank() throws Exception {
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, null);
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
                             "name": null,
                             "description": "",
-                            "priority_id": null
+                            "priority_id": null,
+                            "status_id": null,
+                            "type_id": null
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name", hasItem("Issue name can't be blank")))
-                .andExpect(jsonPath("$.errors.description", hasItem("Issue description can't be blank")))
-                .andExpect(jsonPath("$.errors.priority_id", hasItem("Priority id can't be null")));
+                .andExpect(jsonPath("$.errors.name", hasItem("Task name can't be blank")))
+                .andExpect(jsonPath("$.errors.description", hasItem("Task description can't be blank")))
+                .andExpect(jsonPath("$.errors.priority_id", hasItem("Priority id can't be null")))
+                .andExpect(jsonPath("$.errors.status_id", hasItem("Status id can't be null")))
+                .andExpect(jsonPath("$.errors.type_id", hasItem("Type id can't be null")));
     }
 
     @Test
-    public void testPatchIssueTooLong() throws Exception {
-        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+    public void testPatchTaskTooLong() throws Exception {
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, null);
         String tooLong = "a".repeat(256);
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -453,14 +456,14 @@ public class TaskControllerTest {
                             "description": "%s"
                         }""", tooLong, tooLong)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.errors.name", hasItem("Issue name can contain at most 50 characters")))
-                .andExpect(jsonPath("$.errors.description", hasItem("Issue description can contain at most 255 characters")));
+                .andExpect(jsonPath("$.errors.name", hasItem("Task name can contain at most 50 characters")))
+                .andExpect(jsonPath("$.errors.description", hasItem("Task description can contain at most 255 characters")));
     }
 
     @Test
-    public void testPatchIssuePriorityNotFound() throws Exception {
-        Issue issue = createIssueInDb(critical, UUID.randomUUID());
-        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+    public void testPatchTaskPriorityNotFound() throws Exception {
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, null);
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -473,7 +476,39 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.errors.message", hasItem("Priority doesn't exist")));
     }
 
-    private Task createTaskInDB(UUID projectId, Priority priority, Status status, Type type) {
+    @Test
+    public void testPatchTaskStatusNotFound() throws Exception {
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, null);
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "New Name",
+                            "description": "New Desc",
+                            "status_id": "%s"
+                        }""", UUID.randomUUID())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Status doesn't exist")));
+    }
+
+    @Test
+    public void testPatchTaskTypeNotFound() throws Exception {
+        Task task = createTaskInDB(UUID.randomUUID(), critical, open, bug, null);
+        mockMvc.perform(patch(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "New Name",
+                            "description": "New Desc",
+                            "type_id": "%s"
+                        }""", UUID.randomUUID())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Type doesn't exist")));
+    }
+
+    private Task createTaskInDB(UUID projectId, Priority priority, Status status, Type type, final UUID userId) {
         Task task = new Task();
         task.setName("Task name");
         task.setDescription("Desc");
@@ -481,6 +516,7 @@ public class TaskControllerTest {
         task.setPriority(priority);
         task.setStatus(status);
         task.setProjectId(projectId);
+        task.setUserId(userId);
         return taskRepository.save(task);
     }
 
