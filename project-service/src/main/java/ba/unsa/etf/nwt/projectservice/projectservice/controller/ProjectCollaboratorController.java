@@ -62,7 +62,7 @@ public class ProjectCollaboratorController {
                                            @PathVariable UUID collaboratorId,
                                            ResourceOwner resourceOwner) {
         ProjectCollaborator projectCollaborator = projectCollaboratorService
-                .findByIdAndAndProjectId(collaboratorId, projectId);
+                .findByCollaboratorIdAndProjectId(collaboratorId, projectId);
         if (!projectCollaborator.getProject().getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
 

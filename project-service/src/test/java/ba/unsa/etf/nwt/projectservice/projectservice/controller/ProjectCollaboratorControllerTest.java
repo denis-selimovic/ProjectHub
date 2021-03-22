@@ -122,7 +122,7 @@ public class ProjectCollaboratorControllerTest {
     public void deleteCollaboratorNotOwner() throws Exception {
         Project project = createProjectInDB(UUID.randomUUID());
         ProjectCollaborator collaborator = createCollaboratorInDB(project);
-        mockMvc.perform(delete(String.format("/api/v1/projects/%s/collaborators/%s", project.getId(), collaborator.getId()))
+        mockMvc.perform(delete(String.format("/api/v1/projects/%s/collaborators/%s", project.getId(), collaborator.getCollaboratorId()))
                 .header("Authorization", token))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
@@ -132,7 +132,7 @@ public class ProjectCollaboratorControllerTest {
     public void deleteCollaboratorSuccess() throws Exception {
         Project project = createProjectInDB(ResourceOwnerInjector.id);
         ProjectCollaborator collaborator = createCollaboratorInDB(project);
-        mockMvc.perform(delete(String.format("/api/v1/projects/%s/collaborators/%s", project.getId(), collaborator.getId()))
+        mockMvc.perform(delete(String.format("/api/v1/projects/%s/collaborators/%s", project.getId(), collaborator.getCollaboratorId()))
                 .header("Authorization", token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.message", Matchers.is("Project collaborator successfully deleted")));

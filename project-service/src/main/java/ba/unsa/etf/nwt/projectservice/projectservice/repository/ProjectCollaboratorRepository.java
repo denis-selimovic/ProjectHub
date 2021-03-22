@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @Repository
 public interface ProjectCollaboratorRepository extends PagingAndSortingRepository<ProjectCollaborator, UUID> {
-    Optional<ProjectCollaborator> findByIdAndProjectId(UUID id, UUID projectId);
     Optional<ProjectCollaborator> findByCollaboratorIdAndProjectId(UUID userId, UUID projectId);
     Page<ProjectCollaboratorDTO> findAllByProject(Project project, Pageable pageable);
 }
