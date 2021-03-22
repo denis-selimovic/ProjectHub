@@ -15,7 +15,9 @@ public class ProjectFilter {
     private UUID collaboratorId;
 
     public ProjectFilter(final String filter, final UUID userId) {
-        if(filter.toLowerCase().equals("owner")) {
+        if(filter == null){
+            throw new UnprocessableEntityException("Invalid filter");
+        }else if(filter.toLowerCase().equals("owner")) {
             this.ownerId = userId;
         }else if(filter.toLowerCase().equals("collaborator")) {
             this.collaboratorId = userId;

@@ -71,10 +71,11 @@ public class ProjectController {
 
     @GetMapping
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK")
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 422, message = "Unprocessable entity: Invalid filter")
     })
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<PaginatedResponse<ProjectDTO, MetadataDTO>> getFiltered(@RequestParam String filter,
+    public ResponseEntity<PaginatedResponse<ProjectDTO, MetadataDTO>> getFiltered(@RequestParam(required = false) String filter,
                                                                                   Pageable pageable,
                                                                                   ResourceOwner resourceOwner) {
         ProjectFilter projectFilter = new ProjectFilter(filter, resourceOwner.getId());
