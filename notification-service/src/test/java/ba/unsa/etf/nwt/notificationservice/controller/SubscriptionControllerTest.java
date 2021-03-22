@@ -80,7 +80,7 @@ public class SubscriptionControllerTest {
                         }""", taskId)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UnprocessableEntityException))
-                .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. You are already subscribed to the task.")));
+                .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. You have already subscribed to the task.")));
     }
 
     @Test
