@@ -9,13 +9,15 @@ import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
 import ba.unsa.etf.nwt.taskservice.request.create.CreateIssueRequest;
+import ba.unsa.etf.nwt.taskservice.request.patch.PatchIssueRequest;
+import ba.unsa.etf.nwt.taskservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +62,14 @@ public class IssueService {
         return issueRepository.findById(issueId).orElseThrow(() -> {
             throw new NotFoundException("Issue not found");
         });
+    }
+
+    public Issue patch(final Issue issue, final PatchIssueRequest patchIssueRequest) {
+        JsonNullableUtils.changeIfPresent(patchIssueRequest.getName(), issue::setName);
+        JsonNullableUtils.changeIfPresent(patchIssueRequest.getDescription(), issue::setDescription);
+        if(patchIssueRequest.getPriorityId().isPresent()){
+            issue.setPriority(priorityService.findById(patchIssueRequest.getPriorityId().get()));
+        }
+        return issueRepository.save(issue);
     }
 }
