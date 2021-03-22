@@ -4,7 +4,12 @@ import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
-import ba.unsa.etf.nwt.taskservice.repository.*;
+import ba.unsa.etf.nwt.taskservice.repository.CommentRepository;
+import ba.unsa.etf.nwt.taskservice.repository.IssueRepository;
+import ba.unsa.etf.nwt.taskservice.repository.PriorityRepository;
+import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
+import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
+import ba.unsa.etf.nwt.taskservice.repository.TypeRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,8 +25,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -247,6 +256,117 @@ public class IssueControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.message", hasItem("Issue not found")));
+    }
+
+    @Test
+    public void testPatchIssueNotFound() throws Exception {
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", UUID.randomUUID()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Issue not found")));
+    }
+
+    @Test
+    public void testPatchIssueNoChange() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name", is(issue.getName())))
+                .andExpect(jsonPath("$.data.description", is(issue.getDescription())))
+                .andExpect(jsonPath("$.data.priority.id", is(issue.getPriority().getId().toString())))
+                .andExpect(jsonPath("$.data.project_id", is(issue.getProjectId().toString())));
+    }
+
+
+    @Test
+    public void testPatchIssueChangeFew() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": "New issue name",
+                            "description": "New issue description"
+                        }"""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name", is("New issue name")))
+                .andExpect(jsonPath("$.data.description", is("New issue description")))
+                .andExpect(jsonPath("$.data.priority.id").value(is(issue.getPriority().getId().toString())))
+                .andExpect(jsonPath("$.data.project_id").value(is(issue.getProjectId().toString())));
+    }
+
+    @Test
+    public void testPatchIssueChangePriority() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "priority_id": "%s"
+                        }""", medium.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name").value(is(issue.getName())))
+                .andExpect(jsonPath("$.data.description").value(is(issue.getDescription())))
+                .andExpect(jsonPath("$.data.priority.id").value(is(medium.getId().toString())))
+                .andExpect(jsonPath("$.data.project_id").value(is(issue.getProjectId().toString())));
+    }
+
+    @Test
+    public void testPatchIssueNullAndBlank() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": null,
+                            "description": "",
+                            "priority_id": null
+                        }"""))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name", hasItem("Issue name can't be blank")))
+                .andExpect(jsonPath("$.errors.description", hasItem("Issue description can't be blank")))
+                .andExpect(jsonPath("$.errors.priority_id", hasItem("Priority id can't be null")));
+    }
+
+    @Test
+    public void testPatchIssueTooLong() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        String tooLong = "a".repeat(256);
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "%s",
+                            "description": "%s"
+                        }""", tooLong, tooLong)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errors.name", hasItem("Issue name can contain at most 50 characters")))
+                .andExpect(jsonPath("$.errors.description", hasItem("Issue description can contain at most 255 characters")));
+    }
+
+    @Test
+    public void testPatchIssuePriorityNotFound() throws Exception {
+        Issue issue = createIssueInDb(critical, UUID.randomUUID());
+        mockMvc.perform(patch(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "New Name",
+                            "description": "New Desc",
+                            "priority_id": "%s"
+                        }""", UUID.randomUUID())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Priority doesn't exist")));
     }
 
     private Issue createIssueInDb(Priority priority, UUID projectId) {

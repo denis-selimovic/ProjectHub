@@ -10,17 +10,16 @@ import ba.unsa.etf.nwt.taskservice.model.Status;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.model.Type;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
-import ba.unsa.etf.nwt.taskservice.request.CreateTaskRequest;
+import ba.unsa.etf.nwt.taskservice.request.create.CreateTaskRequest;
+import ba.unsa.etf.nwt.taskservice.request.patch.PatchTaskRequest;
+import ba.unsa.etf.nwt.taskservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.Root;
-import java.util.*;
-
-import static java.util.Arrays.asList;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +74,25 @@ public class TaskService {
                 .with(new String[]{"type", "id"}, typeId, SearchCriteria.SearchCriteriaOperation.EQ, UUID::fromString)
                 .build();
         return taskRepository.findAll(specification, pageable);
+    }
+
+    public void save(final Task task) {
+        taskRepository.save(task);
+    }
+
+    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest) {
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getName(), task::setName);
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getDescription(), task::setDescription);
+        JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
+        if(patchTaskRequest.getPriorityId().isPresent()){
+            task.setPriority(priorityService.findById(patchTaskRequest.getPriorityId().get()));
+        }
+        if(patchTaskRequest.getStatusId().isPresent()){
+            task.setStatus(statusService.findById(patchTaskRequest.getStatusId().get()));
+        }
+        if(patchTaskRequest.getTypeId().isPresent()){
+            task.setType(typeService.findById(patchTaskRequest.getTypeId().get()));
+        }
+        return taskRepository.save(task);
     }
 }

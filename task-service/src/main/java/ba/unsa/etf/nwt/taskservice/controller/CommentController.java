@@ -5,7 +5,7 @@ import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
 import ba.unsa.etf.nwt.taskservice.model.Task;
-import ba.unsa.etf.nwt.taskservice.request.CreateCommentRequest;
+import ba.unsa.etf.nwt.taskservice.request.create.CreateCommentRequest;
 import ba.unsa.etf.nwt.taskservice.response.SimpleResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;

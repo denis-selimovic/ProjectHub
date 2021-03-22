@@ -15,13 +15,13 @@ public class StatusService {
 
     public Status findById(final UUID id) {
         return statusRepository.findById(id).orElseThrow(() -> {
-            throw new NotFoundException("Request body can not be processed");
+            throw new NotFoundException("Status doesn't exist");
         });
     }
 
     public Status findByStatusType(final Status.StatusType type) {
         return statusRepository.findByStatus(type).orElseThrow(() -> {
-            throw new NotFoundException("Request body can not be processed");
+            throw new NotFoundException("Status doesn't exist");
         });
     }
 }
