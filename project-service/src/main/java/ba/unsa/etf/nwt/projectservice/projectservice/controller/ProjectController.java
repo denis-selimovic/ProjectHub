@@ -6,6 +6,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenExc
 import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.CreateProjectRequest;
+import ba.unsa.etf.nwt.projectservice.projectservice.request.PatchProjectRequest;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.PaginatedResponse;
@@ -20,15 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -68,6 +61,24 @@ public class ProjectController {
 
         projectService.delete(projectId);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Project successfully deleted")));
+    }
+
+    @PatchMapping("/{projectId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Project updated"),
+            @ApiResponse(code = 404, message = "Project not found"),
+            @ApiResponse(code = 403, message = "Forbidden: User not owner of project", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<ProjectDTO>> patch(ResourceOwner resourceOwner,
+                                                      @PathVariable UUID projectId,
+                                                      @RequestBody @Valid PatchProjectRequest patchProjectRequest) {
+        Project project = projectService.findById(projectId);
+        if (!project.getOwnerId().equals(resourceOwner.getId()))
+            throw new ForbiddenException("You don't have permission for this activity");
+        projectService.patch(project, patchProjectRequest);
+        return ResponseEntity.ok().body(new Response<>(new ProjectDTO(project)));
+
     }
 
     @GetMapping
