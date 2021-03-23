@@ -21,12 +21,12 @@ import java.security.Principal;
 public class TokenController extends TokenEndpoint {
 
     @PostMapping
-    public ResponseEntity<Response> postAccessToken(
+    public ResponseEntity<Response<GrantTokenDTO>> postAccessToken(
             Principal principal,
             @Valid @RequestBody GrantTokenRequest request
     ) throws HttpRequestMethodNotSupportedException {
         OAuth2AccessToken oauthResponse = super.postAccessToken(principal, request.toForm()).getBody();
-        return ResponseEntity.ok(new Response(new GrantTokenDTO(oauthResponse)));
+        return ResponseEntity.ok(new Response<>(new GrantTokenDTO(oauthResponse)));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
