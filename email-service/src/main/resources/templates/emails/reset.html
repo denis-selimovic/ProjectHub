@@ -6,10 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Email</title>
     <style>
-        /* Email styles need to be inline */
-
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
         * {
@@ -30,7 +27,7 @@
         }
 
         .text {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 300;
         }
 
@@ -45,7 +42,7 @@
 
         .header {
             font-weight: 600;
-            font-size: 34px;
+            font-size: 28px;
         }
 
         .vertical-spacer {
@@ -82,6 +79,7 @@
             height: 0;
             border-top: 1px solid rgba(102, 102, 102, 0.16);
         }
+
         a:visited {
             text-decoration: none;
             color: #0084F4
@@ -93,7 +91,8 @@
         }
 
         .icon {
-            margin-bottom: 36px;
+            margin-bottom: 16px;
+            margin-left: 20px !important;
             width: 100%;
         }
 
@@ -106,16 +105,17 @@
 <body>
 <div class="container">
     <div class="icon left-spacer">
+        <img src="https://i.ibb.co/B6CDg9W/logo.png" alt="logo"/>
     </div>
     <div class="box left-spacer">
-        <div class="header vertical-spacer">Hi <span th:text="${name}"></span></div>
+        <div class="header vertical-spacer">Hi <span th:text="${name}"></span>,</div>
         <div class="text">Please click the button below to reset your password.</div>
         <div class="text vertical-spacer">If you didn't request reset just ignore this email.</div>
         <button class="click"><a href="">Reset password</a></button>
         <p class="vertical-spacer text smaller-text">Thanks, ProjectHub</p>
     </div>
     <div class="footer left-spacer">
-        <p class="footer-text">ProjectHub</p>
+        <p class="footer-text">ProjectHub - track your issues</p>
     </div>
 </div>
 </body>
