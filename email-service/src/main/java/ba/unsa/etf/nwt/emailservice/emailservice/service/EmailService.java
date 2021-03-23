@@ -12,7 +12,9 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,21 +26,26 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
 
-    public void sendEmail(String subject, String name, String to, String template) throws MessagingException {
-        String process = loadTemplate(template, name, UUID.randomUUID().toString());
+    public void sendEmail(String subject, String to, String template, Map<String, String> params)
+            throws MessagingException {
+        String process = loadTemplate(template, params);
+        MimeMessage message = createMessage(subject, to, process);
+        Executors.newCachedThreadPool().submit(() -> javaMailSender.send(message));
+    }
+
+    private MimeMessage createMessage(String subject, String to, String process) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(from);
         helper.setSubject(subject);
         helper.setTo(to);
         helper.setText(process, true);
-        javaMailSender.send(message);
+        return message;
     }
 
-    private String loadTemplate(String path, String name, String token) {
+    private String loadTemplate(String path, Map<String, String> params) {
         Context context = new Context();
-        context.setVariable("name", name);
-        context.setVariable("token", token);
+        params.forEach(context::setVariable);
         return templateEngine.process(path, context);
     }
 }
