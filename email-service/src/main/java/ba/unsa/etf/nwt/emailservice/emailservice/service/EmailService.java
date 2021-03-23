@@ -2,6 +2,7 @@ package ba.unsa.etf.nwt.emailservice.emailservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,7 +27,7 @@ public class EmailService {
     public void sendEmail(String subject, String name, String to) throws MessagingException {
         String process = loadTemplate("emails/activate", name, UUID.randomUUID().toString());
         MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(from);
         helper.setSubject(subject);
         helper.setTo(to);
