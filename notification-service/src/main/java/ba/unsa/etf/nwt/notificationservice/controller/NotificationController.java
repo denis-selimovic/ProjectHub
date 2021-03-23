@@ -5,6 +5,7 @@ import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
+import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.notificationservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.notificationservice.response.base.Response;
@@ -59,6 +60,7 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Notification successfully deleted")));
     }
 
+
     @GetMapping
     @ApiResponse(code = 200, message = "Success")
     @ResponseStatus(value = HttpStatus.OK)
@@ -72,5 +74,23 @@ public class NotificationController {
                                                                             Sort.by("createdAt").descending()));
 
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(notificationPage), notificationPage.getContent()));
+    }
+
+    @PatchMapping("/{notificationId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Notification updated"),
+            @ApiResponse(code = 404, message = "Notification not found"),
+            @ApiResponse(code = 403, message = "Forbidden", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<NotificationDTO>> patch(ResourceOwner resourceOwner,
+                                                           @PathVariable UUID notificationId,
+                                                           @RequestBody @Valid PatchNotificationRequest patchNotificationRequest) {
+
+        Notification notification = notificationService.findById(notificationId);
+        notificationService.checkUserId(resourceOwner.getId(), notification.getUserId());
+        notificationService.patch(notification, patchNotificationRequest);
+
+        return ResponseEntity.ok().body(new Response<>(new NotificationDTO(notification)));
     }
 }
