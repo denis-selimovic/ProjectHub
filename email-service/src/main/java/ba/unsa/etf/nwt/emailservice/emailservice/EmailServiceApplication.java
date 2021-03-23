@@ -5,11 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 
@@ -26,9 +22,11 @@ public class EmailServiceApplication {
 	private final EmailService emailService;
 
 	@GetMapping
-	public ResponseEntity<?> hello() {
+	public ResponseEntity<?> hello(@RequestParam(name = "type") String type) {
 		try {
-			emailService.sendEmail("TEST", "Denis", "dselimovic1@etf.unsa.ba");
+			String subject = (type.equals("reset")) ? "Reset your paassword" : "Activate your account";
+			String template = (type.equals("reset")) ? "emails/reset" : "emails/activate";
+			emailService.sendEmail(subject, "Denis", "dselimovic1@etf.unsa.ba", template);
 		} catch (MessagingException e) {
 			return ResponseEntity.ok("NOT OK");
 		}

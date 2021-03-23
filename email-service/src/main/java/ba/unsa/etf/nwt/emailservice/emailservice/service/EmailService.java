@@ -24,8 +24,8 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
 
-    public void sendEmail(String subject, String name, String to) throws MessagingException {
-        String process = loadTemplate("emails/activate", name, UUID.randomUUID().toString());
+    public void sendEmail(String subject, String name, String to, String template) throws MessagingException {
+        String process = loadTemplate(template, name, UUID.randomUUID().toString());
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(from);
