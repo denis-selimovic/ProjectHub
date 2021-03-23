@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Email</title>
+        <style>
+            /* Email styles need to be inline */
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        * {
+            color: #121212;
+            font-family: Poppins, sans-serif;
+            font-style: normal;
+        }
+
+        .container {
+            width: 590px;
+            min-height: 750px;
+            height: fit-content;
+        }
+
+        .box {
+            width: 100%;
+            background-color: white;
+        }
+
+        .text {
+            font-size: 22px;
+            font-weight: 300;
+        }
+
+        .smaller-text {
+            font-size: 18px !important;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .header {
+            font-weight: 600;
+            font-size: 34px;
+        }
+
+        .vertical-spacer {
+            margin-bottom: 36px;
+        }
+
+        .left-spacer {
+            margin-left: 36px;
+        }
+
+        .click {
+            height: 54px;
+            width: 208px;
+            border: 2px solid #0084F4;
+            border-radius: 5px;
+            background-color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .click > a {
+            text-decoration: none;
+            color: #121212;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .footer {
+            width: 100%;
+            background-color: white;
+            margin-top: 10px;
+            height: 0;
+            border-top: 1px solid rgba(102, 102, 102, 0.16);
+        }
+            a:visited {
+            text-decoration: none;
+            color: #0084F4
+        }
+
+        a:link {
+            text-decoration: none;
+            color: #0084F4
+        }
+
+        .icon {
+            margin-bottom: 36px;
+            width: 100%;
+        }
+
+        .icon > img {
+            max-height: 110px;
+            max-width: 110px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="icon left-spacer">
+    </div>
+    <div class="box left-spacer">
+        <div class="header vertical-spacer">Hi <span th:text="${name}"></span></div>
+        <div class="text">Thank you for registering with us.</div>
+        <div class="text vertical-spacer">Please click the button below to activate your account.</div>
+        <button class="click"><a href="">Activate your account</a></button>
+        <p class="vertical-spacer text smaller-text">Thanks, ProjectHub</p>
+    </div>
+    <div class="footer left-spacer">
+        <p class="footer-text">ProjectHub</p>
+    </div>
+</div>
+</body>
+</html>
