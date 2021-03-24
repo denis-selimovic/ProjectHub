@@ -22,14 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -282,6 +279,45 @@ public class ProjectControllerTest {
             );
             assertTrue(pc.isPresent());
         }
+    }
+
+    @Test
+    public void patchProjectNotFound() throws Exception {
+        mockMvc.perform(patch(String.format("/api/v1/projects/%s", UUID.randomUUID()))
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Project not found")));
+    }
+
+    @Test
+    public void patchProjectChangeName() throws Exception {
+        Project project = createProjectInDB(ResourceOwnerInjector.id, "Project name");
+        mockMvc.perform(patch(String.format("/api/v1/projects/%s", project.getId()))
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": "New project name"
+                        }"""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name", is("New project name")))
+                .andExpect(jsonPath("$.data.owner_id").value(is(project.getOwnerId().toString())));
+    }
+
+    @Test
+    public void patchProjectNotOwner() throws Exception {
+        Project project = createProjectInDB(UUID.randomUUID(), "Project name");
+        mockMvc.perform(patch(String.format("/api/v1/projects/%s", project.getId()))
+                .header("Authorization", token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "name": "New project name"
+                        }"""))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
     }
 
     private Project createProjectInDB(UUID ownerID, final String name) {
