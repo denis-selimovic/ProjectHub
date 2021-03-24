@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.service;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
@@ -46,5 +47,11 @@ public class ProjectCollaboratorService {
 
     public Page<ProjectCollaboratorDTO> getCollaboratorsForProject(Project project, Pageable pageable) {
         return projectCollaboratorRepository.findAllByProject(project, pageable);
+    }
+
+    public void checkIfOwnerOrCollaborator(UUID ownerId, UUID resourceOwnerId, UUID projectId) {
+        if (!ownerId.equals(resourceOwnerId) &&
+                existsByCollaboratorIdAndProjectId(resourceOwnerId, projectId))
+            throw new ForbiddenException("You don't have permission for this activity");
     }
 }

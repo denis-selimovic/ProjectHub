@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.service;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
@@ -49,5 +50,10 @@ public class ProjectService {
         JsonNullableUtils.changeIfPresent(patchProjectRequest.getName(), project::setName);
         JsonNullableUtils.changeIfPresent(patchProjectRequest.getOwnerId(), project::setOwnerId);
         projectRepository.save(project);
+    }
+
+    public void checkIfOwner(UUID ownerId, UUID resourceOwnerId) {
+        if (!ownerId.equals(resourceOwnerId))
+            throw new ForbiddenException("You don't have permission for this activity");
     }
 }

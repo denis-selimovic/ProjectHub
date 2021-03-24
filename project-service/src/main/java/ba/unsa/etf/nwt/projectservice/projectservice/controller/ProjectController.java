@@ -2,13 +2,11 @@ package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectDTO;
-import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.CreateProjectRequest;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.PatchProjectRequest;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.ErrorResponse;
-import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.Response;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.SimpleResponse;
@@ -56,9 +54,7 @@ public class ProjectController {
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID projectId,
                                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
-        if (!project.getOwnerId().equals(resourceOwner.getId()))
-            throw new ForbiddenException("You don't have permission for this activity");
-
+        projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
         projectService.delete(projectId);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Project successfully deleted")));
     }
@@ -74,8 +70,7 @@ public class ProjectController {
                                                       @PathVariable UUID projectId,
                                                       @RequestBody @Valid PatchProjectRequest patchProjectRequest) {
         Project project = projectService.findById(projectId);
-        if (!project.getOwnerId().equals(resourceOwner.getId()))
-            throw new ForbiddenException("You don't have permission for this activity");
+        projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
         projectService.patch(project, patchProjectRequest);
         return ResponseEntity.ok().body(new Response<>(new ProjectDTO(project)));
 

@@ -2,7 +2,6 @@ package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
-import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.AddCollaboratorRequest;
@@ -44,9 +43,7 @@ public class ProjectCollaboratorController {
                                            @RequestBody @Valid AddCollaboratorRequest request,
                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
-        if (!project.getOwnerId().equals(resourceOwner.getId()))
-            throw new ForbiddenException("You don't have permission for this activity");
-
+        projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
         ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(request.getCollaboratorId(), project);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new ProjectCollaboratorDTO(projectCollaborator)));
     }
@@ -63,9 +60,7 @@ public class ProjectCollaboratorController {
                                            ResourceOwner resourceOwner) {
         ProjectCollaborator projectCollaborator = projectCollaboratorService
                 .findByCollaboratorIdAndProjectId(collaboratorId, projectId);
-        if (!projectCollaborator.getProject().getOwnerId().equals(resourceOwner.getId()))
-            throw new ForbiddenException("You don't have permission for this activity");
-
+        projectService.checkIfOwner(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId());
         projectCollaboratorService.delete(projectCollaborator);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Project collaborator successfully deleted")));
     }
@@ -80,9 +75,7 @@ public class ProjectCollaboratorController {
                                                                         ResourceOwner resourceOwner,
                                                                         Pageable pageable) {
         Project project = projectService.findById(projectId);
-        if (!project.getOwnerId().equals(resourceOwner.getId()) &&
-                projectCollaboratorService.existsByCollaboratorIdAndProjectId(resourceOwner.getId(), projectId))
-            throw new ForbiddenException("You don't have permission for this activity");
+        projectCollaboratorService.checkIfOwnerOrCollaborator(project.getOwnerId(), resourceOwner.getId(), projectId);
 
         Page<ProjectCollaboratorDTO> collaboratorPage = projectCollaboratorService
                 .getCollaboratorsForProject(project, pageable);
