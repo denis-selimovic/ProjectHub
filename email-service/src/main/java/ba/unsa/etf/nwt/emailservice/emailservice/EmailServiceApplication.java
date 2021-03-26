@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -26,7 +27,7 @@ public class EmailServiceApplication {
 		try {
 			String subject = (type.equals("reset")) ? "Reset your paassword" : "Activate your account";
 			String template = (type.equals("reset")) ? "emails/reset" : "emails/activate";
-			emailService.sendEmail(subject, "Denis", "dselimovic1@etf.unsa.ba", template);
+			emailService.sendEmail(subject, "dselimovic1@etf.unsa.ba", template, Map.of("name", "Denis"));
 		} catch (MessagingException e) {
 			return ResponseEntity.ok("NOT OK");
 		}
