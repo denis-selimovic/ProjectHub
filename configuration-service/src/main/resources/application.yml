@@ -3,8 +3,10 @@ spring:
     config:
       server:
         git:
-          uri: ${HOME}/test-config
+          uri: https://github.com/dselimovic1/ProjectHub.git
           searchPaths: 'config/{application}'
+          username: ${PROJECTHUB_GIT_USERNAME}
+          password: ${PROJECTHUB_GIT_PASSWORD}
   security:
     user:
       name: root
