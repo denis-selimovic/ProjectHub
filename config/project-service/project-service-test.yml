@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:project-service-test
+    username: projecthub
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+
+token:
+  test:
+    private-key: projecthub.jks
+    password: projecthub
+    alias: projecthub
+
