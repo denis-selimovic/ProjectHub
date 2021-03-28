@@ -4,7 +4,7 @@ Issue tracker and project management tool
 
 ## Microservices
 The project consists of following five microservices:
-- [User service](/user-service
+- [User service](/user-service)
 - [Project service](/project-service)
 - [Task service](/task-service)
 - [Notification service](/notification-service)
