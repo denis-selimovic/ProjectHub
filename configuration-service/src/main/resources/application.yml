@@ -5,8 +5,8 @@ spring:
         git:
           uri: https://github.com/dselimovic1/ProjectHub.git
           searchPaths: 'config/{application}'
-          username: ${PROJECTHUB_GIT_USERNAME}
-          password: ${PROJECTHUB_GIT_PASSWORD}
+          username: lvrnjak1 # ${PROJECTHUB_GIT_USERNAME}
+          password: 1lamsaetf # ${PROJECTHUB_GIT_PASSWORD}
   security:
     user:
       name: root
