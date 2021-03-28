@@ -1,10 +1,10 @@
-package ba.unsa.etf.nwt.eurekaservice;
+package ba.unsa.etf.nwt.eurekaserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EurekaServiceApplicationTests {
+class EurekaServerApplicationTests {
 
     @Test
     void contextLoads() {
