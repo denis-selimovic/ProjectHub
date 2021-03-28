@@ -4,15 +4,15 @@ Issue tracker and project management tool
 
 ## Microservices
 The project consists of following five microservices:
-- [User service](/user-service/README.md)
-- [Project service](/project-service/README.md)
-- [Task service](/task-service/README.md)
-- [Notification service](/notification-service/README.md)
-- [Email service](/email-service/README.md)
+- [User service](/user-service
+- [Project service](/project-service)
+- [Task service](/task-service)
+- [Notification service](/notification-service)
+- [Email service](/email-service)
 
-The project also includes a [Configuration service](/configuration-service/README.md) and an [Eureka server](/eureka-server/README.md)
+The project also includes a [Configuration service](/configuration-service) and an [Eureka server](/eureka-server)
 
-Visit the README.md files of each of the microservices for a more detailed description and setup instructions.
+Read the README.md files of each of the microservices for a more detailed description and setup instructions.
 
 # Contributors
 
