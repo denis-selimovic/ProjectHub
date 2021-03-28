@@ -22,7 +22,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
-            "/webjars/**"
+            "/webjars/**",
+            "/service-instances/**"
     };
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 

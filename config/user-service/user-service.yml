@@ -13,3 +13,12 @@ token:
     token:
       activation: 1800
       reset: 1800
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
