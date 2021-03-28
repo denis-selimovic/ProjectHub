@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/dselimovic1/ProjectHub.git
+          searchPaths: 'config/{application}'
+          username: ${PROJECTHUB_GIT_USERNAME}
+          password: ${PROJECTHUB_GIT_PASSWORD}
+  security:
+    user:
+      name: root
+      password: secret
+
+server:
+  port: 8888

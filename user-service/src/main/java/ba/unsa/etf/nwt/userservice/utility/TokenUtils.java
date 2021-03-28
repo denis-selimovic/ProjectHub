@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Data
 public class TokenUtils {
 
-    @Value("${token.activation-token-duration}")
+    @Value("${token.duration.token.activation}")
     private Integer activationTokenDuration;
-    @Value("${token.reset-password-token-duration}")
+    @Value("${token.duration.token.reset}")
     private Integer resetPasswordTokenDuration;
     @Value("${token.length}")
     private Integer tokenLength;

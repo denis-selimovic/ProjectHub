@@ -1,23 +1,14 @@
 spring:
+  application:
+    name: user-service
+  cloud:
+    config:
+      password: secret
+      username: root
+  config:
+    import: optional:configserver:http://localhost:8888
   profiles:
     active: dev
-  main:
-    allow-bean-definition-overriding: true
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-token:
-  private-key: projecthub.jks
-  password: projecthub
-  alias: projecthub
-  activation-token-duration: 1800
-  reset-password-token-duration: 1200
-  length: 12
-springdoc:
-  api-docs:
-    enabled: true
-    path: '/v1/api-docs'
-  swagger-ui:
-    path: '/v1/swagger-ui'
-    configUrl: '/v1/api-docs/swagger-config'
-    url: '/v1/api-docs'
-  paths-to-match: '/api/v1/**'
+
+server:
+  port: 8081
