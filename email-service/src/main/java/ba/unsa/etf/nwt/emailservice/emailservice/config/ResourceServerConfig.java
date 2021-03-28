@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private final String[] unprotectedEndpoints = {
-            "/test"
+            "/test",
+            "/service-instances/**"
     };
 
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
