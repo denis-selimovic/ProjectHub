@@ -31,11 +31,9 @@ public class SubscriptionService {
         return subscription;
     }
 
-    public boolean existsById(UUID subscriptionId) {
-        return subscriptionRepository.existsById(subscriptionId);
-    }
-
     public void deleteById(UUID subscriptionId) {
+        if(!subscriptionRepository.existsById(subscriptionId))
+            throw new UnprocessableEntityException("Request body can not be processed. This subscription doesn't exist");
         subscriptionRepository.deleteById(subscriptionId);
     }
 }

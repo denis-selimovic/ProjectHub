@@ -3,16 +3,17 @@ package ba.unsa.etf.nwt.notificationservice.service;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
 import ba.unsa.etf.nwt.notificationservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
+import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
+import ba.unsa.etf.nwt.notificationservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ba.unsa.etf.nwt.notificationservice.utility.JsonNullableUtils;
 
 import java.util.UUID;
 
@@ -32,11 +33,10 @@ public class NotificationService {
         return notification;
     }
 
-    public boolean existsById(UUID notificationId) {
-        return notificationRepository.existsById(notificationId);
-    }
-
     public void deleteById(UUID notificationId) {
+        if(!notificationRepository.existsById(notificationId))
+            throw new UnprocessableEntityException("Request body can not be processed. This notification doesn't exist");
+
         notificationRepository.deleteById(notificationId);
     }
 
@@ -54,7 +54,7 @@ public class NotificationService {
     }
 
     public void checkUserId(UUID resourceOwnerId, UUID userId) {
-        if(resourceOwnerId != userId)
+        if(!resourceOwnerId.equals(userId))
             throw new ForbiddenException("Forbidden");
     }
 

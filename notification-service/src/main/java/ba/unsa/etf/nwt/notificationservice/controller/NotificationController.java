@@ -2,7 +2,6 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
-import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
@@ -52,10 +51,6 @@ public class NotificationController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID notificationId) {
-
-        if(!notificationService.existsById(notificationId))
-            throw new UnprocessableEntityException("Request body can not be processed. This notification doesn't exist");
-
         notificationService.deleteById(notificationId);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Notification successfully deleted")));
     }
