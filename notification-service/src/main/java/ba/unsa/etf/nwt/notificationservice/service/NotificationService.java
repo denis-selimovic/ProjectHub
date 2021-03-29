@@ -46,10 +46,6 @@ public class NotificationService {
 
     public Notification patch(final Notification notification, final PatchNotificationRequest patchNotificationRequest) {
         JsonNullableUtils.changeIfPresent(patchNotificationRequest.getRead(), notification::setRead);
-
-        if(patchNotificationRequest.getRead().isPresent())
-            notification.setRead(patchNotificationRequest.getRead().get());
-
         return notificationRepository.save(notification);
     }
 
