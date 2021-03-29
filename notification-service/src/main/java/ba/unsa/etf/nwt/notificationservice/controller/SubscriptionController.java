@@ -1,7 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.dto.SubscriptionDTO;
-import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.request.CreateSubscriptionRequest;
 import ba.unsa.etf.nwt.notificationservice.response.base.ErrorResponse;
@@ -45,12 +44,9 @@ public class SubscriptionController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId) {
-
-        if(!subscriptionService.existsById(subscriptionId))
-            throw new UnprocessableEntityException("Request body can not be processed. This subscription doesn't exist");
-
         subscriptionService.deleteById(subscriptionId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Subscription successfully deleted")));
     }
+
 }
