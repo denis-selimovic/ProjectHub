@@ -20,9 +20,9 @@ public class NotificationUser {
 
     @NotNull(message = "Notification id can't be null")
     @Column(name = "notification_id", nullable = false)
-    private UUID userId;
+    private UUID notificationId;
 
     @NotNull(message = "User id can't be null")
     @Column(name = "user_id", nullable = false)
-    private UUID taskId;
+    private UUID userId;
 }
