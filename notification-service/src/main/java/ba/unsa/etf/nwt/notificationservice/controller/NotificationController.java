@@ -83,7 +83,7 @@ public class NotificationController {
                                                            @RequestBody @Valid PatchNotificationRequest patchNotificationRequest) {
 
         Notification notification = notificationService.findById(notificationId);
-        notificationService.checkUserId(resourceOwner.getId(), notification.getUserId());
+        //notificationService.checkUserId(resourceOwner.getId(), notification.getUserId());
         notificationService.patch(notification, patchNotificationRequest);
 
         return ResponseEntity.ok().body(new Response<>(new NotificationDTO(notification)));

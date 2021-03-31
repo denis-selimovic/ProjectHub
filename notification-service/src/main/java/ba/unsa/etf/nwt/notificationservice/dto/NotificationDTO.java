@@ -19,7 +19,6 @@ public class NotificationDTO implements Resource {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
-    private UUID userId;
     private boolean read;
 
     public NotificationDTO(Notification notification) {

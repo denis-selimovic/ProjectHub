@@ -27,7 +27,6 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setTitle(request.getTitle());
         notification.setDescription(request.getDescription());
-        notification.setUserId(resourceOwner.getId());
         notification.setRead(false);
         notificationRepository.save(notification);
         return notification;
