@@ -36,11 +36,11 @@ public class NotificationUserTest {
         Notification notification = new Notification();
         notification.setTitle("Title");
         notification.setDescription("Description");
-        notification.setRead(false);
 
         notificationUser = new NotificationUser();
         notificationUser.setNotification(notification);
         notificationUser.setUserId(UUID.randomUUID());
+        notificationUser.setRead(false);
     }
 
     @Test
@@ -53,6 +53,7 @@ public class NotificationUserTest {
     public void testMultipleViolations() {
         notificationUser.setNotification(null);
         notificationUser.setUserId(null);
+        notificationUser.setRead(null);
 
         List<String> violations = validator
                 .validate(notificationUser)
@@ -60,9 +61,10 @@ public class NotificationUserTest {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
-        assertEquals(2, violations.size());
+        assertEquals(3, violations.size());
         assertTrue(violations.contains("Notification id can't be null"));
         assertTrue(violations.contains("User id can't be null"));
+        assertTrue(violations.contains("Attribute read can't be null"));
     }
 
     @Test
@@ -81,6 +83,15 @@ public class NotificationUserTest {
         List<ConstraintViolation<NotificationUser>> violations = new ArrayList<>(validator.validate(notificationUser));
         assertEquals(1, violations.size());
         assertEquals("Notification id can't be null", violations.get(0).getMessage());
+    }
+
+    @Test
+    public void testNoReadValue() {
+        notificationUser.setRead(null);
+
+        List<ConstraintViolation<NotificationUser>> violations = new ArrayList<>(validator.validate(notificationUser));
+        assertEquals(1, violations.size());
+        assertEquals("Attribute read can't be null", violations.get(0).getMessage());
     }
 
     @AfterAll

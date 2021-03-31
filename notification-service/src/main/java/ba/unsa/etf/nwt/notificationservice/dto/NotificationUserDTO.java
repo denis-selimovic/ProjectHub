@@ -17,11 +17,14 @@ public class NotificationUserDTO implements Resource {
     private UUID id;
     private Notification notification;
     private UUID userId;
+    private boolean read;
 
     public NotificationUserDTO(NotificationUser notificationUser) {
         id = notificationUser.getId();
         notification = notificationUser.getNotification();
         userId = notificationUser.getUserId();
+        read = notificationUser.getRead();
+
     }
 
 }

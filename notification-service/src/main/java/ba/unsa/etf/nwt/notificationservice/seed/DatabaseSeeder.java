@@ -32,11 +32,11 @@ public class DatabaseSeeder {
     }
 
     private void seedNotificationsTable() {
-        Notification notification1 = createNotification("New project", "Added you to the team A", false);
-        Notification notification2 = createNotification("New task", "Added task UNIT TESTS to the project ProjectHub", true);
-        Notification notification3 = createNotification("New bug", "Added bug WRONG EMAIL to the project ProjectHub", false);
-        Notification notification4 = createNotification("New comment", "Commented on the task UNIT TESTS", false);
-        Notification notification5 = createNotification("New project", "Added you to the team Aplha", true);
+        Notification notification1 = createNotification("New project", "Added you to the team A");
+        Notification notification2 = createNotification("New task", "Added task UNIT TESTS to the project ProjectHub");
+        Notification notification3 = createNotification("New bug", "Added bug WRONG EMAIL to the project ProjectHub");
+        Notification notification4 = createNotification("New comment", "Commented on the task UNIT TESTS");
+        Notification notification5 = createNotification("New project", "Added you to the team Aplha");
 
         seedNotificationUserTable(List.of(notification1, notification2, notification3, notification4, notification5));
     }
@@ -45,11 +45,11 @@ public class DatabaseSeeder {
         UUID user1 = UUID.randomUUID();
         UUID user2 = UUID.randomUUID();
 
-        createNotificationUser(notifications.get(0), user1);
-        createNotificationUser(notifications.get(1), user2);
-        createNotificationUser(notifications.get(2), user1);
-        createNotificationUser(notifications.get(3), user2);
-        createNotificationUser(notifications.get(4), user1);
+        createNotificationUser(notifications.get(0), user1, false);
+        createNotificationUser(notifications.get(1), user2, false);
+        createNotificationUser(notifications.get(2), user1, true);
+        createNotificationUser(notifications.get(3), user2, true);
+        createNotificationUser(notifications.get(4), user1, true);
     }
 
     private void seedSubscriptionsTable() {
@@ -58,21 +58,19 @@ public class DatabaseSeeder {
         createSubscription(UUID.randomUUID(), UUID.randomUUID());
     }
 
-    private Notification createNotification(final String title,
-                                            final String description,
-                                            boolean read) {
+    private Notification createNotification(final String title, final String description) {
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setDescription(description);
-        notification.setRead(read);
 
         return notificationRepository.save(notification);
     }
 
-    private void createNotificationUser(Notification notification, UUID userId) {
+    private void createNotificationUser(Notification notification, UUID userId, boolean read) {
         NotificationUser notificationUser = new NotificationUser();
         notificationUser.setNotification(notification);
         notificationUser.setUserId(userId);
+        notificationUser.setRead(read);
 
         notificationUserRepository.save(notificationUser);
     }

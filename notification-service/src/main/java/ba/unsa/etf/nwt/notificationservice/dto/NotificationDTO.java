@@ -19,7 +19,6 @@ public class NotificationDTO implements Resource {
     private String description;
     private Instant createdAt;
     private Instant updatedAt;
-    private boolean read;
 
     public NotificationDTO(Notification notification) {
         id = notification.getId();
@@ -27,7 +26,6 @@ public class NotificationDTO implements Resource {
         description = notification.getDescription();
         createdAt = notification.getCreatedAt();
         updatedAt = notification.getUpdatedAt();
-        read = notification.getRead();
     }
 
 }

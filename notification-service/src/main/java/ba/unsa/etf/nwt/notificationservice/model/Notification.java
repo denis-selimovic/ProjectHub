@@ -39,7 +39,4 @@ public class Notification {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
-
-    @Column(name = "read", nullable = false)
-    private Boolean read;
 }

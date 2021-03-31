@@ -6,9 +6,7 @@ import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityExc
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
-import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
-import ba.unsa.etf.nwt.notificationservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setTitle(request.getTitle());
         notification.setDescription(request.getDescription());
-        notification.setRead(false);
         notificationRepository.save(notification);
         return notification;
     }
@@ -39,11 +36,6 @@ public class NotificationService {
     /*public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
         return notificationRepository.findAllByUserId(userId, pageable);
     }*/
-
-    public Notification patch(final Notification notification, final PatchNotificationRequest patchNotificationRequest) {
-        JsonNullableUtils.changeIfPresent(patchNotificationRequest.getRead(), notification::setRead);
-        return notificationRepository.save(notification);
-    }
 
     public void checkUserId(UUID resourceOwnerId, UUID userId) {
         if(!resourceOwnerId.equals(userId))

@@ -6,6 +6,5 @@ CREATE TABLE IF NOT EXISTS "notifications" (
     description VARCHAR(255) NOT NULL,
     created_at timestamptz,
     updated_at timestamptz,
-    read BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT pkey_notifications PRIMARY KEY (id)
 );

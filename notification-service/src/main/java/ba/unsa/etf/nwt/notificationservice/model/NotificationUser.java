@@ -28,4 +28,8 @@ public class NotificationUser {
     @NotNull(message = "User id can't be null")
     @Column(name = "user_id", nullable = false)
     private UUID userId;
+
+    @NotNull(message = "Attribute read can't be null")
+    @Column(name = "read", nullable = false)
+    private Boolean read;
 }
