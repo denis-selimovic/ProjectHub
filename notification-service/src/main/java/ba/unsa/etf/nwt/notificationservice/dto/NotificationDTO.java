@@ -28,7 +28,6 @@ public class NotificationDTO implements Resource {
         description = notification.getDescription();
         createdAt = notification.getCreatedAt();
         updatedAt = notification.getUpdatedAt();
-        userId = notification.getUserId();
         read = notification.getRead();
     }
 
