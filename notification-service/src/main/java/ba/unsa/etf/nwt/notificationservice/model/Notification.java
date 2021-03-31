@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.UUID;
@@ -43,8 +42,4 @@ public class Notification {
 
     @Column(name = "read", nullable = false)
     private Boolean read;
-
-    @NotNull(message = "User id can't be null")
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
 }
