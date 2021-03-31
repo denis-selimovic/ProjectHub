@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.dto;
 
+import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import ba.unsa.etf.nwt.notificationservice.response.interfaces.Resource;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,12 @@ import java.util.UUID;
 public class NotificationUserDTO implements Resource {
 
     private UUID id;
-    private UUID notificationId;
+    private Notification notification;
     private UUID userId;
 
     public NotificationUserDTO(NotificationUser notificationUser) {
         id = notificationUser.getId();
-        notificationId = notificationUser.getNotificationId();
+        notification = notificationUser.getNotification();
         userId = notificationUser.getUserId();
     }
 

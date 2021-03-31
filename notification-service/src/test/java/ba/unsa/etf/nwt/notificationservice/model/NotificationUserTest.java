@@ -2,6 +2,7 @@ package ba.unsa.etf.nwt.notificationservice.model;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -22,23 +23,37 @@ public class NotificationUserTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
+    private static NotificationUser notificationUser;
+
     @BeforeAll
     public static void createValidator() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
+    @BeforeEach
+    public void createNotificationUser() {
+        Notification notification = new Notification();
+        notification.setTitle("Title");
+        notification.setDescription("Description");
+        notification.setRead(false);
+
+        notificationUser = new NotificationUser();
+        notificationUser.setNotification(notification);
+        notificationUser.setUserId(UUID.randomUUID());
+    }
+
     @Test
     public void testNoViolations() {
-        NotificationUser notificationUser = createNotificationUser(UUID.randomUUID(), UUID.randomUUID());
-
         List<ConstraintViolation<NotificationUser>> violations = new ArrayList<>(validator.validate(notificationUser));
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void testMultipleViolations() {
-        NotificationUser notificationUser = new NotificationUser();
+        notificationUser.setNotification(null);
+        notificationUser.setUserId(null);
+
         List<String> violations = validator
                 .validate(notificationUser)
                 .stream()
@@ -52,7 +67,7 @@ public class NotificationUserTest {
 
     @Test
     public void testNoUserId() {
-        NotificationUser notificationUser = createNotificationUser(UUID.randomUUID(), null);
+        notificationUser.setUserId(null);
 
         List<ConstraintViolation<NotificationUser>> violations = new ArrayList<>(validator.validate(notificationUser));
         assertEquals(1, violations.size());
@@ -61,19 +76,11 @@ public class NotificationUserTest {
 
     @Test
     public void testNoNotificationId() {
-        NotificationUser notificationUser = createNotificationUser( null, UUID.randomUUID());
+        notificationUser.setNotification(null);
 
         List<ConstraintViolation<NotificationUser>> violations = new ArrayList<>(validator.validate(notificationUser));
         assertEquals(1, violations.size());
         assertEquals("Notification id can't be null", violations.get(0).getMessage());
-    }
-
-    private NotificationUser createNotificationUser(UUID notificationId, UUID userId) {
-        NotificationUser notificationUser = new NotificationUser();
-        notificationUser.setUserId(userId);
-        notificationUser.setNotificationId(notificationId);
-
-        return notificationUser;
     }
 
     @AfterAll

@@ -45,11 +45,11 @@ public class DatabaseSeeder {
         UUID user1 = UUID.randomUUID();
         UUID user2 = UUID.randomUUID();
 
-        createNotificationUser(notifications.get(0).getId(), user1);
-        createNotificationUser(notifications.get(1).getId(), user2);
-        createNotificationUser(notifications.get(2).getId(), user1);
-        createNotificationUser(notifications.get(3).getId(), user2);
-        createNotificationUser(notifications.get(4).getId(), user1);
+        createNotificationUser(notifications.get(0), user1);
+        createNotificationUser(notifications.get(1), user2);
+        createNotificationUser(notifications.get(2), user1);
+        createNotificationUser(notifications.get(3), user2);
+        createNotificationUser(notifications.get(4), user1);
     }
 
     private void seedSubscriptionsTable() {
@@ -69,9 +69,9 @@ public class DatabaseSeeder {
         return notificationRepository.save(notification);
     }
 
-    private void createNotificationUser(UUID notificationId, UUID userId) {
+    private void createNotificationUser(Notification notification, UUID userId) {
         NotificationUser notificationUser = new NotificationUser();
-        notificationUser.setNotificationId(notificationId);
+        notificationUser.setNotification(notification);
         notificationUser.setUserId(userId);
 
         notificationUserRepository.save(notificationUser);

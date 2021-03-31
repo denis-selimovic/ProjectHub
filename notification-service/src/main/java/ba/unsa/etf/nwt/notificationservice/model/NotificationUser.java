@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.notificationservice.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,8 +20,10 @@ public class NotificationUser {
     private UUID id;
 
     @NotNull(message = "Notification id can't be null")
-    @Column(name = "notification_id", nullable = false)
-    private UUID notificationId;
+    @ManyToOne
+    @JoinColumn(name = "notification_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    private Notification notification;
 
     @NotNull(message = "User id can't be null")
     @Column(name = "user_id", nullable = false)
