@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.notificationservice.service;
 
-import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
 import ba.unsa.etf.nwt.notificationservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
@@ -11,8 +10,6 @@ import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.notificationservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -39,9 +36,9 @@ public class NotificationService {
         notificationRepository.deleteById(notificationId);
     }
 
-    public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
+    /*public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
         return notificationRepository.findAllByUserId(userId, pageable);
-    }
+    }*/
 
     public Notification patch(final Notification notification, final PatchNotificationRequest patchNotificationRequest) {
         JsonNullableUtils.changeIfPresent(patchNotificationRequest.getRead(), notification::setRead);

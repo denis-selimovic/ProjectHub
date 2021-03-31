@@ -7,6 +7,5 @@ CREATE TABLE IF NOT EXISTS "notifications" (
     created_at timestamptz,
     updated_at timestamptz,
     read BOOLEAN NOT NULL DEFAULT FALSE,
-    user_id uuid NOT NULL,
     CONSTRAINT pkey_notifications PRIMARY KEY (id)
 );

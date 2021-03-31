@@ -14,10 +14,7 @@ import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,13 +59,9 @@ public class NotificationController {
     public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
                                                                                             Pageable pageable) {
 
-        Page<NotificationDTO> notificationPage = notificationService.getNotificationsForUser(
-                                                                            resourceOwner.getId(),
-                                                                            PageRequest.of(pageable.getPageNumber(),
-                                                                            pageable.getPageSize(),
-                                                                            Sort.by("createdAt").descending()));
+        //return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(notificationPage), notificationPage.getContent()));
 
-        return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(notificationPage), notificationPage.getContent()));
+        return null;
     }
 
     @PatchMapping("/{notificationId}")
