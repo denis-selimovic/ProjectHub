@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
@@ -14,9 +16,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -54,6 +58,8 @@ public class IssueControllerTest {
     private TaskRepository taskRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @MockBean
+    private ProjectService projectService;
 
     private Priority critical;
     private Priority medium;
@@ -136,6 +142,8 @@ public class IssueControllerTest {
 
     @Test
     public void createIssueSuccess() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Mockito.when(projectService.findProjectById(null, projectId)).thenReturn(new ProjectDTO(projectId));
         mockMvc.perform(post("/api/v1/issues")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +153,7 @@ public class IssueControllerTest {
                             "description": "This is a description",
                             "project_id": "%s",
                             "priority_id": "%s"
-                        }""", UUID.randomUUID(), critical.getId())))
+                        }""", projectId, critical.getId())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.name").hasJsonPath())
