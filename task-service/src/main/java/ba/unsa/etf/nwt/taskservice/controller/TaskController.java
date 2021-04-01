@@ -50,7 +50,7 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
-        projectService.checkIfProjectExists(resourceOwner, request.getProjectId());
+        projectService.findProjectById(resourceOwner, request.getProjectId());
         communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         if (request.getUserId() != null) {
             communicationService.checkIfCollaborator(request.getUserId(), request.getProjectId());

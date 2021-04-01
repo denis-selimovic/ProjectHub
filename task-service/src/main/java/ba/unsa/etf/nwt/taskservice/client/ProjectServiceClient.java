@@ -16,5 +16,5 @@ import java.util.UUID;
 public interface ProjectServiceClient {
     @RequestMapping(method = RequestMethod.GET,value = "/api/v1/projects/{projectId}")
     ResponseEntity<ProjectDTO> getProjectById(@RequestHeader("Authorization") String bearerToken,
-                                              @PathVariable UUID projectId);
+                                                        @PathVariable UUID projectId);
 }

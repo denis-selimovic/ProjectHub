@@ -8,16 +8,9 @@ import java.util.UUID;
 public class CommunicationService {
     public void checkIfCollaborator(final UUID userId, final UUID projectId) {
         //TODO
-        //if not throw 403
-    }
-
-    public void checkIfProjectExists(final UUID projectId) {
-        //TODO
-        //if not throw 422
     }
 
     public void checkIfOwner(final UUID id, final UUID projectId) {
         //TODO
-        //if not throw 403
     }
 }
