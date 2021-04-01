@@ -33,6 +33,6 @@ public class ResourceOwnerInjector implements HandlerMethodArgumentResolver {
                                   ModelAndViewContainer modelAndViewContainer,
                                   @NonNull NativeWebRequest nativeWebRequest,
                                   WebDataBinderFactory webDataBinderFactory) {
-        return new ResourceOwner(id, email, clientId, scopes);
+        return new ResourceOwner(id, email, clientId, null, scopes);
     }
 }
