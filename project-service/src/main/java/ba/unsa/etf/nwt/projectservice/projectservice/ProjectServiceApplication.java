@@ -19,6 +19,6 @@ public class ProjectServiceApplication {
 
 	@GetMapping
 	public ResponseEntity<?> hello(ResourceOwner resourceOwner) {
-		return ResponseEntity.ok().body("Hello from project service and user " + resourceOwner.getEmail());
+		return ResponseEntity.ok().build();
 	}
 }
