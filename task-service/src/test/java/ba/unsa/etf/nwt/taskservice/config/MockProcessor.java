@@ -1,7 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.config;
 
 import ba.unsa.etf.nwt.taskservice.client.ProjectServiceClient;
-import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import org.mockito.Mockito;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -15,8 +14,6 @@ public class MockProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof ProjectServiceClient)
             return Mockito.mock(ProjectServiceClient.class);
-        if (bean instanceof ProjectService)
-            return Mockito.mock(ProjectService.class);
         return bean;
     }
 }
