@@ -4,6 +4,8 @@ import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.exception.base.ForbiddenException;
+import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.repository.CommentRepository;
@@ -31,6 +33,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -375,6 +378,41 @@ public class IssueControllerTest {
                         }""", UUID.randomUUID())))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.message", hasItem("Priority doesn't exist")));
+    }
+
+    @Test
+    public void testCreateProjectNotFound() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new NotFoundException("Not found"));
+        mockMvc.perform(post("/api/v1/issues")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "This is an issue",
+                            "description": "This is a description",
+                            "project_id": "%s",
+                            "priority_id": "%s"
+                        }""", projectId, critical.getId())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Not found")));
+    }
+
+    @Test
+    public void testCreateUserNotOwnerOrCollaborator() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new ForbiddenException("Forbidden"));
+        mockMvc.perform(post("/api/v1/issues")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "This is an issue",
+                            "description": "This is a description",
+                            "project_id": "%s",
+                            "priority_id": "%s"
+                        }""", projectId, critical.getId())))
+                .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
     }
 
     private Issue createIssueInDb(Priority priority, UUID projectId) {
