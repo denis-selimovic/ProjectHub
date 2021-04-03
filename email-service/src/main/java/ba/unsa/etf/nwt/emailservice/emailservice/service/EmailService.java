@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.service;
 
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.BadRequestException;
 import ba.unsa.etf.nwt.emailservice.emailservice.request.SendEmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,14 +25,18 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
 
-    public void sendEmail(SendEmailRequest request) throws MessagingException {
+    public void sendEmail(SendEmailRequest request) {
         boolean activation = request.getType().equals("activation");
         String subject = activation ? "Activate your accounts" : "Reset your password";
         String template = activation ? "emails/activate" : "emails/reset";
-        sendEmail(subject, request.getEmail(), template, Map.of(
-                "name", request.getFirstName(),
-                "token", request.getToken()
-        ));
+        try {
+            sendEmail(subject, request.getEmail(), template, Map.of(
+                    "name", request.getFirstName(),
+                    "token", request.getToken()
+            ));
+        } catch (MessagingException e) {
+            throw new BadRequestException("Bad request");
+        }
     }
 
     private void sendEmail(String subject, String to, String template, Map<String, String> params)
