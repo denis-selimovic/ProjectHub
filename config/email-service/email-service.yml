@@ -1,3 +1,7 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
 eureka:
   instance:
     prefer-ip-address: true
