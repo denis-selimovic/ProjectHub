@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
-import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.User;
 import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
@@ -93,9 +92,9 @@ public class ProjectCollaboratorController {
                                                                  @PathVariable UUID collaboratorId,
                                                                  ResourceOwner resourceOwner) {
 
-        User user = userService.getUserById(resourceOwner, collaboratorId);
+        UserDTO userDto = userService.getUserById(resourceOwner, collaboratorId);
         ProjectCollaborator projectCollaborator = projectCollaboratorService.findByCollaboratorIdAndProjectId(collaboratorId, projectId);
         projectService.checkIfOwner(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId());
-        return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
+        return ResponseEntity.ok().body(new Response<>(userDto));
     }
 }

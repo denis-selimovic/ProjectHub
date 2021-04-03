@@ -1,5 +1,6 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.client.dto;
+package ba.unsa.etf.nwt.taskservice.client.dto;
 
+import ba.unsa.etf.nwt.taskservice.response.interfaces.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class ProjectCollaboratorDTO implements Resource {
     private UUID id;
     private String email;
     private String firstName;

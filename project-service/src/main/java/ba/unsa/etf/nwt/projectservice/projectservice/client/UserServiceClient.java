@@ -1,7 +1,8 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.client;
 
 
-import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.User;
+import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.response.base.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,6 @@ import java.util.UUID;
 @Component
 public interface UserServiceClient {
     @RequestMapping(method = RequestMethod.GET, value = "/api/v1/users/{userId}")
-    ResponseEntity<User> getUserById(@RequestHeader("Authorization") String bearerToken,
-                                     @PathVariable UUID userId);
+    ResponseEntity<Response<UserDTO>> getUserById(@RequestHeader("Authorization") String bearerToken,
+                                                  @PathVariable UUID userId);
 }

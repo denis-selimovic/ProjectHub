@@ -19,13 +19,4 @@ public class UserDTO implements Resource {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public UserDTO(User user) {
-        id = user.getId();
-        email = user.getEmail();
-        firstName = user.getFirstName();
-        lastName = user.getLastName();
-        createdAt = user.getCreatedAt();
-        updatedAt = user.getUpdatedAt();
-    }
-
 }
