@@ -16,6 +16,6 @@ public class EmailService {
     public EmailDTO sendEmail(User user, Token token, String type) {
         SendEmailRequest request = new SendEmailRequest(type, user.getEmail(),
                 user.getFirstName(), token.getToken());
-        return emailServiceClient.sendEmail(request).getBody();
+        return emailServiceClient.sendEmail(request).getBody().getData();
     }
 }
