@@ -146,7 +146,9 @@ public class IssueControllerTest {
     @Test
     public void createIssueSuccess() throws Exception {
         UUID projectId = UUID.randomUUID();
-        Mockito.when(projectService.findProjectById(null, projectId)).thenReturn(new ProjectDTO(projectId));
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/issues")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -116,7 +116,9 @@ public class TaskControllerTest {
     @Test
     public void createTaskSuccess() throws Exception {
         UUID projectId = UUID.randomUUID();
-        Mockito.when(projectService.findProjectById(null, projectId)).thenReturn(new ProjectDTO(projectId));
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/tasks")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
