@@ -1,7 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.client.service;
 
 import ba.unsa.etf.nwt.taskservice.client.ProjectServiceClient;
-import ba.unsa.etf.nwt.taskservice.client.utility.Utility;
 import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ public class ProjectService {
 
     public ProjectDTO findProjectById(ResourceOwner resourceOwner, final UUID projectId) {
        return projectServiceClient
-                .getProjectById(Utility.getAuthHeader(resourceOwner), projectId)
+                .getProjectById(resourceOwner.getAuthHeader(), projectId)
                .getBody();
     }
 }
