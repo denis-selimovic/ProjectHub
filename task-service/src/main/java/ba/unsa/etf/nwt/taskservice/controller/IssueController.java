@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.dto.IssueDTO;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
@@ -39,6 +40,7 @@ import java.util.UUID;
 public class IssueController {
     private final IssueService issueService;
     private final CommunicationService communicationService;
+    private final ProjectService projectService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -48,7 +50,7 @@ public class IssueController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<IssueDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
-        communicationService.checkIfProjectExists(request.getProjectId());
+        projectService.findProjectById(resourceOwner, request.getProjectId());
         communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         Issue issue = issueService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new IssueDTO(issue)));

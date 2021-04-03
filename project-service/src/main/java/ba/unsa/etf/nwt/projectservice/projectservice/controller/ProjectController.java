@@ -11,6 +11,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.response.base.PaginatedResp
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.Response;
 import ba.unsa.etf.nwt.projectservice.projectservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwner;
+import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectCollaboratorService;
 import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -29,8 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/projects")
 @RequiredArgsConstructor
 public class ProjectController {
-
     private final ProjectService projectService;
+    private final ProjectCollaboratorService projectCollaboratorService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -96,5 +97,18 @@ public class ProjectController {
                                         .collect(Collectors.toList())
                         )
                 );
+    }
+
+    @GetMapping("/{projectId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Project not found")
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<ProjectDTO>> getProjectById(@PathVariable UUID projectId,
+                                                               ResourceOwner resourceOwner) {
+        Project project = projectService.findById(projectId);
+        projectCollaboratorService.checkIfOwnerOrCollaborator(project.getOwnerId(), resourceOwner.getId(), project.getId());
+        return ResponseEntity.ok().body(new Response<>(new ProjectDTO(project)));
     }
 }

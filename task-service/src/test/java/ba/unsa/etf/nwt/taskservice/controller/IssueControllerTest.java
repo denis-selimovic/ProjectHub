@@ -1,7 +1,11 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.taskservice.exception.base.ForbiddenException;
+import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Issue;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
 import ba.unsa.etf.nwt.taskservice.repository.CommentRepository;
@@ -14,9 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +33,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -54,6 +61,8 @@ public class IssueControllerTest {
     private TaskRepository taskRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @MockBean
+    private ProjectService projectService;
 
     private Priority critical;
     private Priority medium;
@@ -136,6 +145,10 @@ public class IssueControllerTest {
 
     @Test
     public void createIssueSuccess() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/issues")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +158,7 @@ public class IssueControllerTest {
                             "description": "This is a description",
                             "project_id": "%s",
                             "priority_id": "%s"
-                        }""", UUID.randomUUID(), critical.getId())))
+                        }""", projectId, critical.getId())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.name").hasJsonPath())
@@ -367,6 +380,41 @@ public class IssueControllerTest {
                         }""", UUID.randomUUID())))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errors.message", hasItem("Priority doesn't exist")));
+    }
+
+    @Test
+    public void testCreateProjectNotFound() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new NotFoundException("Not found"));
+        mockMvc.perform(post("/api/v1/issues")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "This is an issue",
+                            "description": "This is a description",
+                            "project_id": "%s",
+                            "priority_id": "%s"
+                        }""", projectId, critical.getId())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Not found")));
+    }
+
+    @Test
+    public void testCreateUserNotOwnerOrCollaborator() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new ForbiddenException("Forbidden"));
+        mockMvc.perform(post("/api/v1/issues")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "name": "This is an issue",
+                            "description": "This is a description",
+                            "project_id": "%s",
+                            "priority_id": "%s"
+                        }""", projectId, critical.getId())))
+                .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
     }
 
     private Issue createIssueInDb(Priority priority, UUID projectId) {
