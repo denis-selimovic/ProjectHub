@@ -1,9 +1,9 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.service;
 
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.BadRequestException;
+import ba.unsa.etf.nwt.emailservice.emailservice.request.SendEmailRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,6 @@ import org.thymeleaf.context.Context;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 
 @Service
@@ -26,7 +25,21 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
 
-    public void sendEmail(String subject, String to, String template, Map<String, String> params)
+    public void sendEmail(SendEmailRequest request) {
+        boolean activation = request.getType().equals("activation");
+        String subject = activation ? "Activate your accounts" : "Reset your password";
+        String template = activation ? "emails/activate" : "emails/reset";
+        try {
+            sendEmail(subject, request.getEmail(), template, Map.of(
+                    "name", request.getFirstName(),
+                    "token", request.getToken()
+            ));
+        } catch (MessagingException e) {
+            throw new BadRequestException("Bad request");
+        }
+    }
+
+    private void sendEmail(String subject, String to, String template, Map<String, String> params)
             throws MessagingException {
         String process = loadTemplate(template, params);
         MimeMessage message = createMessage(subject, to, process);

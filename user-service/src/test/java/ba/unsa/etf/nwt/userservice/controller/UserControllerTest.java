@@ -1,5 +1,9 @@
 package ba.unsa.etf.nwt.userservice.controller;
 
+import ba.unsa.etf.nwt.userservice.client.dto.EmailDTO;
+import ba.unsa.etf.nwt.userservice.client.service.EmailService;
+import ba.unsa.etf.nwt.userservice.exception.base.NotFoundException;
+import ba.unsa.etf.nwt.userservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.TokenRepository;
@@ -9,10 +13,13 @@ import ba.unsa.etf.nwt.userservice.service.TokenService;
 import ba.unsa.etf.nwt.userservice.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +27,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +46,10 @@ public class UserControllerTest {
     private UserRepository userRepository;
     @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @MockBean
+    private EmailService emailService;
 
     @BeforeEach
     public void setUp() {
@@ -273,6 +285,40 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testEmailServiceUnprocessableEntityError() throws Exception {
+        Mockito.when(emailService.sendEmail(Mockito.any(), Mockito.any(), eq("activation")))
+                .thenThrow(new UnprocessableEntityException("Unprocessable entity"));
+        mockMvc.perform(post("/api/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "email": "amila.zigo@gmail.com",
+                            "password": "Password1#",
+                            "confirm_password": "Password1#",
+                            "first_name": "Amila",
+                            "last_name": "Zigo"
+                        }"""
+                )).andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testEmailServiceNotFoundError() throws Exception {
+        Mockito.when(emailService.sendEmail(Mockito.any(), Mockito.any(), eq("activation")))
+                .thenThrow(new NotFoundException("Not found"));
+        mockMvc.perform(post("/api/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "email": "amila.zigo@gmail.com",
+                            "password": "Password1#",
+                            "confirm_password": "Password1#",
+                            "first_name": "Amila",
+                            "last_name": "Zigo"
+                        }"""
+                )).andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testRequestResendBlankEmail() throws Exception {
         mockMvc.perform(post("/api/v1/users/request-password-reset")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -305,6 +351,34 @@ public class UserControllerTest {
                         }"""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.message", is("Email successfully sent")));
+    }
+
+    @Test
+    public void testEmailServiceErrorOnPasswordReset() throws Exception {
+        createUserInDb("lamija.vrnjak@gmail.com", "password", "Test", "Test", true);
+        Mockito.when(emailService.sendEmail(Mockito.any(), Mockito.any(), eq("reset")))
+                .thenThrow(new NotFoundException("Not found"));
+        mockMvc.perform(post("/api/v1/users/request-password-reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "email": "lamija.vrnjak@gmail.com"
+                        }""")
+                ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testEmailServiceUnprocessableEntityErrorOnPasswordReset() throws Exception {
+        createUserInDb("lamija.vrnjak@gmail.com", "password", "Test", "Test", true);
+        Mockito.when(emailService.sendEmail(Mockito.any(), Mockito.any(), eq("reset")))
+                .thenThrow(new UnprocessableEntityException("Unprocessable entity"));
+        mockMvc.perform(post("/api/v1/users/request-password-reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "email": "lamija.vrnjak@gmail.com"
+                        }""")
+        ).andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -559,5 +633,15 @@ public class UserControllerTest {
                         }""", token.getToken())))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errors.message", hasItem("Invalid token")));
+    }
+
+    private User createUserInDb(String email, String password, String firstName, String lastName, Boolean enabled) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEnabled(enabled);
+        return userRepository.save(user);
     }
 }

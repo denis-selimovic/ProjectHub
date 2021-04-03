@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.userservice.controller;
 
+import ba.unsa.etf.nwt.userservice.client.service.EmailService;
 import ba.unsa.etf.nwt.userservice.dto.UserDTO;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
@@ -10,7 +11,6 @@ import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import ba.unsa.etf.nwt.userservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.userservice.response.base.Response;
 import ba.unsa.etf.nwt.userservice.response.base.SimpleResponse;
-import ba.unsa.etf.nwt.userservice.service.EmailService;
 import ba.unsa.etf.nwt.userservice.service.TokenService;
 import ba.unsa.etf.nwt.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,7 +52,7 @@ public class UsersController {
     public ResponseEntity<Response<UserDTO>> create(@RequestBody @Valid CreateUserRequest request) {
         User user = userService.create(request);
         Token token = tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
-        emailService.sendEmail(user, token);
+        emailService.sendEmail(user, token, "activation");
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new UserDTO(user)));
     }
 
@@ -71,7 +71,7 @@ public class UsersController {
     public ResponseEntity<Response<SimpleResponse>> requestPasswordReset(@RequestBody @Valid RequestPasswordResetRequest request) {
         userService.findByEmail(request.getEmail()).ifPresent(user -> {
             Token token = tokenService.generateToken(user, Token.TokenType.RESET_PASSWORD);
-            emailService.sendEmail(user, token);
+            emailService.sendEmail(user, token, "reset");
         });
         return ResponseEntity.ok(new Response<>(new SimpleResponse("Email successfully sent")));
     }
