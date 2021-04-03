@@ -1,5 +1,8 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.User;
+import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
@@ -31,6 +34,7 @@ public class ProjectCollaboratorController {
 
     private final ProjectService projectService;
     private final ProjectCollaboratorService projectCollaboratorService;
+    private final UserService userService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -82,5 +86,16 @@ public class ProjectCollaboratorController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(collaboratorPage), collaboratorPage.getContent()));
 
+    }
+
+    @GetMapping("/{collaboratorId}")
+    public ResponseEntity<Response<UserDTO>> getCollaboratorById(@PathVariable UUID projectId,
+                                                                 @PathVariable UUID collaboratorId,
+                                                                 ResourceOwner resourceOwner) {
+
+        User user = userService.getUserById(resourceOwner, collaboratorId);
+        ProjectCollaborator projectCollaborator = projectCollaboratorService.findByCollaboratorIdAndProjectId(collaboratorId, projectId);
+        projectService.checkIfOwner(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId());
+        return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
     }
 }

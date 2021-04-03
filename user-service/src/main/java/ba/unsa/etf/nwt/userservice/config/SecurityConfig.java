@@ -23,7 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final String[] unprotectedEndpoints = {
             "/oauth/token",
             "/api/v1/users/**",
-            "/api/v1/users/**",
+//            "/api/v1/users",
+//            "/api/v1/users/request-password-reset",
+//            "/api/v1/users/confirm-email",
+//            "/api/v1/users/reset-password",
             "/swagger-resources/**",
             "/webjars/**",
             "/v3/**",
@@ -44,9 +47,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated()
+//                .access("#oauth2.user")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
     }
+
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web
+//            .ignoring()
+//                .antMatchers("\\/api\\/v1\\/users\\/[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}");
+//    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
