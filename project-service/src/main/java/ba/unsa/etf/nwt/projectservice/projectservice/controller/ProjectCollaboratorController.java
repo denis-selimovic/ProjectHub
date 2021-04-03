@@ -88,13 +88,18 @@ public class ProjectCollaboratorController {
     }
 
     @GetMapping("/{collaboratorId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 403, message = "Forbidden: User not collaborator or owner of project", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Project or user not found", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<UserDTO>> getCollaboratorById(@PathVariable UUID projectId,
                                                                  @PathVariable UUID collaboratorId,
                                                                  ResourceOwner resourceOwner) {
 
         UserDTO userDto = userService.getUserById(resourceOwner, collaboratorId);
         ProjectCollaborator projectCollaborator = projectCollaboratorService.findByCollaboratorIdAndProjectId(collaboratorId, projectId);
-        projectService.checkIfOwner(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId());
+        projectCollaboratorService.checkIfOwnerOrCollaborator(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId(), projectId);
         return ResponseEntity.ok().body(new Response<>(userDto));
     }
 }
