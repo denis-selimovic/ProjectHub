@@ -22,7 +22,7 @@ public class ProjectService {
                .getData();
     }
 
-    public ProjectCollaboratorDTO findCollaboratorBydId(ResourceOwner resourceOwner, final UUID projectId, final UUID collaboratorId) {
+    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId, final UUID collaboratorId) {
         return Objects.requireNonNull(projectServiceClient
                 .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
                 .getBody())

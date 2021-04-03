@@ -51,10 +51,10 @@ public class TaskController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
         projectService.findProjectById(resourceOwner, request.getProjectId());
-        projectService.findCollaboratorBydId(resourceOwner, request.getProjectId(), resourceOwner.getId());
+        projectService.findCollaboratorById(resourceOwner, request.getProjectId(), resourceOwner.getId());
 //        communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         if (request.getUserId() != null) {
-            projectService.findCollaboratorBydId(resourceOwner, request.getProjectId(), request.getUserId());
+            projectService.findCollaboratorById(resourceOwner, request.getProjectId(), request.getUserId());
 //            communicationService.checkIfCollaborator(request.getUserId(), request.getProjectId());
         }
         Task task = taskService.create(request);
@@ -87,7 +87,7 @@ public class TaskController {
                                                       @RequestParam(required = false, name = "priority_id") String priorityId,
                                                       @RequestParam(required = false, name = "status_id") String statusId,
                                                       @RequestParam(required = false, name = "type_id") String typeId) {
-        projectService.findCollaboratorBydId(resourceOwner, projectId, resourceOwner.getId());
+        projectService.findCollaboratorById(resourceOwner, projectId, resourceOwner.getId());
 //        communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
@@ -104,7 +104,7 @@ public class TaskController {
                                          @PathVariable UUID taskId,
                                          @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
-        projectService.findCollaboratorBydId(resourceOwner, task.getProjectId(), resourceOwner.getId());
+        projectService.findCollaboratorById(resourceOwner, task.getProjectId(), resourceOwner.getId());
 //        communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
