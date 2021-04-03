@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
 
 @FeignClient(value = "email-service")
 @Component
 public interface EmailServiceClient {
     @RequestMapping(method = RequestMethod.POST, value = "/api/v1/emails")
-    ResponseEntity<EmailDTO> sendEmail(@RequestBody @Valid SendEmailRequest request);
+    ResponseEntity<EmailDTO> sendEmail(@RequestBody SendEmailRequest request);
 }
