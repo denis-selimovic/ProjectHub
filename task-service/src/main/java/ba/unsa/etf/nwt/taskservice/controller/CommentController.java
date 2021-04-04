@@ -13,7 +13,6 @@ import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.taskservice.service.CommentService;
-import ba.unsa.etf.nwt.taskservice.service.CommunicationService;
 import ba.unsa.etf.nwt.taskservice.service.TaskService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -39,7 +38,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    private final CommunicationService communicationService;
     private final TaskService taskService;
     private final ProjectService projectService;
 
