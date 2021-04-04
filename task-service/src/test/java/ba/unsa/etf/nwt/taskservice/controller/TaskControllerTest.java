@@ -558,6 +558,35 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
     }
 
+    @Test
+    public void deleteTaskSameOwners() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+
+        Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+
+        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+
+        mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteTaskDifferentOwners() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+
+        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId)))
+                .thenThrow(new ForbiddenException("You don't have permission for this activity"));
+
+        mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
+    }
+
     private Task createTaskInDB(UUID projectId, Priority priority, Status status, Type type, final UUID userId) {
         Task task = new Task();
         task.setName("Task name");

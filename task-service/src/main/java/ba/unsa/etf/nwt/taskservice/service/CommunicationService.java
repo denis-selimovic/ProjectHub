@@ -10,7 +10,5 @@ public class CommunicationService {
         //TODO
     }
 
-    public void checkIfOwner(final UUID id, final UUID projectId) {
-        //TODO
-    }
+    //public void checkIfOwner(final UUID id, final UUID projectId){}
 }

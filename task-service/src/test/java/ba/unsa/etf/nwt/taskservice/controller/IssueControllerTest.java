@@ -417,6 +417,35 @@ public class IssueControllerTest {
                 .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
     }
 
+    @Test
+    public void deleteIssueSameOwners() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+
+        Issue issue = createIssueInDb(critical, projectDTO.getProjectId());
+
+        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+
+        mockMvc.perform(delete(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteIssueDifferentOwners() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Issue issue = createIssueInDb(critical, projectId);
+
+        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId)))
+                .thenThrow(new ForbiddenException("You don't have permission for this activity"));
+
+        mockMvc.perform(delete(String.format("/api/v1/issues/%s", issue.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
+    }
+
     private Issue createIssueInDb(Priority priority, UUID projectId) {
         Issue issue = new Issue();
         issue.setName("Name 1");
