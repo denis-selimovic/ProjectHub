@@ -52,10 +52,8 @@ public class TaskController {
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
         projectService.findProjectById(resourceOwner, request.getProjectId());
         projectService.findCollaboratorById(resourceOwner, request.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         if (request.getUserId() != null) {
             projectService.findCollaboratorById(resourceOwner, request.getProjectId(), request.getUserId());
-//            communicationService.checkIfCollaborator(request.getUserId(), request.getProjectId());
         }
         Task task = taskService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
@@ -88,7 +86,6 @@ public class TaskController {
                                                       @RequestParam(required = false, name = "status_id") String statusId,
                                                       @RequestParam(required = false, name = "type_id") String typeId) {
         projectService.findCollaboratorById(resourceOwner, projectId, resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
     }
@@ -105,7 +102,6 @@ public class TaskController {
                                          @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
         projectService.findCollaboratorById(resourceOwner, task.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }

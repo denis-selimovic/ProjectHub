@@ -52,7 +52,6 @@ public class IssueController {
     public ResponseEntity<Response<IssueDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
         projectService.findProjectById(resourceOwner, request.getProjectId());
         projectService.findCollaboratorById(resourceOwner, request.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), request.getProjectId());
         Issue issue = issueService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new IssueDTO(issue)));
     }
@@ -67,7 +66,6 @@ public class IssueController {
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
         Issue issue = issueService.findById(issueId);
         projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfOwner(resourceOwner.getId(), issue.getProjectId());
         issueService.delete(issue);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Issue successfully deleted")));
     }
@@ -83,7 +81,6 @@ public class IssueController {
                                                        @RequestParam(name = "project_id") UUID projectId,
                                                        @RequestParam(required = false, name = "priority_id") String priorityId) {
         projectService.findCollaboratorById(resourceOwner, projectId, resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), projectId);
         Page<IssueDTO> issuePage = issueService.filter(pageable, projectId, priorityId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(issuePage), issuePage.getContent()));
     }
@@ -100,7 +97,6 @@ public class IssueController {
                                                    @RequestBody @Valid PatchIssueRequest patchIssueRequest) {
         Issue issue = issueService.findById(issueId);
         projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), issue.getProjectId());
         issueService.patch(issue, patchIssueRequest);
         return ResponseEntity.ok().body(new Response<>(new IssueDTO(issue)));
     }

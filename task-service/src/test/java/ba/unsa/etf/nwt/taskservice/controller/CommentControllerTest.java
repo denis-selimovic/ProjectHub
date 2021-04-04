@@ -288,18 +288,6 @@ public class CommentControllerTest {
         return taskRepository.save(task);
     }
 
-//    private Task createTaskInDB() {
-//        Task task = new Task();
-//        task.setName("Task name");
-//        task.setDescription("Desc");
-//        task.setType(bug);
-//        task.setPriority(critical);
-//        task.setStatus(open);
-//        UUID projectId = UUID.randomUUID();
-//        task.setProjectId(projectId);
-//        return taskRepository.save(task);
-//    }
-
     private Comment createCommentInDB(Task task, UUID userId) {
         Comment comment = new Comment();
         comment.setText("Comment");

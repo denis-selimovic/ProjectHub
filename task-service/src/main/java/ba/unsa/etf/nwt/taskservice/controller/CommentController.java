@@ -55,7 +55,6 @@ public class CommentController {
                                            @RequestBody @Valid CreateCommentRequest request) {
         Task task = taskService.findById(taskId);
         projectService.findCollaboratorById(resourceOwner, task.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         Comment comment = commentService.create(request, task, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment)));
     }
@@ -71,7 +70,6 @@ public class CommentController {
                                                                 Pageable pageable) {
         Task task = taskService.findById(taskId);
         projectService.findCollaboratorById(resourceOwner, task.getProjectId(), resourceOwner.getId());
-//        communicationService.checkIfCollaborator(resourceOwner.getId(), task.getProjectId());
         Page<CommentDTO> commentPage = commentService.getCommentsForTask(task, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(commentPage), commentPage.getContent()));
