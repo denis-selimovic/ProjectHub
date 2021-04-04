@@ -11,7 +11,6 @@ import ba.unsa.etf.nwt.taskservice.response.base.ErrorResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.PaginatedResponse;
 import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
-import ba.unsa.etf.nwt.taskservice.service.CommunicationService;
 import ba.unsa.etf.nwt.taskservice.service.IssueService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -39,7 +38,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class IssueController {
     private final IssueService issueService;
-    private final CommunicationService communicationService;
     private final ProjectService projectService;
 
     @PostMapping
@@ -66,6 +64,7 @@ public class IssueController {
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
         Issue issue = issueService.findById(issueId);
         projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
+        projectService.findProjectByIdAndOwner(resourceOwner, issue.getProjectId());
         issueService.delete(issue);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Issue successfully deleted")));
     }
