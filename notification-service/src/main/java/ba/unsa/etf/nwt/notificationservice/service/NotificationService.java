@@ -32,6 +32,7 @@ public class NotificationService {
         NotificationUser notificationUser = new NotificationUser();
         notificationUser.setUserId(resourceOwner.getId());
         notificationUser.setNotification(notification);
+        notificationUser.setRead(false);
         notificationUserRepository.save(notificationUser);
         return new NotificationDTO(notification, notificationUser);
     }
