@@ -56,6 +56,6 @@ public class NotificationService {
             throw new UnprocessableEntityException("Notification doesn't exist");
         }
 
-        notificationRepository.deleteById(notificationId);
+        notificationUserRepository.deleteById(notificationUserOptional.get().getId());
     }
 }

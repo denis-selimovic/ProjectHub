@@ -5,18 +5,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -42,7 +38,4 @@ public class NotificationUser {
     @NotNull(message = "Attribute read can't be null")
     @Column(name = "read", nullable = false)
     private Boolean read;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification")
-    private Set<NotificationUser> users = new HashSet<>();
 }
