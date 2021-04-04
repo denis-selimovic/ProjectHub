@@ -2,13 +2,35 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 
 import ba.unsa.etf.nwt.notificationservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.notificationservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
+import ba.unsa.etf.nwt.notificationservice.model.Notification;
+import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.UUID;
+
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -35,7 +57,7 @@ public class NotificationControllerTest {
                 ResourceOwnerInjector.clientId
         ).getValue();
     }
-    /*
+
     @Test
     public void createNotificationBlankTitle() throws Exception {
         mockMvc.perform(post("/api/notifications")
@@ -144,8 +166,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.description").hasJsonPath())
                 .andExpect(jsonPath("$.data.created_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.updated_at").hasJsonPath())
-                .andExpect(jsonPath("$.data.read").hasJsonPath())
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("Title")))
                 .andExpect(jsonPath("$.data.description", is("Description")));
     }
@@ -274,8 +294,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(notification.getRead())))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
@@ -294,8 +312,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(notification.getRead())))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
@@ -314,8 +330,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(true)))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
@@ -334,8 +348,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(false)))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
@@ -358,10 +370,12 @@ public class NotificationControllerTest {
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setDescription(description);
-        notification.setUserId(ResourceOwnerInjector.id);
-        notification.setRead(read);
+        NotificationUser notificationUser = new NotificationUser();
+        notificationUser.setId(ResourceOwnerInjector.id);
+        notificationUser.setRead(read);
+//        notification.setUserId(ResourceOwnerInjector.id);
+//        notification.setRead(read);
         notificationRepository.save(notification);
         return notification;
     }
-    */
 }
