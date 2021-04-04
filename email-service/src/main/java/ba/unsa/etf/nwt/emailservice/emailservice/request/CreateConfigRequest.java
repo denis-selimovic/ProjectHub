@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.request;
 
+import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailConfig;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,11 @@ public class CreateConfigRequest {
     @NotNull
     @JsonProperty("user_id")
     private UUID userId;
+
+    public EmailConfig createEmailConfig() {
+        EmailConfig emailConfig = new EmailConfig();
+        emailConfig.setEmail(email);
+        emailConfig.setUserId(userId);
+        return emailConfig;
+    }
 }

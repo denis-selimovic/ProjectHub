@@ -18,14 +18,8 @@ public class EmailConfigService {
         emailConfigRepository.findByUserId(request.getUserId()).ifPresent(c -> {
             throw new UnprocessableEntityException("Request cannot be processed");
         });
-        EmailConfig emailConfig = createFromRequest(request);
+        EmailConfig emailConfig = request.createEmailConfig();
         return emailConfigRepository.save(emailConfig);
     }
 
-    private EmailConfig createFromRequest(CreateConfigRequest request) {
-        EmailConfig emailConfig = new EmailConfig();
-        emailConfig.setEmail(request.getEmail());
-        emailConfig.setUserId(request.getUserId());
-        return emailConfig;
-    }
 }
