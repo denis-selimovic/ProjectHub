@@ -18,37 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthService authService;
 
-//    private final String[] unprotectedEndpoints = {
-//            "/oauth/token",
-//            "/api/v1/users",
-//            "/api/v1/users/request-password-reset",
-//            "/api/v1/users/confirm-email",
-//            "/api/v1/users/reset-password",
-//            "/swagger-resources/**",
-//            "/webjars/**",
-//            "/v3/**",
-//            "/swagger-ui/**",
-//            "/v1/swagger-ui/**",
-//            "/v1/api-docs/**",
-//            "/service-instances/**"
-//    };
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.cors()
-//                .and()
-//                .csrf()
-//                .disable()
-//                .authorizeRequests()
-//                .antMatchers(unprotectedEndpoints)
-//                .permitAll()
-//                .anyRequest()
-//                .authenticated()
-//                .and()gi
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//
-//    }
-
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(authService).passwordEncoder(passwordEncoder());

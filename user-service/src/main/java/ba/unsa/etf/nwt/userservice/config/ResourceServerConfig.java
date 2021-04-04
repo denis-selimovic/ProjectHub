@@ -7,19 +7,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.stereotype.Component;
 
 @EnableResourceServer
 @Component
 @RequiredArgsConstructor
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+    private final TokenStore tokenStore;
 
     @Override
     public void configure(ResourceServerSecurityConfigurer configurer) {
-        configurer.tokenStore(tokenStore()) ;
+        configurer.tokenStore(tokenStore) ;
     }
 
     private final String[] unprotectedEndpoints = {
@@ -50,9 +48,5 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .access("#oauth2.user")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(jwtAccessTokenConverter);
     }
 }
