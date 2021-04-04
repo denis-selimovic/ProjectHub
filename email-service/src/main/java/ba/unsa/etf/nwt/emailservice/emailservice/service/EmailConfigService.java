@@ -1,11 +1,14 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.service;
 
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailConfig;
 import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailConfigRepository;
 import ba.unsa.etf.nwt.emailservice.emailservice.request.CreateConfigRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @Service
@@ -22,4 +25,7 @@ public class EmailConfigService {
         return emailConfigRepository.save(emailConfig);
     }
 
+    public EmailConfig findByUserId(UUID userId) {
+        return emailConfigRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("Config not found"));
+    }
 }
