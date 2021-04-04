@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
@@ -14,9 +16,11 @@ import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
 import ba.unsa.etf.nwt.taskservice.repository.TypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +31,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -51,6 +56,8 @@ public class CommentControllerTest {
     private StatusRepository statusRepository;
     @Autowired
     private TypeRepository typeRepository;
+    @MockBean
+    private ProjectService projectService;
 
     private Priority critical;
     private Type bug;
@@ -142,7 +149,12 @@ public class CommentControllerTest {
         task.setType(bug);
         task.setPriority(critical);
         task.setStatus(open);
+
         UUID projectId = UUID.randomUUID();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+
         task.setProjectId(projectId);
         task = taskRepository.save(task);
 
@@ -259,14 +271,19 @@ public class CommentControllerTest {
                 .andExpect(jsonPath("$.data", hasSize(10)));
     }
 
-    private Task createTaskInDB() {
+    public Task createTaskInDB() {
         Task task = new Task();
         task.setName("Task name");
         task.setDescription("Desc");
         task.setType(bug);
         task.setPriority(critical);
         task.setStatus(open);
+
         UUID projectId = UUID.randomUUID();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setProjectId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+
         task.setProjectId(projectId);
         return taskRepository.save(task);
     }

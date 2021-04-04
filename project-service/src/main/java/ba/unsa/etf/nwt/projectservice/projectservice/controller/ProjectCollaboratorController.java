@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
@@ -31,6 +33,7 @@ public class ProjectCollaboratorController {
 
     private final ProjectService projectService;
     private final ProjectCollaboratorService projectCollaboratorService;
+    private final UserService userService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -82,5 +85,21 @@ public class ProjectCollaboratorController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(collaboratorPage), collaboratorPage.getContent()));
 
+    }
+
+    @GetMapping("/{collaboratorId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 403, message = "Forbidden: User not collaborator or owner of project", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Project or user not found", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<UserDTO>> getCollaboratorById(@PathVariable UUID projectId,
+                                                                 @PathVariable UUID collaboratorId,
+                                                                 ResourceOwner resourceOwner) {
+
+        UserDTO userDto = userService.getUserById(resourceOwner, collaboratorId);
+        ProjectCollaborator projectCollaborator = projectCollaboratorService.findByCollaboratorIdAndProjectId(collaboratorId, projectId);
+        projectCollaboratorService.checkIfOwnerOrCollaborator(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId(), projectId);
+        return ResponseEntity.ok().body(new Response<>(userDto));
     }
 }

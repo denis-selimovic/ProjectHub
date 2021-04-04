@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -19,34 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthService authService;
-
-    private final String[] unprotectedEndpoints = {
-            "/oauth/token",
-            "/api/v1/users/**",
-            "/api/v1/users/**",
-            "/swagger-resources/**",
-            "/webjars/**",
-            "/v3/**",
-            "/swagger-ui/**",
-            "/v1/swagger-ui/**",
-            "/v1/api-docs/**",
-            "/service-instances/**"
-    };
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers(unprotectedEndpoints)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -1,6 +1,8 @@
 package ba.unsa.etf.nwt.taskservice.client;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,11 @@ import java.util.UUID;
 @Component
 public interface ProjectServiceClient {
     @RequestMapping(method = RequestMethod.GET,value = "/api/v1/projects/{projectId}")
-    ResponseEntity<ProjectDTO> getProjectById(@RequestHeader("Authorization") String bearerToken,
+    ResponseEntity<Response<ProjectDTO>> getProjectById(@RequestHeader("Authorization") String bearerToken,
                                                         @PathVariable UUID projectId);
+
+    @RequestMapping(method = RequestMethod.GET,value = "/api/v1/projects/{projectId}/collaborators/{collaboratorId}")
+    ResponseEntity<Response<ProjectCollaboratorDTO>> getCollaboratorById(@RequestHeader("Authorization") String bearerToken,
+                                                                        @PathVariable UUID projectId,
+                                                                        @PathVariable UUID collaboratorId);
 }

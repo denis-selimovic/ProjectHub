@@ -11,10 +11,11 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDTO implements Resource {
-    private UUID projectId;
-    private String name;
-    private UUID ownerId;
+public class ProjectCollaboratorDTO implements Resource {
+    private UUID id;
+    private String email;
+    private String firstName;
+    private String lastName;
     private Instant createdAt;
     private Instant updatedAt;
 }

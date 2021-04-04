@@ -1,4 +1,4 @@
-package ba.unsa.etf.nwt.projectservice.projectservice.security;
+package ba.unsa.etf.nwt.userservice.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,9 +25,5 @@ public class ResourceOwner {
         clientId = (String) decoded.get("client_id");
         accessToken = details.getTokenValue();
         scopes = (ArrayList<String>) decoded.get("scope");
-    }
-
-    public String getAuthHeader() {
-        return "Bearer " + accessToken;
     }
 }
