@@ -30,7 +30,7 @@ public class ProjectService {
                 .getData();
     }
 
-    public ProjectDTO findProjectByOwner(ResourceOwner resourceOwner, final UUID projectId) {
+    public ProjectDTO findProjectByIdAndOwner(ResourceOwner resourceOwner, final UUID projectId) {
         ProjectDTO projectDTO = findProjectById(resourceOwner, projectId);
         if(!projectDTO.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");

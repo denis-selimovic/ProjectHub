@@ -66,7 +66,7 @@ public class TaskController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID taskId) {
         Task task = taskService.findById(taskId);
-        projectService.findProjectByOwner(resourceOwner, task.getProjectId());
+        projectService.findProjectByIdAndOwner(resourceOwner, task.getProjectId());
         taskService.delete(task);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Task successfully deleted")));
     }

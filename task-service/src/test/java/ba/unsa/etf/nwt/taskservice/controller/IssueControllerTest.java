@@ -425,7 +425,7 @@ public class IssueControllerTest {
 
         Issue issue = createIssueInDb(critical, projectDTO.getProjectId());
 
-        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+        Mockito.when(projectService.findProjectByIdAndOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         mockMvc.perform(delete(String.format("/api/v1/issues/%s", issue.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -437,7 +437,7 @@ public class IssueControllerTest {
         UUID projectId = UUID.randomUUID();
         Issue issue = createIssueInDb(critical, projectId);
 
-        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId)))
+        Mockito.when(projectService.findProjectByIdAndOwner(Mockito.any(), eq(projectId)))
                 .thenThrow(new ForbiddenException("You don't have permission for this activity"));
 
         mockMvc.perform(delete(String.format("/api/v1/issues/%s", issue.getId()))

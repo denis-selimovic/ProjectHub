@@ -566,7 +566,7 @@ public class TaskControllerTest {
 
         Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
 
-        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
+        Mockito.when(projectService.findProjectByIdAndOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token))
@@ -578,7 +578,7 @@ public class TaskControllerTest {
         UUID projectId = UUID.randomUUID();
         Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
 
-        Mockito.when(projectService.findProjectByOwner(Mockito.any(), eq(projectId)))
+        Mockito.when(projectService.findProjectByIdAndOwner(Mockito.any(), eq(projectId)))
                 .thenThrow(new ForbiddenException("You don't have permission for this activity"));
 
         mockMvc.perform(delete(String.format("/api/v1/tasks/%s", task.getId()))

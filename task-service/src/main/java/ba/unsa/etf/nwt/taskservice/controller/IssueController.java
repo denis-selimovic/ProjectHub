@@ -64,7 +64,7 @@ public class IssueController {
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
         Issue issue = issueService.findById(issueId);
         projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
-        projectService.findProjectByOwner(resourceOwner, issue.getProjectId());
+        projectService.findProjectByIdAndOwner(resourceOwner, issue.getProjectId());
         issueService.delete(issue);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Issue successfully deleted")));
     }
