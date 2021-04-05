@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.notificationservice.service;
 
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
+import ba.unsa.etf.nwt.notificationservice.dto.NotificationProjection;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
@@ -12,6 +13,7 @@ import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,7 +40,8 @@ public class NotificationService {
     }
 
     public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
-        return notificationRepository.findAllByUserId(userId, pageable);
+        Page<NotificationProjection> notificationPage = notificationRepository.findAllByUserId(userId, pageable);
+        notificationPage.
     }
 
     public Notification findById(UUID notificationId) {
