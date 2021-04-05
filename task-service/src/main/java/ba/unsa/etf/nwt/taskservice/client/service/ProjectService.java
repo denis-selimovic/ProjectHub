@@ -46,7 +46,8 @@ public class ProjectService {
         return projectDTO;
     }
 
-    public void checkIfOwnerOrCollaborator(ResourceOwner resourceOwner, ProjectDTO projectDTO) {
+    public void checkIfOwnerOrCollaborator(ResourceOwner resourceOwner, final UUID projectId) {
+        ProjectDTO projectDTO = findProjectById(resourceOwner, projectId);
         if (!projectDTO.getOwnerId().equals(resourceOwner.getId()))
             projectServiceClient
                     .getCollaboratorById(resourceOwner.getAuthHeader(), projectDTO.getId(), resourceOwner.getId())
