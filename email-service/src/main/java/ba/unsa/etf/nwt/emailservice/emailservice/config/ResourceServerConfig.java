@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private final String[] unprotectedEndpoints = {
-            "/api/v1/emails",
+            "/api/v1/emails/**",
+            "/api/v1/email-config/**",
             "/service-instances/**"
     };
 
