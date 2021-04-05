@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.service;
 
+import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.repository.SubscriptionRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,9 +33,11 @@ public class SubscriptionService {
         return subscription;
     }
 
-    public void deleteById(UUID subscriptionId) {
-        if(!subscriptionRepository.existsById(subscriptionId))
-            throw new UnprocessableEntityException("Request body can not be processed. This subscription doesn't exist");
+    public void delete(UUID subscriptionId, UUID userId) {
+        Optional<Subscription> optionalSubscription = subscriptionRepository.findByIdAndUserId(subscriptionId, userId);
+        if(optionalSubscription.isEmpty()){
+            throw new NotFoundException("Subscription doesn't exist");
+        }
         subscriptionRepository.deleteById(subscriptionId);
     }
 }

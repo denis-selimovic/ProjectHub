@@ -45,8 +45,8 @@ public class SubscriptionController {
             @ApiResponse(code = 404, message = "Not found: Subscription not found", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId) {
-        subscriptionService.deleteById(subscriptionId);
+    public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId, ResourceOwner resourceOwner) {
+        subscriptionService.delete(subscriptionId, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Subscription successfully deleted")));
     }
 

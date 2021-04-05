@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface SubscriptionRepository extends PagingAndSortingRepository<Subscription, UUID> {
     Optional<Subscription> findByTaskIdAndUserId(UUID taskId, UUID userID);
     boolean existsById(@Nullable UUID id);
+    Optional<Subscription> findByIdAndUserId(UUID id, UUID userId);
 }
