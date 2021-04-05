@@ -97,9 +97,11 @@ public class ProjectCollaboratorController {
                                                                  @PathVariable UUID collaboratorId,
                                                                  ResourceOwner resourceOwner) {
 
+        Project project = projectService.findById(projectId);
         UserDTO userDto = userService.getUserById(resourceOwner, collaboratorId);
-        ProjectCollaborator projectCollaborator = projectCollaboratorService.findByCollaboratorIdAndProjectId(collaboratorId, projectId);
-        projectCollaboratorService.checkIfOwnerOrCollaborator(projectCollaborator.getProject().getOwnerId(), resourceOwner.getId(), projectId);
+        projectCollaboratorService.checkIfOwnerOrCollaborator(project.getOwnerId(), resourceOwner.getId(), projectId);
+        projectCollaboratorService.checkIfCollaboratorExists(project.getOwnerId(), collaboratorId, projectId);
+
         return ResponseEntity.ok().body(new Response<>(userDto));
     }
 }

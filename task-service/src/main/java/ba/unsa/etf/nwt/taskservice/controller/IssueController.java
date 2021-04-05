@@ -44,12 +44,12 @@ public class IssueController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Issue created"),
             @ApiResponse(code = 422, message = "Unprocessable entity: Validation fail", response = ErrorResponse.class),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<IssueDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
+
         projectService.findProjectById(resourceOwner, request.getProjectId());
-        projectService.findCollaboratorById(resourceOwner, request.getProjectId(), resourceOwner.getId());
         Issue issue = issueService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new IssueDTO(issue)));
     }
@@ -63,7 +63,6 @@ public class IssueController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(ResourceOwner resourceOwner, @PathVariable UUID issueId) {
         Issue issue = issueService.findById(issueId);
-        projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
         projectService.findProjectByIdAndOwner(resourceOwner, issue.getProjectId());
         issueService.delete(issue);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Issue successfully deleted")));
@@ -72,14 +71,14 @@ public class IssueController {
     @GetMapping
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<IssueDTO, MetadataDTO>> getIssues(ResourceOwner resourceOwner,
                                                        Pageable pageable,
                                                        @RequestParam(name = "project_id") UUID projectId,
                                                        @RequestParam(required = false, name = "priority_id") String priorityId) {
-        projectService.findCollaboratorById(resourceOwner, projectId, resourceOwner.getId());
+        projectService.findProjectById(resourceOwner, projectId);
         Page<IssueDTO> issuePage = issueService.filter(pageable, projectId, priorityId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(issuePage), issuePage.getContent()));
     }
@@ -88,14 +87,14 @@ public class IssueController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Issue updated"),
             @ApiResponse(code = 404, message = "Issue not found"),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<IssueDTO>> patch(ResourceOwner resourceOwner,
                                                    @PathVariable UUID issueId,
                                                    @RequestBody @Valid PatchIssueRequest patchIssueRequest) {
         Issue issue = issueService.findById(issueId);
-        projectService.findCollaboratorById(resourceOwner, issue.getProjectId(), resourceOwner.getId());
+        projectService.findProjectById(resourceOwner, issue.getProjectId());
         issueService.patch(issue, patchIssueRequest);
         return ResponseEntity.ok().body(new Response<>(new IssueDTO(issue)));
     }

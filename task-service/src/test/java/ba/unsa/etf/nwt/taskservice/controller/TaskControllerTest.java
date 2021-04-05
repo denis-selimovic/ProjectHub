@@ -117,7 +117,7 @@ public class TaskControllerTest {
     public void createTaskSuccess() throws Exception {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/tasks")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -562,7 +562,7 @@ public class TaskControllerTest {
     public void deleteTaskSameOwners() throws Exception {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
 
         Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
 

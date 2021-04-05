@@ -44,14 +44,13 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Task created"),
             @ApiResponse(code = 422, message = "Unprocessable entity: Validation fail", response = ErrorResponse.class),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
         projectService.findProjectById(resourceOwner, request.getProjectId());
-        projectService.findCollaboratorById(resourceOwner, request.getProjectId(), resourceOwner.getId());
         if (request.getUserId() != null) {
-            projectService.findCollaboratorById(resourceOwner, request.getProjectId(), request.getUserId());
+            projectService.findCollaboratorById(resourceOwner, request.getUserId(), request.getProjectId());
         }
         Task task = taskService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
@@ -74,16 +73,16 @@ public class TaskController {
     @GetMapping
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<TaskDTO, MetadataDTO>> getTasks(ResourceOwner resourceOwner,
-                                                      Pageable pageable,
-                                                      @RequestParam(name = "project_id") UUID projectId,
-                                                      @RequestParam(required = false, name = "priority_id") String priorityId,
-                                                      @RequestParam(required = false, name = "status_id") String statusId,
-                                                      @RequestParam(required = false, name = "type_id") String typeId) {
-        projectService.findCollaboratorById(resourceOwner, projectId, resourceOwner.getId());
+                                                                            Pageable pageable,
+                                                                            @RequestParam(name = "project_id") UUID projectId,
+                                                                            @RequestParam(required = false, name = "priority_id") String priorityId,
+                                                                            @RequestParam(required = false, name = "status_id") String statusId,
+                                                                            @RequestParam(required = false, name = "type_id") String typeId) {
+        projectService.findProjectById(resourceOwner, projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
     }
@@ -92,14 +91,17 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Task updated"),
             @ApiResponse(code = 404, message = "Task not found"),
-            @ApiResponse(code = 403, message = "Forbidden: User not collaborator on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<TaskDTO>> patch(ResourceOwner resourceOwner,
-                                         @PathVariable UUID taskId,
-                                         @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
+                                                   @PathVariable UUID taskId,
+                                                   @RequestBody @Valid PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
-        projectService.findCollaboratorById(resourceOwner, task.getProjectId(), resourceOwner.getId());
+        projectService.findProjectById(resourceOwner, task.getProjectId());
+        if(patchTaskRequest.getUserId().isPresent()){
+            projectService.findCollaboratorById(resourceOwner, patchTaskRequest.getUserId().get(), task.getProjectId());
+        }
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }

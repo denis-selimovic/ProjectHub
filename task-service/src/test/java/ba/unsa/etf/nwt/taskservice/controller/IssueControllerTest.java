@@ -147,7 +147,7 @@ public class IssueControllerTest {
     public void createIssueSuccess() throws Exception {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/issues")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -421,9 +421,9 @@ public class IssueControllerTest {
     public void deleteIssueSameOwners() throws Exception {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
 
-        Issue issue = createIssueInDb(critical, projectDTO.getProjectId());
+        Issue issue = createIssueInDb(critical, projectDTO.getId());
 
         Mockito.when(projectService.findProjectByIdAndOwner(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 

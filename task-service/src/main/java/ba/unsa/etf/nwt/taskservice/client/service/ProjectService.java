@@ -23,17 +23,17 @@ public class ProjectService {
                .getData();
     }
 
-    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId, final UUID collaboratorId) {
-        return Objects.requireNonNull(projectServiceClient
-                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
-                .getBody())
-                .getData();
-    }
-
     public ProjectDTO findProjectByIdAndOwner(ResourceOwner resourceOwner, final UUID projectId) {
         ProjectDTO projectDTO = findProjectById(resourceOwner, projectId);
         if(!projectDTO.getOwnerId().equals(resourceOwner.getId()))
             throw new ForbiddenException("You don't have permission for this activity");
         return projectDTO;
+    }
+
+    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, UUID collaboratorId,  UUID projectId) {
+        return Objects.requireNonNull(projectServiceClient
+                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
+                .getBody())
+                .getData();
     }
 }
