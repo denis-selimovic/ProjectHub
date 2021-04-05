@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.controller;
 
+import ba.unsa.etf.nwt.notificationservice.client.service.TaskService;
 import ba.unsa.etf.nwt.notificationservice.dto.SubscriptionDTO;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.request.CreateSubscriptionRequest;
@@ -22,8 +23,8 @@ import java.util.UUID;
 @RequestMapping("/api/v1/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionController {
-
     private final SubscriptionService subscriptionService;
+    private final TaskService taskService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -33,6 +34,7 @@ public class SubscriptionController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<SubscriptionDTO>> create(@RequestBody @Valid CreateSubscriptionRequest request, ResourceOwner resourceOwner) {
+        taskService.findTaskById(resourceOwner, request.getTaskId());
         Subscription subscription = subscriptionService.create(request, resourceOwner);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new SubscriptionDTO(subscription)));
     }
@@ -45,7 +47,6 @@ public class SubscriptionController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId) {
         subscriptionService.deleteById(subscriptionId);
-
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Subscription successfully deleted")));
     }
 
