@@ -39,7 +39,7 @@ public class NotificationService {
         notificationUser.setNotification(notification);
         notificationUser.setRead(false);
         notificationUserRepository.save(notificationUser);
-        return new NotificationDTO(notification, notificationUser);
+        return new NotificationDTO(notification);
     }
 
     public PaginatedResponse<NotificationDTO, MetadataDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
