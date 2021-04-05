@@ -86,7 +86,7 @@ public class NotificationController {
 
         Notification notification = notificationService.findById(notificationId);
         NotificationUser notificationUser = notificationUserService.findByNotificationAndUserId(notification, resourceOwner.getId());
-        notificationUserService.patch(notificationUser, patchNotificationRequest);
-        return ResponseEntity.ok().body(new Response<>(new NotificationDTO(notification)));
+        notificationUser = notificationUserService.patch(notificationUser, patchNotificationRequest);
+        return ResponseEntity.ok().body(new Response<>(new NotificationDTO(notification, notificationUser)));
     }
 }
