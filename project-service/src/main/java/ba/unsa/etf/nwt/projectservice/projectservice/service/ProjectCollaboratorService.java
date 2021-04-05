@@ -54,4 +54,10 @@ public class ProjectCollaboratorService {
                 existsByCollaboratorIdAndProjectId(resourceOwnerId, projectId))
             throw new ForbiddenException("You don't have permission for this activity");
     }
+
+    public void checkIfCollaboratorExists(UUID ownerId, UUID collaboratorId, UUID projectId) {
+        if (!ownerId.equals(collaboratorId) &&
+                existsByCollaboratorIdAndProjectId(collaboratorId, projectId))
+            throw new NotFoundException("Collaborator not found");
+    }
 }

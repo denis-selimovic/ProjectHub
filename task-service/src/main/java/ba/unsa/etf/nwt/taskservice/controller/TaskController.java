@@ -1,6 +1,5 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
-import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.dto.TaskDTO;
@@ -49,9 +48,9 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, request.getProjectId());
+        projectService.findCollaboratorById(resourceOwner, request.getProjectId());
         if (request.getUserId() != null) {
-            projectService.checkIfOwnerOrCollaborator(resourceOwner, request.getProjectId());
+            projectService.findCollaboratorById(resourceOwner, request.getProjectId());
         }
         Task task = taskService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
@@ -84,7 +83,7 @@ public class TaskController {
                                                       @RequestParam(required = false, name = "status_id") String statusId,
                                                       @RequestParam(required = false, name = "type_id") String typeId) {
 
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, projectId);
+        projectService.findCollaboratorById(resourceOwner, projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
     }
@@ -100,7 +99,7 @@ public class TaskController {
                                          @PathVariable UUID taskId,
                                          @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, task.getProjectId());
+        projectService.findCollaboratorById(resourceOwner, task.getProjectId());
 
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));

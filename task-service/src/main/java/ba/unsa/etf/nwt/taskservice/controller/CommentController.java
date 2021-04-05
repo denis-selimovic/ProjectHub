@@ -52,7 +52,7 @@ public class CommentController {
                                            @PathVariable UUID taskId,
                                            @RequestBody @Valid CreateCommentRequest request) {
         Task task = taskService.findById(taskId);
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, task.getProjectId());
+        projectService.findCollaboratorById(resourceOwner, task.getProjectId());
         Comment comment = commentService.create(request, task, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment)));
     }
@@ -67,7 +67,7 @@ public class CommentController {
                                                                 @PathVariable UUID taskId,
                                                                 Pageable pageable) {
         Task task = taskService.findById(taskId);
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, task.getProjectId());
+        projectService.findCollaboratorById(resourceOwner, task.getProjectId());
         Page<CommentDTO> commentPage = commentService.getCommentsForTask(task, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(commentPage), commentPage.getContent()));

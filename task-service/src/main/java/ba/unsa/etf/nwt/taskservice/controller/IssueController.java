@@ -48,7 +48,8 @@ public class IssueController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<IssueDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateIssueRequest request) {
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, request.getProjectId());
+
+        projectService.findCollaboratorById(resourceOwner, request.getProjectId());
         Issue issue = issueService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new IssueDTO(issue)));
     }
@@ -77,7 +78,7 @@ public class IssueController {
                                                        Pageable pageable,
                                                        @RequestParam(name = "project_id") UUID projectId,
                                                        @RequestParam(required = false, name = "priority_id") String priorityId) {
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, projectId);
+        projectService.findCollaboratorById(resourceOwner, projectId);
         Page<IssueDTO> issuePage = issueService.filter(pageable, projectId, priorityId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(issuePage), issuePage.getContent()));
     }
@@ -93,7 +94,7 @@ public class IssueController {
                                                    @PathVariable UUID issueId,
                                                    @RequestBody @Valid PatchIssueRequest patchIssueRequest) {
         Issue issue = issueService.findById(issueId);
-        projectService.checkIfOwnerOrCollaborator(resourceOwner, issue.getProjectId());
+        projectService.findCollaboratorById(resourceOwner, issue.getProjectId());
         issueService.patch(issue, patchIssueRequest);
         return ResponseEntity.ok().body(new Response<>(new IssueDTO(issue)));
     }

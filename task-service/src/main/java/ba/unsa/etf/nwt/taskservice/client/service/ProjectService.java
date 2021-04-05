@@ -25,13 +25,6 @@ public class ProjectService {
                .getData();
     }
 
-    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId, final UUID collaboratorId) {
-        return Objects.requireNonNull(projectServiceClient
-                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
-                .getBody())
-                .getData();
-    }
-
     public ProjectDTO findProjectByIdAndOwner(ResourceOwner resourceOwner, final UUID projectId) {
         ProjectDTO projectDTO = findProjectById(resourceOwner, projectId);
         if(!projectDTO.getOwnerId().equals(resourceOwner.getId()))
@@ -39,11 +32,10 @@ public class ProjectService {
         return projectDTO;
     }
 
-    public void checkIfOwnerOrCollaborator(ResourceOwner resourceOwner, final UUID projectId) {
-        ProjectDTO projectDTO = findProjectById(resourceOwner, projectId);
-        if (!projectDTO.getOwnerId().equals(resourceOwner.getId()))
-            projectServiceClient
-                    .getCollaboratorById(resourceOwner.getAuthHeader(), projectDTO.getId(), resourceOwner.getId())
-                    .getBody();
+    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId) {
+        return Objects.requireNonNull(projectServiceClient
+                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, resourceOwner.getId())
+                .getBody())
+                .getData();
     }
 }
