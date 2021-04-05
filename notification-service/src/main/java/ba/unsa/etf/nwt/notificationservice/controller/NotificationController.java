@@ -3,6 +3,7 @@ package ba.unsa.etf.nwt.notificationservice.controller;
 import ba.unsa.etf.nwt.notificationservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
+import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import ba.unsa.etf.nwt.notificationservice.request.CreateNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.request.PatchNotificationRequest;
 import ba.unsa.etf.nwt.notificationservice.response.base.ErrorResponse;
@@ -11,26 +12,33 @@ import ba.unsa.etf.nwt.notificationservice.response.base.Response;
 import ba.unsa.etf.nwt.notificationservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
+import ba.unsa.etf.nwt.notificationservice.service.NotificationUserService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping("/api/v1/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final NotificationUserService notificationUserService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -39,8 +47,8 @@ public class NotificationController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<NotificationDTO>> create(@RequestBody @Valid CreateNotificationRequest request, ResourceOwner resourceOwner) {
-        Notification notification = notificationService.create(request, resourceOwner);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new NotificationDTO(notification)));
+        NotificationDTO notification = notificationService.create(request, resourceOwner);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(notification));
     }
 
 
@@ -50,8 +58,8 @@ public class NotificationController {
             @ApiResponse(code = 404, message = "Not found: Notification not found", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID notificationId) {
-        notificationService.deleteById(notificationId);
+    public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID notificationId, ResourceOwner resourceOwner) {
+        notificationService.delete(notificationId, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Notification successfully deleted")));
     }
 
@@ -61,14 +69,8 @@ public class NotificationController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
                                                                                             Pageable pageable) {
-
-        Page<NotificationDTO> notificationPage = notificationService.getNotificationsForUser(
-                                                                            resourceOwner.getId(),
-                                                                            PageRequest.of(pageable.getPageNumber(),
-                                                                            pageable.getPageSize(),
-                                                                            Sort.by("createdAt").descending()));
-
-        return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(notificationPage), notificationPage.getContent()));
+        var notifications = notificationService.getNotificationsForUser(resourceOwner.getId(), pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(new MetadataDTO(notifications), notifications.getContent()));
     }
 
     @PatchMapping("/{notificationId}")
@@ -83,9 +85,9 @@ public class NotificationController {
                                                            @RequestBody @Valid PatchNotificationRequest patchNotificationRequest) {
 
         Notification notification = notificationService.findById(notificationId);
-        notificationService.checkUserId(resourceOwner.getId(), notification.getUserId());
-        notificationService.patch(notification, patchNotificationRequest);
-
-        return ResponseEntity.ok().body(new Response<>(new NotificationDTO(notification)));
+        NotificationUser notificationUser = notificationUserService.findByNotificationAndUserId(notification, resourceOwner.getId());
+        notificationUser = notificationUserService.patch(notificationUser, patchNotificationRequest);
+        NotificationDTO dto = new NotificationDTO(notification, notificationUser.getRead());
+        return ResponseEntity.ok().body(new Response<>(dto));
     }
 }

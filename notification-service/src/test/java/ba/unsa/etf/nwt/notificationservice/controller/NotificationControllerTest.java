@@ -4,7 +4,9 @@ import ba.unsa.etf.nwt.notificationservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.notificationservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
+import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
+import ba.unsa.etf.nwt.notificationservice.repository.NotificationUserRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +21,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +44,8 @@ public class NotificationControllerTest {
     private TokenGenerator tokenGenerator;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationUserRepository notificationUserRepository;
 
     private String token;
 
@@ -56,7 +63,7 @@ public class NotificationControllerTest {
 
     @Test
     public void createNotificationBlankTitle() throws Exception {
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -70,7 +77,7 @@ public class NotificationControllerTest {
 
     @Test
     public void createNotificationBlankDescription() throws Exception {
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -84,7 +91,7 @@ public class NotificationControllerTest {
 
     @Test
     public void createNotificationBlankTitleAndDescription() throws Exception {
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -100,7 +107,7 @@ public class NotificationControllerTest {
     @Test
     public void createNotificationTooLongTitle() throws Exception {
         String tooLongTitle = "t".repeat(51);
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -116,7 +123,7 @@ public class NotificationControllerTest {
     @Test
     public void createNotificationTooLongDescription() throws Exception {
         String tooLongDescription = "t".repeat(201);
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -133,7 +140,7 @@ public class NotificationControllerTest {
     public void createNotificationTooLongTitleAndDescription() throws Exception {
         String tooLongDescription = "t".repeat(201);
         String tooLongTitle = "t".repeat(51);
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.format("""
@@ -148,7 +155,7 @@ public class NotificationControllerTest {
 
     @Test
     public void createNotificationSuccess() throws Exception {
-        mockMvc.perform(post("/api/notifications")
+        mockMvc.perform(post("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -163,15 +170,15 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.created_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.updated_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.read").hasJsonPath())
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("Title")))
-                .andExpect(jsonPath("$.data.description", is("Description")));
+                .andExpect(jsonPath("$.data.description", is("Description")))
+                .andExpect(jsonPath("$.data.read", is(false)));
     }
 
     @Test
     public void deleteNotificationSuccess() throws Exception {
         Notification notification = createNotificationInDb("Title", "Description", true);
-        mockMvc.perform(delete(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(delete(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.message", is("Notification successfully deleted")));
@@ -179,10 +186,10 @@ public class NotificationControllerTest {
 
     @Test
     public void deleteNotificationBadId() throws Exception {
-        mockMvc.perform(delete(String.format("/api/notifications/%s", UUID.randomUUID().toString()))
+        mockMvc.perform(delete(String.format("/api/v1/notifications/%s", UUID.randomUUID().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UnprocessableEntityException))
-                .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. This notification doesn't exist")));
+                .andExpect(jsonPath("$.errors.message").value(hasItem("Notification doesn't exist")));
     }
 
     @Test
@@ -190,7 +197,7 @@ public class NotificationControllerTest {
         for(int i = 0; i < 10; i++)
             createNotificationInDb("title", "description", false);
 
-        mockMvc.perform(get("/api/notifications?page=0&size=5")
+        mockMvc.perform(get("/api/v1/notifications?page=0&size=5")
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
@@ -207,7 +214,7 @@ public class NotificationControllerTest {
         for(int i = 0; i < 10; i++)
             createNotificationInDb("title", "description", false);
 
-        mockMvc.perform(get("/api/notifications?page=1&size=5")
+        mockMvc.perform(get("/api/v1/notifications?page=1&size=5")
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
@@ -224,7 +231,7 @@ public class NotificationControllerTest {
         for(int i = 0; i < 10; i++)
             createNotificationInDb("title", "description", false);
 
-        mockMvc.perform(get("/api/notifications")
+        mockMvc.perform(get("/api/v1/notifications")
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
@@ -241,7 +248,7 @@ public class NotificationControllerTest {
         for(int i = 0; i < 15; i++)
             createNotificationInDb("title", "description", false);
 
-        mockMvc.perform(get("/api/notifications?page=1&size=10")
+        mockMvc.perform(get("/api/v1/notifications?page=1&size=10")
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
@@ -255,7 +262,7 @@ public class NotificationControllerTest {
 
     @Test
     public void getNotifications5() throws Exception {
-        var result = mockMvc.perform(get("/api/notifications")
+        var result = mockMvc.perform(get("/api/v1/notifications")
                                         .header(HttpHeaders.AUTHORIZATION, token))
                                         .andExpect(status().isOk())
                                         .andExpect(jsonPath("$.metadata").hasJsonPath())
@@ -273,7 +280,7 @@ public class NotificationControllerTest {
 
     @Test
     public void testPatchNotificationNotFound() throws Exception {
-        mockMvc.perform(patch(String.format("/api/notifications/%s", UUID.randomUUID()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", UUID.randomUUID()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
@@ -284,7 +291,7 @@ public class NotificationControllerTest {
     @Test
     public void testPatchNotificationNoChange() throws Exception {
         Notification notification = createNotificationInDb("First title", "First description", false);
-        mockMvc.perform(patch(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
@@ -292,16 +299,15 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(notification.getRead())))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
+                .andExpect(jsonPath("$.data.read", is(false)))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
 
     @Test
     public void testPatchNotificationNoChange2() throws Exception {
         Notification notification = createNotificationInDb("First title", "First description", false);
-        mockMvc.perform(patch(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -312,16 +318,15 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(notification.getRead())))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
+                .andExpect(jsonPath("$.data.read", is(false)))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
 
     @Test
     public void testPatchNotificationChange1() throws Exception {
         Notification notification = createNotificationInDb("First title", "First description", false);
-        mockMvc.perform(patch(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -332,16 +337,15 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(true)))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
+                .andExpect(jsonPath("$.data.read", is(true)))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
 
     @Test
     public void testPatchNotificationChange2() throws Exception {
         Notification notification = createNotificationInDb("First title", "First description", true);
-        mockMvc.perform(patch(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -352,16 +356,15 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.id", is(notification.getId().toString())))
                 .andExpect(jsonPath("$.data.title", is(notification.getTitle())))
                 .andExpect(jsonPath("$.data.description", is(notification.getDescription())))
-                .andExpect(jsonPath("$.data.read", is(false)))
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
                 .andExpect(jsonPath("$.data.title", is("First title")))
+                .andExpect(jsonPath("$.data.read", is(false)))
                 .andExpect(jsonPath("$.data.description", is("First description")));
     }
 
     @Test
     public void testPatchNotificationNull() throws Exception {
         Notification notification = createNotificationInDb("title", "description", true);
-        mockMvc.perform(patch(String.format("/api/notifications/%s", notification.getId()))
+        mockMvc.perform(patch(String.format("/api/v1/notifications/%s", notification.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
@@ -376,10 +379,12 @@ public class NotificationControllerTest {
         Notification notification = new Notification();
         notification.setTitle(title);
         notification.setDescription(description);
-        notification.setUserId(ResourceOwnerInjector.id);
-        notification.setRead(read);
         notificationRepository.save(notification);
+        NotificationUser notificationUser = new NotificationUser();
+        notificationUser.setUserId(ResourceOwnerInjector.id);
+        notificationUser.setNotification(notification);
+        notificationUser.setRead(read);
+        notificationUserRepository.save(notificationUser);
         return notification;
     }
-
 }
