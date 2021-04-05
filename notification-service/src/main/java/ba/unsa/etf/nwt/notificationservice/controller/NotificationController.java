@@ -70,7 +70,7 @@ public class NotificationController {
     public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
                                                                                             Pageable pageable) {
         var notifications = notificationService.getNotificationsForUser(resourceOwner.getId(), pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(notifications);
+        return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(new MetadataDTO(notifications), notifications.getContent()));
     }
 
     @PatchMapping("/{notificationId}")
@@ -87,8 +87,7 @@ public class NotificationController {
         Notification notification = notificationService.findById(notificationId);
         NotificationUser notificationUser = notificationUserService.findByNotificationAndUserId(notification, resourceOwner.getId());
         notificationUser = notificationUserService.patch(notificationUser, patchNotificationRequest);
-        NotificationDTO dto = new NotificationDTO(notification);
-        dto.setRead(notificationUser.getRead());
+        NotificationDTO dto = new NotificationDTO(notification, notificationUser.getRead());
         return ResponseEntity.ok().body(new Response<>(dto));
     }
 }

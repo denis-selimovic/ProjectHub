@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,5 +50,6 @@ public class Notification {
     private Instant updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification")
+    @JsonIgnore
     private Set<NotificationUser> users = new HashSet<>();
 }
