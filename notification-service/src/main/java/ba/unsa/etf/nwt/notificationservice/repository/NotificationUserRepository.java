@@ -1,6 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.repository;
 
-import ba.unsa.etf.nwt.notificationservice.dto.NotificationProjection;
+import ba.unsa.etf.nwt.notificationservice.projections.NotificationProjection;
 import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

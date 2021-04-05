@@ -2,7 +2,7 @@ package ba.unsa.etf.nwt.notificationservice.service;
 
 import ba.unsa.etf.nwt.notificationservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO;
-import ba.unsa.etf.nwt.notificationservice.dto.NotificationProjection;
+import ba.unsa.etf.nwt.notificationservice.projections.NotificationProjection;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
