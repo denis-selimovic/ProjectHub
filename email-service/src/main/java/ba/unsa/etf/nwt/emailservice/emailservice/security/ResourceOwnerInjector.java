@@ -1,16 +1,20 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.security;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Profile("dev")
+@Component
 public class ResourceOwnerInjector implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
