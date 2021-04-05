@@ -4,6 +4,9 @@ import ba.unsa.etf.nwt.emailservice.emailservice.client.TaskServiceClient;
 import ba.unsa.etf.nwt.emailservice.emailservice.client.service.TaskService;
 import ba.unsa.etf.nwt.emailservice.emailservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.emailservice.emailservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.BadRequestException;
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.NotFoundException;
+import ba.unsa.etf.nwt.emailservice.emailservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailConfig;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailSubscription;
 import ba.unsa.etf.nwt.emailservice.emailservice.repository.EmailConfigRepository;
@@ -70,6 +73,86 @@ public class EmailSubscriptionControllerTest {
                 .content(createJSONSub(uuid))
         ).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.task_id", Matchers.is(uuid.toString())));
+    }
+
+    @Test
+    public void createSubscriptionNoConfig() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenReturn(null);
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createJSONSub(uuid))
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void createSubscriptionWrongUUID() throws Exception {
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenReturn(null);
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                        {
+                            "task_id" : "wrong_uuid"
+                        }
+                    """
+                )
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createSubscriptionNoToken() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenReturn(null);
+        EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createJSONSub(uuid))
+        ).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void createSubscriptionTaskService422() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenThrow(new UnprocessableEntityException("Error"));
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createJSONSub(uuid))
+        ).andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void createSubscriptionTaskService404() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenThrow(new NotFoundException("Error"));
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createJSONSub(uuid))
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void createSubscriptionTaskService400() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
+        Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
+                .thenThrow(new BadRequestException("Error"));
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createJSONSub(uuid))
+        ).andExpect(status().isBadRequest());
     }
 
     private String createJSONSub(UUID uuid) throws JSONException {
