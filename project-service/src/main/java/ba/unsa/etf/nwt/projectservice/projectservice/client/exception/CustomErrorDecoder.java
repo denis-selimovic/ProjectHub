@@ -14,7 +14,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
             case 400 -> new BadRequestException("Bad request");
             case 404 -> new NotFoundException("Not found");
             case 422 -> new UnprocessableEntityException("Unprocessable entity");
-            case 403 -> new ForbiddenException("Forbidden");
+            case 403 -> new ForbiddenException("You don't have permission for this activity");
             default -> new Exception("Error");
         };
     }
