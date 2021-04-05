@@ -1,13 +1,9 @@
 package ba.unsa.etf.nwt.notificationservice.dto;
 
-import java.time.Instant;
-import java.util.UUID;
+import ba.unsa.etf.nwt.notificationservice.model.Notification;
+import ba.unsa.etf.nwt.notificationservice.response.interfaces.Resource;
 
-public interface NotificationProjection {
-    UUID getId();
-    String getTitle();
-    String getDescription();
-    Instant getCreatedAt();
-    Instant getUpdatedAt();
+public interface NotificationProjection extends Resource {
+    Notification getNotification();
     Boolean getRead();
 }
