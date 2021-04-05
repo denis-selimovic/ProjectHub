@@ -17,7 +17,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,22 +50,4 @@ public class Notification {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification")
     private Set<NotificationUser> users = new HashSet<>();
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Notification that = (Notification) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(updatedAt, that.updatedAt) &&
-                Objects.equals(users, that.users);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, createdAt, updatedAt, users);
-    }
 }

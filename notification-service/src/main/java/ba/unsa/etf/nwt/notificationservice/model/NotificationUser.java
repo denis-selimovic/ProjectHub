@@ -3,6 +3,7 @@ package ba.unsa.etf.nwt.notificationservice.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -13,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -30,6 +30,7 @@ public class NotificationUser {
     @ManyToOne
     @JoinColumn(name = "notification_id", nullable = false)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Notification notification;
 
     @NotNull(message = "User id can't be null")
@@ -39,20 +40,4 @@ public class NotificationUser {
     @NotNull(message = "Attribute read can't be null")
     @Column(name = "read", nullable = false)
     private Boolean read;
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NotificationUser that = (NotificationUser) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(notification, that.notification) &&
-                Objects.equals(userId, that.userId) &&
-                Objects.equals(read, that.read);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, notification, userId, read);
-    }
 }
