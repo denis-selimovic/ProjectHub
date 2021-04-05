@@ -25,4 +25,8 @@ public class ResourceOwner {
         accessToken = details.getTokenValue();
         scopes = (ArrayList<String>) decoded.get("scope");
     }
+
+    public String getAuthHeader() {
+        return "Bearer " + accessToken;
+    }
 }
