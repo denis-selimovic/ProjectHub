@@ -99,7 +99,7 @@ public class TaskController {
                                                    @RequestBody @Valid PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
         projectService.findProjectById(resourceOwner, task.getProjectId());
-        if(patchTaskRequest.getUserId() != null){
+        if(patchTaskRequest.getUserId().isPresent()){
             projectService.findCollaboratorById(resourceOwner, patchTaskRequest.getUserId().get(), task.getProjectId());
         }
         taskService.patch(task, patchTaskRequest);
