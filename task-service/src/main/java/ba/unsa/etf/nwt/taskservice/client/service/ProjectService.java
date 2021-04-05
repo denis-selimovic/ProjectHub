@@ -4,10 +4,8 @@ import ba.unsa.etf.nwt.taskservice.client.ProjectServiceClient;
 import ba.unsa.etf.nwt.taskservice.client.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
 import ba.unsa.etf.nwt.taskservice.exception.base.ForbiddenException;
-import ba.unsa.etf.nwt.taskservice.response.base.Response;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -32,9 +30,9 @@ public class ProjectService {
         return projectDTO;
     }
 
-    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId) {
+    public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, UUID collaboratorId,  UUID projectId) {
         return Objects.requireNonNull(projectServiceClient
-                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, resourceOwner.getId())
+                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
                 .getBody())
                 .getData();
     }

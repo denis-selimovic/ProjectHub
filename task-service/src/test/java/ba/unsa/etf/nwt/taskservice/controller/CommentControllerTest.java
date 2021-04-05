@@ -152,7 +152,7 @@ public class CommentControllerTest {
 
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);
@@ -281,7 +281,7 @@ public class CommentControllerTest {
 
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectId(projectId);
+        projectDTO.setId(projectId);
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);

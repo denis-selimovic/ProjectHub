@@ -48,9 +48,9 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
-        projectService.findCollaboratorById(resourceOwner, request.getProjectId());
+        projectService.findProjectById(resourceOwner, request.getProjectId());
         if (request.getUserId() != null) {
-            projectService.findCollaboratorById(resourceOwner, request.getProjectId());
+            projectService.findCollaboratorById(resourceOwner, request.getUserId(), request.getProjectId());
         }
         Task task = taskService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
@@ -77,13 +77,12 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<TaskDTO, MetadataDTO>> getTasks(ResourceOwner resourceOwner,
-                                                      Pageable pageable,
-                                                      @RequestParam(name = "project_id") UUID projectId,
-                                                      @RequestParam(required = false, name = "priority_id") String priorityId,
-                                                      @RequestParam(required = false, name = "status_id") String statusId,
-                                                      @RequestParam(required = false, name = "type_id") String typeId) {
-
-        projectService.findCollaboratorById(resourceOwner, projectId);
+                                                                            Pageable pageable,
+                                                                            @RequestParam(name = "project_id") UUID projectId,
+                                                                            @RequestParam(required = false, name = "priority_id") String priorityId,
+                                                                            @RequestParam(required = false, name = "status_id") String statusId,
+                                                                            @RequestParam(required = false, name = "type_id") String typeId) {
+        projectService.findProjectById(resourceOwner, projectId);
         Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
     }
@@ -96,11 +95,10 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<TaskDTO>> patch(ResourceOwner resourceOwner,
-                                         @PathVariable UUID taskId,
-                                         @RequestBody @Valid  PatchTaskRequest patchTaskRequest) {
+                                                   @PathVariable UUID taskId,
+                                                   @RequestBody @Valid PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
-        projectService.findCollaboratorById(resourceOwner, task.getProjectId());
-
+        projectService.findProjectById(resourceOwner, task.getProjectId());
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
