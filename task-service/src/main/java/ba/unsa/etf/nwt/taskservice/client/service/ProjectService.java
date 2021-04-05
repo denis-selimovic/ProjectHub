@@ -19,10 +19,6 @@ public class ProjectService {
     private final ProjectServiceClient projectServiceClient;
 
     public ProjectDTO findProjectById(ResourceOwner resourceOwner, final UUID projectId) {
-        System.out.println("Response " + projectServiceClient
-                .getProjectById(resourceOwner.getAuthHeader(), projectId)
-                .getBody()
-                .getData());
        return Objects.requireNonNull(projectServiceClient
                .getProjectById(resourceOwner.getAuthHeader(), projectId)
                .getBody())
@@ -30,9 +26,6 @@ public class ProjectService {
     }
 
     public ProjectCollaboratorDTO findCollaboratorById(ResourceOwner resourceOwner, final UUID projectId, final UUID collaboratorId) {
-        System.out.println("Ovaj drugi " + projectServiceClient
-                .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
-                .getBody());
         return Objects.requireNonNull(projectServiceClient
                 .getCollaboratorById(resourceOwner.getAuthHeader(), projectId, collaboratorId)
                 .getBody())
