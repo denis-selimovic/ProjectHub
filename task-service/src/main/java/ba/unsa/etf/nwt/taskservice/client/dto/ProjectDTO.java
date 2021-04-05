@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO implements Resource {
-    private UUID projectId;
+    private UUID id;
     private String name;
     private UUID ownerId;
     private Instant createdAt;
