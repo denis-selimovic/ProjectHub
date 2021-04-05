@@ -587,6 +587,51 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.errors.message", hasItem("You don't have permission for this activity")));
     }
 
+    @Test
+    public void getTaskByIdSuccess() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(projectId);
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId)))
+                .thenReturn(projectDTO);
+
+        mockMvc.perform(get(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(is(task.getId().toString())));
+    }
+
+    @Test
+    public void getTaskByIdNotFound() throws Exception {
+        mockMvc.perform(get(String.format("/api/v1/tasks/%s", UUID.randomUUID()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Task not found")));
+    }
+
+    @Test
+    public void getTaskByIdForbiddenFromProjectMS() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new ForbiddenException("Forbidden"));
+        mockMvc.perform(get(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
+    }
+
+    @Test
+    public void getTaskByIdNotFoundFromProjectMS() throws Exception {
+        UUID projectId = UUID.randomUUID();
+        Task task = createTaskInDB(projectId, critical, open, bug, UUID.randomUUID());
+        Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenThrow(new NotFoundException("Not Found"));
+        mockMvc.perform(get(String.format("/api/v1/tasks/%s", task.getId()))
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Not Found")));
+    }
+
     private Task createTaskInDB(UUID projectId, Priority priority, Status status, Type type, final UUID userId) {
         Task task = new Task();
         task.setName("Task name");

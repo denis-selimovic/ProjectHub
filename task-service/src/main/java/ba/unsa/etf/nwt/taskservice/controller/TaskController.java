@@ -105,4 +105,18 @@ public class TaskController {
         taskService.patch(task, patchTaskRequest);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
+
+    @GetMapping("/{taskId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Task not found or project not found"),
+            @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<TaskDTO>> getTaskById(ResourceOwner resourceOwner,
+                                                   @PathVariable UUID taskId) {
+        Task task = taskService.findById(taskId);
+        projectService.findProjectById(resourceOwner, task.getProjectId());
+        return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
+    }
 }
