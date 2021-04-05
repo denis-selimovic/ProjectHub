@@ -108,8 +108,8 @@ public class TaskController {
 
     @GetMapping("/{taskId}")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Task updated"),
-            @ApiResponse(code = 404, message = "Task not found"),
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Task not found or project not found"),
             @ApiResponse(code = 403, message = "Forbidden: User not owner or collaborator on project", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
