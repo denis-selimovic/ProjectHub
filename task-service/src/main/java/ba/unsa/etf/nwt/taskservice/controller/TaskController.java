@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.dto.TaskDTO;
@@ -48,6 +49,7 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
+        projectService.checkIfOwnerOrCollaborator(resourceOwner, request.getProjectId());
         if (request.getUserId() != null) {
             projectService.checkIfOwnerOrCollaborator(resourceOwner, request.getProjectId());
         }
