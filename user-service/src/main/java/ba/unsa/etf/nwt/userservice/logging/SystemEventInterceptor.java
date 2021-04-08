@@ -1,5 +1,7 @@
 package ba.unsa.etf.nwt.userservice.logging;
 
+import ba.unsa.etf.nwt.systemevents.grpc.SystemEventRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
@@ -11,9 +13,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 @Component
-@Qualifier("loggerInterceptor")
-public class LoggerInterceptor implements HandlerInterceptor {
+@Qualifier("systemEventInterceptor")
+@RequiredArgsConstructor
+public class SystemEventInterceptor implements HandlerInterceptor {
+
+    private final SystemEventService systemEventService;
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request,
@@ -23,7 +29,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
         HandlerMethod method = (HandlerMethod) handler;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        LogMessage logMessage = LogMessageFactory.createLogMessage(request, response, auth, method.getBeanType());
-        System.out.println(logMessage.toString());
+        SystemEventRequest req = SystemEventFactory.createLogMessage(request, response, auth, method.getBeanType());
+        systemEventService.logSystemEvent(req);
     }
 }
