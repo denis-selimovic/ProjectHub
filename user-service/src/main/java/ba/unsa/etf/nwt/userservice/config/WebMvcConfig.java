@@ -16,7 +16,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final HandlerMethodArgumentResolver resourceOwnerInjector;
-    private final HandlerInterceptor loggerInterceptor;
+    private final HandlerInterceptor systemEventInterceptor;
 
     @Override
     public void addArgumentResolvers(@NonNull List<HandlerMethodArgumentResolver> argumentResolvers) {
@@ -25,6 +25,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loggerInterceptor);
+        registry.addInterceptor(systemEventInterceptor);
     }
 }
