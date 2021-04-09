@@ -22,10 +22,7 @@ public class SystemEventService {
 
     @PostConstruct
     private void createServiceStub() {
-        InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka("system-events-service", false);
-        ManagedChannel channel = ManagedChannelBuilder.forAddress(instanceInfo.getIPAddr(),
-                instanceInfo.getPort()).usePlaintext().build();
-        systemEventServiceStub = SystemEventServiceGrpc.newStub(channel);
+        createStub();
     }
 
     public void logSystemEvent(SystemEventRequest request) {
@@ -45,6 +42,21 @@ public class SystemEventService {
                 System.out.println("Completed gRPC call");
             }
         };
-        systemEventServiceStub.log(request, responseObserver);
+        boolean stubCreated = systemEventServiceStub != null;
+        if (!stubCreated) stubCreated = createStub();
+        if(stubCreated) systemEventServiceStub.log(request, responseObserver);
+    }
+
+    private boolean createStub() {
+        try {
+            InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka("system-events-service", false);
+            ManagedChannel channel = ManagedChannelBuilder.forAddress(instanceInfo.getIPAddr(),
+                    instanceInfo.getPort()).usePlaintext().build();
+            systemEventServiceStub = SystemEventServiceGrpc.newStub(channel);
+            return true;
+        } catch (Exception ignored) {
+        }
+
+        return false;
     }
 }
