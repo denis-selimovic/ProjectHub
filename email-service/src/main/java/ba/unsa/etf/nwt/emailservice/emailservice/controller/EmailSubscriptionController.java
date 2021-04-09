@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.emailservice.emailservice.controller;
 
+import ba.unsa.etf.nwt.emailservice.emailservice.client.service.TaskService;
 import ba.unsa.etf.nwt.emailservice.emailservice.dto.EmailSubscriptionDto;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailConfig;
 import ba.unsa.etf.nwt.emailservice.emailservice.model.EmailSubscription;
@@ -25,11 +26,13 @@ public class EmailSubscriptionController {
 
     private final EmailConfigService emailConfigService;
     private final EmailSubscriptionService emailSubscriptionService;
+    private final TaskService taskService;
 
     @PostMapping
     public ResponseEntity<Response<EmailSubscriptionDto>> create(ResourceOwner resourceOwner,
                                                                  @RequestBody @Valid CreateSubscriptionRequest request) {
         EmailConfig config = emailConfigService.findByUserId(resourceOwner.getId());
+        taskService.findTaskById(resourceOwner.getAuthHeader(), request.getTaskId());
         EmailSubscription subscription = emailSubscriptionService.create(request, config);
         return new ResponseEntity<>(new Response<>(new EmailSubscriptionDto(subscription)), HttpStatus.CREATED);
     }
