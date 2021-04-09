@@ -1,21 +1,14 @@
 spring:
   application:
     name: system-events-service
+  cloud:
+    config:
+      password: secret
+      username: root
+  config:
+    import: optional:configserver:http://localhost:8888
   profiles:
     active: dev
 
 server:
   port: 8086
-
-grpc:
-  port: 9090
-
-eureka:
-  instance:
-    prefer-ip-address: true
-    nonSecurePort: ${grpc.port}
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
