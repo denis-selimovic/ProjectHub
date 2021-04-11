@@ -34,7 +34,6 @@ public class SystemEventFactory {
         return switch (bean.getSimpleName()) {
             case "CommentController" -> "COMMENT";
             case "IssueController" -> "ISSUE";
-            case "ServiceInstanceController" -> "SERVICE INSTANCE";
             case "TaskController" -> "TASK";
             default -> "UNKNOWN RESOURCE";
         };
