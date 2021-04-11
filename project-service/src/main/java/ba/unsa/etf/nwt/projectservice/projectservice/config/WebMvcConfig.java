@@ -1,11 +1,12 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.config;
 
 
-import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwnerInjector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -15,9 +16,15 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final HandlerMethodArgumentResolver resourceOwnerInjector;
+    private final HandlerInterceptor systemEventInterceptor;
 
     @Override
     public void addArgumentResolvers(@NonNull List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(resourceOwnerInjector);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(systemEventInterceptor);
     }
 }
