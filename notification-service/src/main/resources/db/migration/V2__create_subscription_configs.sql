@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS "subscription_configs"
     email varchar(50) UNIQUE NOT NULL,
     created_at timestamptz,
     updated_at timestamptz,
-    CONSTRAINT pkey_subscriptions PRIMARY KEY (id)
+    CONSTRAINT pkey_subscription_configs PRIMARY KEY (id)
 );
