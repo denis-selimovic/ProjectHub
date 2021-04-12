@@ -1,29 +1,30 @@
 package ba.unsa.etf.nwt.notificationservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "subscriptions")
+@Table(name = "subscription_configs")
 @Data
 @NoArgsConstructor
-public class Subscription {
+public class SubscriptionConfig {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -37,14 +38,15 @@ public class Subscription {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @NotNull(message = "Task id can't be null")
-    @Column(name = "task_id", nullable = false)
-    private UUID taskId;
+    @NotNull(message = "User id can't be null")
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 
-    @NotNull(message = "Subscription config can't be null")
-    @ManyToOne
-    @JoinColumn(name = "config_id", nullable = false)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private SubscriptionConfig config;
+    @NotNull(message = "Email can't be null")
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "config")
+    @JsonIgnore
+    private Set<Subscription> subscriptions = new HashSet<>();
 }
