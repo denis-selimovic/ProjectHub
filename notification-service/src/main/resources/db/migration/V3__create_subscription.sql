@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS "subscriptions" (
     updated_at timestamptz,
     CONSTRAINT pkey_subscriptions PRIMARY KEY (id),
     CONSTRAINT unique_user_task UNIQUE (config_id, task_id),
-    CONSTRAINT fk_config FOREIGN KEY (config_id) references subscription_configs(id)
+    CONSTRAINT fk_config FOREIGN KEY (config_id) references subscription_configs(id) ON DELETE CASCADE
 );
