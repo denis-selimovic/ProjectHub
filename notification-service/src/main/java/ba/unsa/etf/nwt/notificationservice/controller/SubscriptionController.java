@@ -30,7 +30,8 @@ public class SubscriptionController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Subscription created"),
             @ApiResponse(code = 422, message = "Unprocessable entity: Validation fail", response = ErrorResponse.class),
-            @ApiResponse(code = 403, message = "Forbidden: User has already subscribed on project", response = ErrorResponse.class)
+            @ApiResponse(code = 403, message = "Forbidden: User has already subscribed on project", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Subscription config not found", response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<SubscriptionDTO>> create(@RequestBody @Valid CreateSubscriptionRequest request, ResourceOwner resourceOwner) {
@@ -42,7 +43,8 @@ public class SubscriptionController {
     @DeleteMapping("/{subscriptionId}")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Subscription deleted"),
-            @ApiResponse(code = 404, message = "Not found: Subscription not found", response = ErrorResponse.class)
+            @ApiResponse(code = 404, message = "Not found: Subscription not found or config not found",
+                    response = ErrorResponse.class)
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId, ResourceOwner resourceOwner) {
