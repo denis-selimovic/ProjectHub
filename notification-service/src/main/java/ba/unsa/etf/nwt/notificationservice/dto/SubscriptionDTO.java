@@ -17,14 +17,14 @@ public class SubscriptionDTO implements Resource {
     private UUID id;
     private Instant createdAt;
     private Instant updatedAt;
-    private UUID userId;
+    private SubscriptionConfigDTO config;
     private UUID taskId;
 
     public SubscriptionDTO(Subscription subscription) {
         id = subscription.getId();
         createdAt = subscription.getCreatedAt();
         updatedAt = subscription.getUpdatedAt();
-        userId = subscription.getUserId();
+        config = new SubscriptionConfigDTO(subscription.getConfig());
         taskId = subscription.getTaskId();
     }
 }

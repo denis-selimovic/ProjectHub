@@ -9,6 +9,8 @@ import ba.unsa.etf.nwt.notificationservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
+import ba.unsa.etf.nwt.notificationservice.model.SubscriptionConfig;
+import ba.unsa.etf.nwt.notificationservice.repository.SubscriptionConfigRepository;
 import ba.unsa.etf.nwt.notificationservice.repository.SubscriptionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,13 +46,15 @@ public class SubscriptionControllerTest {
     private TokenGenerator tokenGenerator;
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private SubscriptionConfigRepository subscriptionConfigRepository;
     @MockBean
     private TaskService taskService;
     private String token;
 
     @BeforeEach
     public void setUp() {
-
+        subscriptionConfigRepository.deleteAll();
         subscriptionRepository.deleteAll();
 
         token = "Bearer " + tokenGenerator.createAccessToken(
@@ -87,11 +91,12 @@ public class SubscriptionControllerTest {
                         }""", taskId)))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof UnprocessableEntityException))
-                .andExpect(jsonPath("$.errors.message").value(hasItem("Request body can not be processed. You have already subscribed to the task.")));
+                .andExpect(jsonPath("$.errors.message").value(hasItem("You have already subscribed to the task.")));
     }
 
     @Test
     public void createSubscriptionSuccess() throws Exception {
+        createSubscriptionConfigInDb(ResourceOwnerInjector.id, ResourceOwnerInjector.email);
         UUID id = UUID.randomUUID();
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setId(id);
@@ -105,11 +110,14 @@ public class SubscriptionControllerTest {
                         }""", id.toString())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
-                .andExpect(jsonPath("$.data.user_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.config").hasJsonPath())
+                .andExpect(jsonPath("$.data.config.user_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.config.email").hasJsonPath())
                 .andExpect(jsonPath("$.data.task_id").hasJsonPath())
                 .andExpect(jsonPath("$.data.created_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.updated_at").hasJsonPath())
-                .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
+                .andExpect(jsonPath("$.data.config.user_id", is(ResourceOwnerInjector.id.toString())))
+                .andExpect(jsonPath("$.data.config.email", is(ResourceOwnerInjector.email)))
                 .andExpect(jsonPath("$.data.task_id", is(id.toString())));
     }
 
@@ -132,7 +140,7 @@ public class SubscriptionControllerTest {
 
     @Test
     public void deleteSubscriptionNotOwner() throws Exception {
-        Subscription subscription = createSubscriptionInDb(UUID.randomUUID());
+        Subscription subscription = createSubscriptionInDb(UUID.randomUUID(), "amila.zigo@gmail.com");
         mockMvc.perform(delete(String.format("/api/v1/subscriptions/%s", subscription.getId().toString()))
                 .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isNotFound())
@@ -169,14 +177,39 @@ public class SubscriptionControllerTest {
                 .andExpect(jsonPath("$.errors.message", hasItem("Forbidden")));
     }
 
-    private Subscription createSubscriptionInDb() {
-        return createSubscriptionInDb(ResourceOwnerInjector.id);
+    @Test
+    public void createSubscriptionConfigNotFound() throws Exception {
+        UUID id = UUID.randomUUID();
+        TaskDTO taskDTO = new TaskDTO();
+        taskDTO.setId(id);
+        Mockito.when(taskService.findTaskById(Mockito.any(), eq(id))).thenReturn(taskDTO);
+        mockMvc.perform(post("/api/v1/subscriptions")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.format("""
+                        {
+                            "task_id": "%s"
+                        }""", id.toString())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errors.message", hasItem("Config not found")));
     }
 
-    private Subscription createSubscriptionInDb(UUID userId) {
+    private Subscription createSubscriptionInDb() {
+        return createSubscriptionInDb(ResourceOwnerInjector.id, ResourceOwnerInjector.email);
+    }
+
+    private Subscription createSubscriptionInDb(UUID userId, String email) {
+        SubscriptionConfig config = createSubscriptionConfigInDb(userId, email);
         Subscription subscription = new Subscription();
-        subscription.setUserId(userId);
+        subscription.setConfig(config);
         subscription.setTaskId(UUID.randomUUID());
         return subscriptionRepository.save(subscription);
+    }
+
+    private SubscriptionConfig createSubscriptionConfigInDb(UUID userId, String email) {
+        SubscriptionConfig subscriptionConfig = new SubscriptionConfig();
+        subscriptionConfig.setUserId(userId);
+        subscriptionConfig.setEmail(email);
+        return subscriptionConfigRepository.save(subscriptionConfig);
     }
 }

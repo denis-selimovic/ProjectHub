@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
-public class SubscriptionTest {
+public class SubscriptionConfigTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
@@ -39,49 +39,53 @@ public class SubscriptionTest {
         subscriptionConfig.setEmail("lv@gmail.com");
         subscriptionConfig.setUserId(UUID.randomUUID());
 
-        Subscription subscription = new Subscription();
-        subscription.setConfig(subscriptionConfig);
-        subscription.setTaskId(UUID.randomUUID());
-
-        List<ConstraintViolation<Subscription>> violations = new ArrayList<>(validator.validate(subscription));
+        List<ConstraintViolation<SubscriptionConfig>> violations = new ArrayList<>(validator.validate(subscriptionConfig));
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void testMultipleViolations() {
-        Subscription subscription = new Subscription();
+        SubscriptionConfig config = new SubscriptionConfig();
         List<String> violations = validator
-                .validate(subscription)
+                .validate(config)
                 .stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toList());
 
         assertEquals(2, violations.size());
-        assertTrue(violations.contains("Task id can't be null"));
-        assertTrue(violations.contains("Subscription config can't be null"));
+        assertTrue(violations.contains("User id can't be null"));
+        assertTrue(violations.contains("Email can't be blank"));
     }
 
     @Test
-    public void testNoUser() {
-        Subscription subscription = new Subscription();
-        subscription.setTaskId(UUID.randomUUID());
+    public void testBlankEmail() {
+        SubscriptionConfig config = new SubscriptionConfig();
+        config.setEmail("");
+        config.setUserId(UUID.randomUUID());
 
-        List<ConstraintViolation<Subscription>> violations = new ArrayList<>(validator.validate(subscription));
+        List<String> violations = validator
+                .validate(config)
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
+
         assertEquals(1, violations.size());
-        assertEquals("Subscription config can't be null", violations.get(0).getMessage());
+        assertTrue(violations.contains("Email can't be blank"));
     }
 
     @Test
-    public void testNoTask() {
-        SubscriptionConfig subscriptionConfig = new SubscriptionConfig();
-        subscriptionConfig.setEmail("lv@gmail.com");
-        subscriptionConfig.setUserId(UUID.randomUUID());
+    public void testEmailTooLong() {
+        SubscriptionConfig config = new SubscriptionConfig();
+        config.setEmail("a".repeat(60));
+        config.setUserId(UUID.randomUUID());
 
-        Subscription subscription = new Subscription();
-        subscription.setConfig(subscriptionConfig);
+        List<String> violations = validator
+                .validate(config)
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
 
-        List<ConstraintViolation<Subscription>> violations = new ArrayList<>(validator.validate(subscription));
         assertEquals(1, violations.size());
-        assertEquals("Task id can't be null", violations.get(0).getMessage());
+        assertTrue(violations.contains("Email can't contain more than 50 characters"));
     }
 }
