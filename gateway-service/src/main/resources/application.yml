@@ -5,18 +5,6 @@ spring:
 server:
   port: 8080
 
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    routes:
-      enabled: true
-    filters:
-      enabled: true
-
 eureka:
   client:
     register-with-eureka: true
@@ -28,8 +16,11 @@ eureka:
 
 zuul:
   routes:
-    users:
-      path: "/api/v1/users/**"
+    user:
+      path: "/api/v1/users"
+      serviceId: userservice
+    token:
+      path: "/oauth/token"
       serviceId: userservice
   sensitive-headers:
 
