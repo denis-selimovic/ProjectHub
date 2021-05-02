@@ -5,11 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-<<<<<<< HEAD
         <version>2.2.5.RELEASE</version>
-=======
-        <version>2.4.5</version>
->>>>>>> Add gateway
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ba.unsa.etf.nwt</groupId>
@@ -19,16 +15,12 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
-<<<<<<< HEAD
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-=======
-        <spring-cloud.version>2020.0.2</spring-cloud.version>
->>>>>>> Add gateway
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-<<<<<<< HEAD
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -36,38 +28,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>2.2.5.RELEASE</version>
-=======
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
->>>>>>> Add gateway
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
-<<<<<<< HEAD
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-=======
-            <version>2.2.0.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>2.2.0.RELEASE</version>
->>>>>>> Add gateway
         </dependency>
     </dependencies>
 
@@ -88,14 +57,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
