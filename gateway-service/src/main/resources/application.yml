@@ -5,20 +5,31 @@ spring:
 server:
   port: 8080
 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    routes:
+      enabled: true
+    filters:
+      enabled: true
+
 eureka:
-  instance:
-    prefer-ip-address: true
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
 
 zuul:
   routes:
-    userservice: /api/v1/users/**
-  ribbon:
-    eager-load:
-      enabled: true
-
+    users:
+      path: "/api/v1/users/**"
+      serviceId: userservice
+  sensitive-headers:
 
