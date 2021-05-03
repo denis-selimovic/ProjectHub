@@ -17,8 +17,9 @@ eureka:
 zuul:
   routes:
     user:
-      path: "/api/v1/users"
+      path: "/api/v1/users/**"
       serviceId: userservice
+      stripPrefix: false
     token:
       path: "/oauth/token"
       serviceId: userservice
