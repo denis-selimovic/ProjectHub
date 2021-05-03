@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/subscriptions")
+@RequestMapping("/api/v1/email-subscriptions")
 @RequiredArgsConstructor
 public class EmailSubscriptionController {
 

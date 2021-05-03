@@ -67,7 +67,7 @@ public class EmailSubscriptionControllerTest {
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenReturn(null);
         EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
@@ -80,7 +80,7 @@ public class EmailSubscriptionControllerTest {
         UUID uuid = UUID.randomUUID();
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenReturn(null);
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
@@ -91,7 +91,7 @@ public class EmailSubscriptionControllerTest {
     public void createSubscriptionWrongUUID() throws Exception {
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenReturn(null);
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
@@ -110,7 +110,7 @@ public class EmailSubscriptionControllerTest {
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenReturn(null);
         EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
         ).andExpect(status().isUnauthorized());
@@ -122,7 +122,7 @@ public class EmailSubscriptionControllerTest {
         EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenThrow(new UnprocessableEntityException("Error"));
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
@@ -135,7 +135,7 @@ public class EmailSubscriptionControllerTest {
         EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenThrow(new NotFoundException("Error"));
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
@@ -148,7 +148,7 @@ public class EmailSubscriptionControllerTest {
         EmailConfig config = addConfigToDb(ResourceOwnerInjector.id, "email@email.com");
         Mockito.when(taskService.findTaskById(Mockito.anyString(), Mockito.any()))
                 .thenThrow(new BadRequestException("Error"));
-        mockMvc.perform(post("/api/v1/subscriptions")
+        mockMvc.perform(post("/api/v1/email-subscriptions")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(createJSONSub(uuid))
