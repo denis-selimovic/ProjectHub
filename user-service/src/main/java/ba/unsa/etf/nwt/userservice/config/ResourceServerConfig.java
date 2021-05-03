@@ -1,6 +1,7 @@
 package ba.unsa.etf.nwt.userservice.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 @EnableResourceServer
 @Component
 @RequiredArgsConstructor
+@Order(-1)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private final TokenStore tokenStore;
 
@@ -21,11 +23,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 
     private final String[] unprotectedEndpoints = {
-            "/oauth/token",
-            "/api/v1/users",
-            "/api/v1/users/request-password-reset",
-            "/api/v1/users/confirm-email",
-            "/api/v1/users/reset-password",
+            "/oauth/token/**",
+            "/api/v1/users/**",
             "/swagger-resources/**",
             "/webjars/**",
             "/v3/**",
