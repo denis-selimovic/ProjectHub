@@ -53,3 +53,5 @@ zuul:
       serviceId: email-service
       stripPrefix: false
     sensitive-headers:
+  ignored-patterns: "/api/v1/emails"
+
