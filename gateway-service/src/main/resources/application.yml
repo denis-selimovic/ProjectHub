@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gatewayservice
+    name: gateway-service
 
 server:
   port: 8080
@@ -16,12 +16,32 @@ eureka:
 
 zuul:
   routes:
-    user:
+    users:
       path: "/api/v1/users/**"
-      serviceId: userservice
+      serviceId: user-service
       stripPrefix: false
     token:
-      path: "/oauth/token"
-      serviceId: userservice
+      path: "/oauth/token/**"
+      serviceId: user-service
+      stripPrefix: false
+    tasks:
+      path: "/api/v1/tasks/**"
+      serviceId: task-service
+      stripPrefix: false
+    issues:
+      path: "/api/v1/issues/**"
+      serviceId: task-service
+      stripPrefix: false
+    projects:
+      path: "/api/v1/projects/**"
+      serviceId: project-service
+      stripPrefix: false
+    notifications:
+      path: "/api/v1/notifications/**"
+      serviceId: notification-service
+      stripPrefix: false
+    subscriptions:
+      path: "/api/v1/subscriptions/**"
+      serviceId: notification-service
+      stripPrefix: false
   sensitive-headers:
-
