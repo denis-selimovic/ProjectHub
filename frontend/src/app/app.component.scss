@@ -1,12 +1,7 @@
 .page {
   display: grid;
-  grid-template-rows: 10% 60% 30%;
-  .header {
-  }
-
+  grid-template-rows: 1fr 6fr 2fr;
   .content {
-  }
-
-  .footer {
+    padding: 20px 40px;
   }
 }
