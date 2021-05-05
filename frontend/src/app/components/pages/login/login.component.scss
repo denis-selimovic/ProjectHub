@@ -15,6 +15,10 @@
     box-sizing: border-box;
     width: 70%;
     text-align: center;
+    position: relative;
+    .logo {
+      width: 80px;
+    }
   }
 
   h2 {
