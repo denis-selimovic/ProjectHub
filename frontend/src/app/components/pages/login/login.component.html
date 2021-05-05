@@ -1,3 +1,11 @@
 <div class="login">
-    
+    <label for="email" class="input-label">Email*</label>
+    <input type="email" id="email" [formControl]="email" class="input-field">
+
+    <label for="password">Password*</label>
+    <input type="password" id="password" class="input-field">
+
+    <a class="redirect-link">Forgot your password?</a>
+    <button type="submit" class="form-button">Log in</button>
+    <p class="form-info-text">Don't have an account? <span><a class="redirect-link">Register</a></span></p>
 </div>
