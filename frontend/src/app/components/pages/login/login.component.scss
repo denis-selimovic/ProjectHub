@@ -1,0 +1,21 @@
+@import "/src/app/styles/forms.scss";
+@import "/src/app/styles/typography.scss";
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 500px;
+
+  h2 {
+    color: $blue;
+  }
+
+  h3 {
+    width: 90%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}

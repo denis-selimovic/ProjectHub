@@ -1,11 +1,15 @@
 <div class="login">
-    <label for="email" class="input-label">Email*</label>
-    <input type="email" id="email" [formControl]="email" class="input-field">
-
-    <label for="password">Password*</label>
-    <input type="password" id="password" class="input-field">
-
-    <a class="redirect-link">Forgot your password?</a>
-    <button type="submit" class="form-button">Log in</button>
-    <p class="form-info-text">Don't have an account? <span><a class="redirect-link">Register</a></span></p>
+    <h2>Wellcome to Project Hub!</h2>
+    <h3>Issue Tracker and Task Management Tool for Developers</h3>
+    <div class="form-content">
+        <label for="email" class="input-label">Email*</label>
+        <input type="email" id="email" [formControl]="email" class="input-field">
+    
+        <label for="password" class="input-label">Password*</label>
+        <input type="password" id="password"  [formControl]="password" class="input-field">
+    
+        <a class="form-info-text redirect-link">Forgot your password?</a>
+        <button type="submit" class="form-button">Log in</button>
+        <p class="form-info-text">Don't have an account? <span><a class="redirect-link">Register</a></span></p>
+    </div>
 </div>

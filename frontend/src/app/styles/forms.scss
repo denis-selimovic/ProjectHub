@@ -1,0 +1,54 @@
+// global styles for forms
+@import "/src/app/styles/variables.scss";
+
+.form-content {
+  width: 70%;
+  border: 1px solid $light-gray;
+  border-radius: $border-radius;
+  padding: 20px 20px;
+
+  .input-field {
+    box-sizing: border-box;
+    margin: 5px 0px 10px 0px;
+    width: 100%;
+    padding: 0.5em 5px;
+    border: 1px solid $light-gray;
+    border-radius: $border-radius;
+  }
+
+  .input-label {
+    color: $dark-gray;
+    font-size: $fs-medium;
+    display: block;
+  }
+
+  .form-info-text {
+    display: block;
+    color: $blue;
+    text-decoration: none;
+    font-size: $fs-small;
+    text-align: center;
+  }
+
+  .redirect-link {
+    font-weight: bold;
+    cursor: pointer;
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .form-button {
+    width: 100%;
+    cursor: pointer;
+    font-size: $fs-large;
+    font-weight: bold;
+    padding: 0.5em 2.5em;
+    background: $blue;
+    color: $white;
+    border: transparent;
+    border-radius: $border-radius;
+    margin: 10px 0px;
+  }
+}

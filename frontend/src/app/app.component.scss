@@ -1,7 +1,19 @@
 .page {
   display: grid;
   grid-template-rows: 1fr 6fr 2fr;
+  position: absolute;
+  width: 100%;
+
+  .header {
+    min-height: 50px;
+  }
+
   .content {
-    padding: 20px 40px;
+    padding: 1%;
+    height: 100%;
+  }
+
+  .footer {
+    min-height: 100px;
   }
 }
