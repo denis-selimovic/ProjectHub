@@ -1,15 +1,12 @@
+@import "/src/app/styles/variables.scss";
+
 .header {
-  background: #383838;
-  color: #fff;
+  box-sizing: border-box;
+  background: $black;
+  color: $white;
   padding: 20px;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 20px;
-}
-
-.content {
-  padding-top: 20px;
-  padding-bottom: 30px;
 }

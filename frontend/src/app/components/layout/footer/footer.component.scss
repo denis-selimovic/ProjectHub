@@ -1,16 +1,18 @@
+@import "/src/app/styles/variables.scss";
+
 .footer {
   box-sizing: border-box;
-  color: #fff;
+  color: $white;
   text-align: center;
   padding: 10px;
   position: fixed;
   right: 0;
   bottom: 0;
-  background-color: #383838;
+  background-color: $black;
   width: 100%;
 
   a {
-    color: #fff;
+    color: $white;
     text-decoration: none;
     margin: 15px 0px;
     display: block;
