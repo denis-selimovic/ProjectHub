@@ -1,24 +1,13 @@
-<form class="login" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<div class="login-page">
     <div class="background">
         <img class="background-image" src="assets/background-accent.png" alt=""/>
     </div>
-    <div class="title">
-        <img class="logo" src="assets/bug-logo.jpg" alt="Bug Logo"/>
-        <h2>Wellcome to Project Hub!</h2>
-        <h3>Issue Tracker and Task Management Tool for Developers</h3>
+    <div class="page-content">
+        <div class="title">
+            <img class="logo" src="assets/bug-logo.png" alt="Bug Logo"/>
+            <h2>Wellcome to Project Hub!</h2>
+            <h3>Issue Tracker and Task Management Tool for Developers</h3>
+        </div>
+        <div class="login-form"><app-login-form></app-login-form></div>
     </div>
-    <div class="form-content">
-        <label for="email" class="input-label">Email*</label>
-        <input type="email" id="email" formControlName="email" class="input-field">
-        <div *ngIf="isSubmitted && formControls.email.errors" class="help-block">
-            <div *ngIf="formControls.email.errors.required">Email is required</div>
-          </div>
-    
-        <label for="password" class="input-label">Password*</label>
-        <input type="password" id="password"  formControlName="password" class="input-field">
-    
-        <a class="form-info-text redirect-link">Forgot your password?</a>
-        <button type="submit" class="form-button" [disabled]="!loginForm.valid">Log in</button>
-        <p class="form-info-text">Don't have an account? <span><a class="redirect-link">Register</a></span></p>
-    </div>
-</form>
+</div>

@@ -1,17 +1,18 @@
 @import "/src/app/styles/forms.scss";
 @import "/src/app/styles/typography.scss";
 
-.login {
+.login-page {
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   width: 100%;
   max-width: 100%;
   min-height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20px;
 
   .background-image {
+    display: none;
     transform: rotate(180deg);
     margin: 0;
     padding: 0;
@@ -22,7 +23,6 @@
 
   .title {
     box-sizing: border-box;
-    width: 70%;
     text-align: center;
     position: relative;
     .logo {
@@ -35,34 +35,41 @@
   }
 
   h3 {
-    text-align: center;
     margin-bottom: 20px;
   }
 
-  .form-button {
-    margin-top: 40px;
-  }
-
-  @media screen and (min-width: $screen-large) {
-    .title {
-      width: 50%;
+  @media screen and (min-width: $screen-medium) {
+    .page-content {
+      width: 70%;
     }
   }
 
   @media screen and (min-width: $screen-large) {
-    padding-right: 100px;
-    align-items: flex-end;
+    .page-content {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex-direction: column;
+      width: 70%;
+      margin-left: auto;
+      margin-right: 5em;
+
+      .login-form {
+        width: 50%;
+      }
+
+      .title {
+        width: 50%;
+      }
+    }
+
     .background-image {
+      display: initial;
       opacity: 0.7;
       position: absolute;
       top: 0;
       left: 0;
       z-index: -1;
-    }
-
-    .title {
-      width: 40%;
-      max-width: initial;
     }
   }
 }

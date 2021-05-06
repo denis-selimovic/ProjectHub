@@ -1,9 +1,7 @@
-// global styles for forms
 @import "/src/app/styles/variables.scss";
 
 .form-content {
   box-sizing: border-box;
-  width: 70%;
   border: 1px solid $light-gray;
   border-radius: $border-radius;
   padding: 20px 20px;
@@ -20,11 +18,9 @@
   .input-label {
     color: $dark-gray;
     font-size: $fs-medium;
-    display: block;
   }
 
   .form-info-text {
-    display: block;
     color: $blue;
     text-decoration: none;
     font-size: $fs-small;
@@ -32,10 +28,13 @@
   }
 
   .redirect-link {
-    font-weight: bold;
     cursor: pointer;
-    &:focus,
-    &:hover {
+    color: $blue;
+    font-size: $fs-small;
+    text-decoration: none;
+    font-weight: bold;
+    &:hover,
+    &:focus {
       text-decoration: underline;
     }
   }
@@ -51,16 +50,6 @@
     border: transparent;
     border-radius: $border-radius;
     margin: 10px 0px;
-  }
-
-  @media screen and (min-width: $screen-medium) {
-    width: 50%;
-    max-width: 400px;
-  }
-
-  @media screen and (min-width: $screen-large) {
-    width: 40%;
-    max-width: initial;
-    padding: 30px 30px;
+    margin-top: 40px;
   }
 }
