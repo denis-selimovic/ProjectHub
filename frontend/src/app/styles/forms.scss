@@ -51,5 +51,17 @@
     border-radius: $border-radius;
     margin: 10px 0px;
     margin-top: 40px;
+
+    &:disabled {
+      background: $light-gray;
+    }
+  }
+
+  .input-container {
+    margin-bottom: 10px;
+  }
+
+  .error {
+    color: $red;
   }
 }
