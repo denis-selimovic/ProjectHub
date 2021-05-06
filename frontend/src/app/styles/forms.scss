@@ -39,6 +39,11 @@
     }
   }
 
+  .link-center {
+    display: block;
+    text-align: center;
+  }
+
   .form-button {
     width: 100%;
     cursor: pointer;
@@ -49,8 +54,7 @@
     color: $white;
     border: transparent;
     border-radius: $border-radius;
-    margin: 10px 0px;
-    margin-top: 40px;
+    margin: 20px 0px 10px 0px;
 
     &:disabled {
       background: $light-gray;
