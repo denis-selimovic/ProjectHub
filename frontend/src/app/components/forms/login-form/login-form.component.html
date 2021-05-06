@@ -20,5 +20,7 @@
         <a href="#" class="redirect-link">Forgot your password?</a>
         <button type="submit" [disabled]="loginForm.invalid" class="form-button">Log in</button>
         <p class="form-info-text">Don't have an account? <span><a href="#" class="redirect-link">Register</a></span></p>
+        <br/>
+        <p class="form-info-text error">{{errorMessage}}</p>
     </div>
 </form>
