@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormBuilder , Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -7,6 +7,19 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  email = new FormControl("");
-  password = new FormControl("");
+  isSubmitted = false;
+
+  loginForm = this.fb.group({
+    email: ["", Validators.required],
+    password: ["", Validators.required]
+  });
+
+  constructor(private fb: FormBuilder) { }
+
+  get formControls() { return this.loginForm.controls; }
+
+  onSubmit() {
+    this.isSubmitted = true;
+    console.log(this.loginForm.value);
+  }
 }
