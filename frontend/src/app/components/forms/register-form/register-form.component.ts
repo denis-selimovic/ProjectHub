@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { ComparePassword } from 'src/app/validators/passwordMatch.validator';
 
 @Component({
   selector: 'app-register-form',
@@ -20,6 +21,8 @@ export class RegisterFormComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('',[ Validators.required, Validators.pattern(this.validPasswordPattern)]),
       confirmPassword: new FormControl('', [Validators.required, Validators.pattern(this.validPasswordPattern)])
+    },{
+      validators: ComparePassword('password', 'confirmPassword')
     });
   }
 
