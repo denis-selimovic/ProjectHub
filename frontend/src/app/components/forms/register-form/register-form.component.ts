@@ -12,7 +12,7 @@ export class RegisterFormComponent implements OnInit {
   errorMessage: String;
 
   constructor(private formBuilder: FormBuilder) {
-    this.errorMessage = ""; //error message from server
+    this.errorMessage = ""; 
     this.registerForm = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
       lastName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
