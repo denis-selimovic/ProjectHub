@@ -59,6 +59,9 @@ public class User {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = false;
 
+    @Column(name = "deleted", nullable = false)
+    private Boolean deleted = false;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private final Set<Token> tokens = new HashSet<>();
 
