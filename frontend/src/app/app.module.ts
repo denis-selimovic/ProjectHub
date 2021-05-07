@@ -12,6 +12,9 @@ import { RegisterFormComponent } from './components/forms/register-form/register
 import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
+import { NewProjectFormComponent } from './components/forms/new-project-form/new-project-form.component';
+import { NewProjectComponent } from './components/pages/new-project/new-project.component';
+import { NavbarComponent } from './components/layout/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations'
     RegisterComponent,
     RegisterFormComponent,
     NewTaskFormComponent,
-    NewTaskComponent
+    NewTaskComponent,
+    NewProjectFormComponent,
+    NewProjectComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
