@@ -23,7 +23,7 @@ export class RegisterFormComponent implements OnInit {
       ),
       confirmPassword: new FormControl('', [Validators.required])
     },{
-      validators: FieldsMatch('password', 'confirmPassword')
+      validator: FieldsMatch('password', 'confirmPassword')
     });
   }
 

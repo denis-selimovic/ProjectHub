@@ -1,16 +1,16 @@
-import { FormGroup } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
     
 export function FieldsMatch(controlName: string, matchingControlName: string){
-    return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        const matchingControl = formGroup.controls[matchingControlName];
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+    return (formGroup: AbstractControl) => {
+        const control = formGroup.get(controlName);
+        const matchingControl = formGroup.get(matchingControlName);
+        if (matchingControl?.errors && !matchingControl.errors.mustMatch) {
             return;
         }
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
+        if (control?.value !== matchingControl?.value) {
+            matchingControl?.setErrors({ mustMatch: true });
         } else {
-            matchingControl.setErrors(null);
+            matchingControl?.setErrors(null);
         }
     }
 }
