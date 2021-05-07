@@ -3,19 +3,19 @@
 .footer {
   box-sizing: border-box;
   color: $white;
-  text-align: center;
-  padding: 10px;
-  position: fixed;
-  right: 0;
-  bottom: 0;
+  padding: 1em;
   background-color: $black;
   width: 100%;
-  font-size: $fs-medium;
+  font-size: $fs-small;
+  text-align: center;
 
   a {
-    color: $white;
     text-decoration: none;
-    margin: 15px 0px;
+    margin: 5px 0;
     display: block;
+  }
+
+  @media screen and (min-width: $screen-medium) {
+    font-size: $fs-medium;
   }
 }

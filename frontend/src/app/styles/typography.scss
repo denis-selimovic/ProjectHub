@@ -1,0 +1,19 @@
+@import "/src/app/styles/variables.scss";
+
+.h2,
+h3 {
+  display: block;
+  color: $black;
+}
+
+h2 {
+  font-size: $fs-large;
+  margin: 0;
+}
+
+h3 {
+  font-size: $fs-medium;
+  margin: 10px 0px;
+  color: $dark-gray;
+  font-weight: normal;
+}
