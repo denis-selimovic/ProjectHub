@@ -24,13 +24,13 @@
    </div>
 
    <div class="justified-container">
-   <select class="select-option" name="priority">
+   <select class="select-option" name="priority" formControlName="priority">
     <option *ngFor="let priority of priorities" [value]="priorities">
      {{priority.priority}}
     </option>
    </select>
 
-   <select class="select-option" name="collaborator">
+   <select class="select-option" name="collaborator" formControlName="collaborator">
     <option *ngFor="let collaborator of collaborators" [value]="collaborators">
      {{collaborator.email}}
     </option>
