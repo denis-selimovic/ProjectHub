@@ -13,7 +13,7 @@ public class UserConsumer implements Consumer<UserDTO> {
 
     private final UserService userService;
 
-    @RabbitListener(queues = "email-service")
+    @RabbitListener(queues = {"email-service", "notification-service"})
     public void receive(UserDTO data) {
         userService.delete(data.getId());
     }
