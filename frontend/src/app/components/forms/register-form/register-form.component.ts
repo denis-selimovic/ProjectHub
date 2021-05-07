@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { ComparePassword } from 'src/app/validators/passwordMatch.validator';
+import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
 
 @Component({
   selector: 'app-register-form',
@@ -9,20 +9,21 @@ import { ComparePassword } from 'src/app/validators/passwordMatch.validator';
 })
 export class RegisterFormComponent implements OnInit {
   registerForm: FormGroup;
-  errorMessage: String
-  validPasswordPattern: RegExp
+  errorMessage: String;
 
   constructor(private formBuilder: FormBuilder) {
-    this.validPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}/;
     this.errorMessage = ""; //error message from server
     this.registerForm = this.formBuilder.group({
       firstName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
       lastName: new FormControl('', [Validators.required, Validators.maxLength(32)]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('',[ Validators.required, Validators.pattern(this.validPasswordPattern)]),
-      confirmPassword: new FormControl('', [Validators.required, Validators.pattern(this.validPasswordPattern)])
+      password: new FormControl('',[Validators.required, 
+        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}$'),
+        Validators.minLength(8)]
+      ),
+      confirmPassword: new FormControl('', [Validators.required])
     },{
-      validators: ComparePassword('password', 'confirmPassword')
+      validators: FieldsMatch('password', 'confirmPassword')
     });
   }
 
