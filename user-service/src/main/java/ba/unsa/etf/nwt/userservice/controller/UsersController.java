@@ -2,6 +2,7 @@ package ba.unsa.etf.nwt.userservice.controller;
 
 import ba.unsa.etf.nwt.userservice.client.service.EmailService;
 import ba.unsa.etf.nwt.userservice.dto.UserDTO;
+import ba.unsa.etf.nwt.userservice.messaging.publishers.UserPublisher;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
@@ -20,7 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,6 +34,7 @@ public class UsersController {
     private final UserService userService;
     private final TokenService tokenService;
     private final EmailService emailService;
+    private final UserPublisher userPublisher;
 
     @PostMapping
     @ApiResponses(value = {
@@ -51,6 +52,7 @@ public class UsersController {
         User user = userService.create(request);
         Token token = tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
         emailService.sendEmail(user, token, "activation");
+        userPublisher.send(new UserDTO(user));
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new UserDTO(user)));
     }
 

@@ -9,6 +9,17 @@ spring:
     import: optional:configserver:http://localhost:8888
   profiles:
     active: dev
+  rabbitmq:
+    host: localhost
+    password: password
+    username: projecthub
+
 
 server:
   port: 8081
+
+amqp:
+  queue: user-service
+  exchange: user-exchange
+  routing-key: user-routing-key
+

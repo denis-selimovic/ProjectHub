@@ -51,4 +51,11 @@ public class UserService {
             throw new NotFoundException("Request body can not be processed");
         });
     }
+
+    public void delete(UUID userId) {
+        userRepository.findById(userId).ifPresent(u -> {
+            u.setDeleted(true);
+            userRepository.save(u);
+        });
+    }
 }
