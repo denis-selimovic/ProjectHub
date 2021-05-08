@@ -8,14 +8,26 @@
 
    <label for="issue-name" class="input-label">Issue name*</label>
    <input id="issue-name" formControlName="issueName" class="input-field">
-   <div class="error" *ngIf="newIssueForm?.get('issueName')?.touched && newIssueForm?.get('issueName')?.invalid">
-    Issue name can't be empty
+   <div class="error"
+    *ngIf="!newIssueForm?.get('issueName')?.valid && (newIssueForm?.get('issueName')?.dirty ||newIssueForm?.get('issueName')?.touched)">
+    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.required">
+     Issue name is required
+    </div>
+    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.maxlength">
+     Issue name can't contain more than 50 characters
+    </div>
    </div>
 
    <label for="description" class="input-label">Description*</label>
    <textarea id="description" formControlName="description" class="input-field"></textarea>
-   <div class="error" *ngIf="newIssueForm?.get('description')?.touched && newIssueForm?.get('description')?.invalid">
-    Description can't be empty
+   <div class="error"
+    *ngIf="!newIssueForm?.get('description')?.valid && (newIssueForm?.get('description')?.dirty ||newIssueForm?.get('description')?.touched)">
+    <div class="error" *ngIf="newIssueForm?.get('description')?.errors?.required">
+     Description is required
+    </div>
+    <div class="error" *ngIf="newIssueForm?.get('description')?.errors?.maxlength">
+     Description can't contain more than 255 characters
+    </div>
    </div>
 
    <label for="priority" class="input-label">Priority*</label>

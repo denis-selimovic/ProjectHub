@@ -16,14 +16,13 @@ export class NewIssueFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.newIssueForm = this.formBuilder.group( {
-      issueName: new FormControl('', Validators.required),      
-      description: new FormControl('', Validators.required),
+      issueName: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
+      description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       priority: new FormControl('', Validators.required)
     });
     this.errorMessage = ""
     this.project = {name: "NWT Project"}
-    this.priorities = [{priority: "High"}, {priority: "Medium"}]
-    this.collaborators = [{email: "ajsa@gmail.com"}]
+    this.priorities = [{priority: "Critical"}, {priority: "High"}, {priority: "Medium"}, {priority: "Low"}]
   }
 
   ngOnInit(): void {
