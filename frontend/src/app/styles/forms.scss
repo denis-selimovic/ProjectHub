@@ -5,6 +5,7 @@
   border: 1px solid $light-gray;
   border-radius: $border-radius;
   padding: 20px 20px;
+  margin-bottom: 40px;
 
   .input-field {
     box-sizing: border-box;
@@ -67,5 +68,12 @@
 
   .error {
     color: $red;
+  }
+
+  .form-title {
+    width: 100%;
+    text-align: center;
+    color: $blue;
+    margin: 0 0 20px 0;
   }
 }
