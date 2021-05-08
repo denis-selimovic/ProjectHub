@@ -4,8 +4,14 @@
   <div class="input-container">
    <label for="project-name" class="input-label">Project name*</label>
    <input id="project-name" formControlName="projectName" class="input-field">
-   <div class="error" *ngIf="newProjectForm?.get('projectName')?.touched && newProjectForm?.get('projectName')?.invalid">
-    Project name can't be empty
+   <div class="error"
+    *ngIf="!newProjectForm?.get('projectName')?.valid && (newProjectForm?.get('projectName')?.dirty ||newProjectForm?.get('projectName')?.touched)">
+    <div class="error" *ngIf="newProjectForm?.get('projectName')?.errors?.required">
+     Project name is required
+    </div>
+    <div class="error" *ngIf="newProjectForm?.get('projectName')?.errors?.maxlength">
+     Project name can't contain more than 50 characters
+    </div>
    </div>
   </div>
 

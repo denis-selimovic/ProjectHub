@@ -12,7 +12,7 @@ export class NewProjectFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { 
     this.newProjectForm = this.formBuilder.group({
-      projectName: new FormControl('', Validators.required)
+      projectName: new FormControl('', [Validators.required, Validators.maxLength(50)])
     });
     this.errorMessage = "";
   }
