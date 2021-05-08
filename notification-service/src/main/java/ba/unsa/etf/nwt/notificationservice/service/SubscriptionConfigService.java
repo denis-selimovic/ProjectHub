@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.notificationservice.service;
 
+import ba.unsa.etf.nwt.notificationservice.dto.UserDTO;
 import ba.unsa.etf.nwt.notificationservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.notificationservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.notificationservice.model.SubscriptionConfig;
@@ -21,6 +22,15 @@ public class SubscriptionConfigService {
         });
 
         SubscriptionConfig config = createConfigFromRequest(request);
+        return subscriptionConfigRepository.save(config);
+    }
+
+    public SubscriptionConfig create(final UserDTO user) {
+        subscriptionConfigRepository.findByEmailOrUserId(user.getEmail(), user.getId()).ifPresent(c -> {
+            throw new UnprocessableEntityException("Config with this email or user id already exists");
+        });
+
+        SubscriptionConfig config = user.createSubscriptionConfig();
         return subscriptionConfigRepository.save(config);
     }
 
