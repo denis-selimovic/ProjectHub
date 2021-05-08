@@ -32,15 +32,15 @@ public class TaskService {
     private final StatusService statusService;
     private final TypeService typeService;
 
-    public Task create(final CreateTaskRequest request) {
+    public Task create(final CreateTaskRequest request, UUID updatedBy) {
         taskRepository.findByNameAndProjectId(request.getName(), request.getProjectId()).ifPresent(t -> {
             throw new UnpocessableEntityException("Task with this name already exists");
         });
-        Task task = createTaskFromRequest(request);
+        Task task = createTaskFromRequest(request, updatedBy);
         return taskRepository.save(task);
     }
 
-    private Task createTaskFromRequest(final CreateTaskRequest request) {
+    private Task createTaskFromRequest(final CreateTaskRequest request, UUID updatedBy) {
         Priority priority =  priorityService.findById(request.getPriorityId());
         Status status = statusService.findByStatusType(Status.StatusType.OPEN);
         Type type = typeService.findById(request.getTypeId());
@@ -53,6 +53,7 @@ public class TaskService {
         task.setPriority(priority);
         task.setStatus(status);
         task.setType(type);
+        task.setUpdatedBy(updatedBy);
         return task;
     }
 
@@ -76,11 +77,7 @@ public class TaskService {
         return taskRepository.findAll(specification, pageable);
     }
 
-    public void save(final Task task) {
-        taskRepository.save(task);
-    }
-
-    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest) {
+    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest, UUID updatedBy) {
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getName(), task::setName);
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getDescription(), task::setDescription);
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
@@ -93,6 +90,7 @@ public class TaskService {
         if(patchTaskRequest.getTypeId().isPresent()){
             task.setType(typeService.findById(patchTaskRequest.getTypeId().get()));
         }
+        task.setUpdatedBy(updatedBy);
         return taskRepository.save(task);
     }
 }
