@@ -17,14 +17,14 @@ export class NewTaskFormComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { 
     this.newTaskForm = this.formBuilder.group( {
-      taskName: new FormControl('', Validators.required),      
-      description: new FormControl('', Validators.required),
+      taskName: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
+      description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       priority: new FormControl('', Validators.required),
       collaborator: new FormControl('')
     });
     this.errorMessage = ""
     this.project = {name: "NWT Project"}
-    this.priorities = [{priority: "High"}, {priority: "Medium"}]
+    this.priorities = [{priority: "Critical"}, {priority: "High"}, {priority: "Medium"}, {priority: "Low"}]
     this.collaborators = [{email: "ajsa@gmail.com"}]
   }
 
