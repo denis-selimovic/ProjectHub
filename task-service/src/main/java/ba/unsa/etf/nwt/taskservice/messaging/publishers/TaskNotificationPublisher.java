@@ -32,9 +32,10 @@ public class TaskNotificationPublisher implements Publisher<TaskNotificationDTO>
         this.template.convertAndSend(exchange.getName(), routingKey, data);
     }
 
-    public TaskNotificationDTO createNotification(Object[] previous, Object[] current, String[] properties, UUID id) {
+    public TaskNotificationDTO createNotification(Object[] previous, Object[] current, String[] properties, Task task) {
         TaskNotificationDTO data = new TaskNotificationDTO();
-        data.setTaskId(id);
+        data.setTaskId(task.getId());
+        data.setTaskName(task.getName());
         for (int i = 0; i < properties.length; ++i) {
             if (!this.properties.contains(properties[i])) continue;
 
@@ -74,7 +75,7 @@ public class TaskNotificationPublisher implements Publisher<TaskNotificationDTO>
     }
 
     public TaskNotificationDTO createNotification(Task task) {
-        TaskNotificationDTO data = new TaskNotificationDTO(task.getUpdatedBy().toString(), task.getId());
+        TaskNotificationDTO data = new TaskNotificationDTO(task.getUpdatedBy().toString(), task.getId(), task.getName());
         String userId = (task.getUserId() != null) ? task.getUserId().toString() : null;
         data.addChange("userId", null, userId);
         return data;

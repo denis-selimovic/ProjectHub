@@ -29,6 +29,8 @@ public class TaskNotificationDTO implements Resource {
     private String updatedBy;
     @JsonProperty("task_id")
     private UUID taskId;
+    @JsonProperty("task_name")
+    private String taskName;
 
     public void addChange(String property, String prev, String curr) {
         changes.put(property, new Change(prev, curr));

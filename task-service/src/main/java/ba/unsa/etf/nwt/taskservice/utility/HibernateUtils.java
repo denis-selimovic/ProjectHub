@@ -17,7 +17,7 @@ public class HibernateUtils extends EmptyInterceptor {
         if(entity.getClass().equals(Task.class)) {
             TaskNotificationPublisher publisher = ApplicationContextHolder.context.getBean(TaskNotificationPublisher.class);
             Task task = (Task) entity;
-            TaskNotificationDTO data = publisher.createNotification(previousState, currentState, propertyNames, task.getId());
+            TaskNotificationDTO data = publisher.createNotification(previousState, currentState, propertyNames, task);
             publisher.send(data);
         }
         return super.onFlushDirty(entity, id, currentState, previousState, propertyNames, types);
