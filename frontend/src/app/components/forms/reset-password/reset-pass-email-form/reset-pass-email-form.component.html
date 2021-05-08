@@ -11,7 +11,7 @@
                 Valid email is required
             </div>
        </div>
-       <button type="submit" [disabled]="resetPassEmailForm.invalid" class="form-button">Reset password</button>
+       <a routerLink="/reset-password-code"><button type="submit" [disabled]="resetPassEmailForm.invalid" class="form-button">Reset password</button></a>
        <div class="form-info-text">
         <p><a routerLink="/" class="redirect-link">Log In</a></p>
         <p> or </p>

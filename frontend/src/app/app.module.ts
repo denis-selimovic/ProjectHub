@@ -9,6 +9,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
 import { ResetPasswordEmailComponent } from './components/pages/reset-password/reset-password-email/reset-password-email.component';
 import { ResetPassEmailFormComponent } from './components/forms/reset-password/reset-pass-email-form/reset-pass-email-form.component';
+import { ResetPasswordCodeComponent } from './components/pages/reset-password/reset-password-code/reset-password-code.component';
+import { ResetPassCodeFormComponent } from './components/forms/reset-password/reset-pass-code-form/reset-pass-code-form.component';
+import { ResetPasswordNewComponent } from './components/pages/reset-password/reset-password-new/reset-password-new.component';
+import { ResetPassNewFormComponent } from './components/forms/reset-password/reset-pass-new-form/reset-pass-new-form.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +22,11 @@ import { ResetPassEmailFormComponent } from './components/forms/reset-password/r
     FooterComponent,
     LoginFormComponent,
     ResetPasswordEmailComponent,
-    ResetPassEmailFormComponent
+    ResetPassEmailFormComponent,
+    ResetPasswordCodeComponent,
+    ResetPassCodeFormComponent,
+    ResetPasswordNewComponent,
+    ResetPassNewFormComponent
   ],
   imports: [
     BrowserModule,
