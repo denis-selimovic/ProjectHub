@@ -12,3 +12,13 @@ p {
     width: 100%;
     justify-content: center;
   }
+
+input {
+    width: 92%;
+    border: none;
+    height: 100%;
+  }
+
+input:focus {
+  outline: none;
+}

@@ -5,7 +5,12 @@
 
         <div class="input-container">
             <label for="password" class="input-label">Password:</label>
-            <input type="password" id="password"  formControlName="password" class="input-field">
+            <div class="input-field">
+                <span><input matInput type="password" [type]="hide ? 'password':'text'"  id="password"  formControlName="password"></span>
+                <span><i class="material-icons" matSuffix (click) = "hide = !hide">
+                    {{hide ? 'visibility' : 'visibility_off'}}
+                </i></span>
+            </div>
             <div class="error" *ngIf="resetPassNewForm?.get('password')?.touched && resetPassNewForm?.get('password')?.errors?.required">
                 Password is required
             </div>
@@ -16,7 +21,12 @@
 
         <div class="input-container">
             <label for="confirmPassword" class="input-label">Confirm password:</label>
-            <input type="password" id="confirmPassword"  formControlName="confirmPassword" class="input-field">
+            <div class="input-field">
+                <span><input matInput type="password" [type]="hideConf ? 'password':'text'" id="confirmPassword"  formControlName="confirmPassword" class="field"></span>
+                <span><i class="material-icons" matSuffix (click) = "hideConf = !hideConf">
+                    {{hideConf ? 'visibility' : 'visibility_off'}}
+                </i></span>
+            </div>
             <div class="error" 
             *ngIf="!resetPassNewForm?.get('confirmPassword')?.valid && (resetPassNewForm?.get('confirmPassword')?.dirty ||resetPassNewForm?.get('confirmPassword')?.touched)">
                 <div class="error" *ngIf="resetPassNewForm?.get('confirmPassword')?.errors?.required">

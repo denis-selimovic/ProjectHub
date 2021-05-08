@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, Form } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, Form, FormsModule } from '@angular/forms';
 import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
+import { MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-reset-pass-new-form',
@@ -10,10 +11,14 @@ import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
 
 export class ResetPassNewFormComponent implements OnInit {
   resetPassNewForm: FormGroup;
-  errorMessage: String
+  errorMessage: String;
+  hide: boolean;
+  hideConf: boolean
 
   constructor(private formBuilder: FormBuilder) {
     this.errorMessage = ""; //error message from server
+    this.hide = true;
+    this.hideConf = true;
     this.resetPassNewForm = this.formBuilder.group({
     password: new FormControl('',[Validators.required, 
       Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}$'),
@@ -28,3 +33,4 @@ export class ResetPassNewFormComponent implements OnInit {
   }
 
 }
+
