@@ -1,0 +1,23 @@
+@import "/src/app/styles/variables.scss";
+
+.navbar {
+  width: 100%;
+  background: rgba(189, 189, 189, 0.1);
+  margin: 0;
+  padding: 10px 20px;
+  box-sizing: border-box;
+
+  .navbar-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .navbar-link {
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.63;
+    display: inline-block;
+    margin-right: 15px;
+  }
+}
