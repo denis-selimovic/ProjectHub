@@ -2,8 +2,10 @@ package ba.unsa.etf.nwt.userservice.controller;
 
 import ba.unsa.etf.nwt.userservice.client.dto.EmailDTO;
 import ba.unsa.etf.nwt.userservice.client.service.EmailService;
+import ba.unsa.etf.nwt.userservice.dto.UserDTO;
 import ba.unsa.etf.nwt.userservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.userservice.exception.base.UnprocessableEntityException;
+import ba.unsa.etf.nwt.userservice.messaging.publishers.UserPublisher;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.TokenRepository;
@@ -50,6 +52,8 @@ public class UserControllerTest {
     private PasswordEncoder passwordEncoder;
     @MockBean
     private EmailService emailService;
+    @MockBean
+    private UserPublisher userPublisher;
 
     @BeforeEach
     public void setUp() {
@@ -236,6 +240,7 @@ public class UserControllerTest {
 
     @Test
     public void testSuccessCreate() throws Exception {
+        Mockito.doNothing().when(userPublisher).send(Mockito.any(UserDTO.class));
         mockMvc.perform(post("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
