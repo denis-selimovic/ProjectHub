@@ -14,7 +14,15 @@ spring:
       hibernate:
         session_factory:
           interceptor: ba.unsa.etf.nwt.taskservice.utility.HibernateUtils
-
+  rabbitmq:
+    host: localhost
+    password: password
+    username: projecthub
 
 server:
   port: 8083
+
+amqp:
+  queue: task-service
+  exchange: task-exchange
+  routing-key: task-routing-key
