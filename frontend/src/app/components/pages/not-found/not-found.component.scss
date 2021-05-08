@@ -2,10 +2,15 @@
 
 .not-found-page {
   text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   .not-found-code {
     margin: 0;
     padding: 0;
-    font-size: 300px;
+    font-size: 150px; //300px;
     color: $blue;
     letter-spacing: 10.5px;
     text-shadow: 8px 10px 0 $light-gray;
@@ -25,6 +30,12 @@
       &:hover {
         text-decoration: underline;
       }
+    }
+  }
+
+  @media screen and (min-width: $screen-medium) {
+    .not-found-code {
+      font-size: 300px;
     }
   }
 }
