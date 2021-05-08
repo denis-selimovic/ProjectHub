@@ -4,6 +4,7 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { ResetPasswordEmailComponent } from './components/pages/reset-password/reset-password-email/reset-password-email.component'
 import { ResetPasswordCodeComponent } from './components/pages/reset-password/reset-password-code/reset-password-code.component'
 import { ResetPasswordNewComponent } from './components/pages/reset-password/reset-password-new/reset-password-new.component'
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
@@ -46,6 +47,11 @@ const routes: Routes = [
   {
     path: 'new-issue', 
     component: NewIssueComponent
+  }, 
+  {
+    path: 'not-found',
+    pathMatch: 'full',
+    component: NotFoundComponent
   }
 ];
 @NgModule({

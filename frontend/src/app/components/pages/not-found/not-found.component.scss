@@ -1,0 +1,30 @@
+@import "/src/app/styles/typography.scss";
+
+.not-found-page {
+  text-align: center;
+  .not-found-code {
+    margin: 0;
+    padding: 0;
+    font-size: 300px;
+    color: $blue;
+    letter-spacing: 10.5px;
+    text-shadow: 8px 10px 0 $light-gray;
+  }
+
+  .not-found-text {
+    color: $black;
+    font-size: $fs-large;
+    font-weight: normal;
+
+    .redirect-link {
+      color: $blue;
+      cursor: pointer;
+      font-weight: bold;
+
+      &:focus,
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

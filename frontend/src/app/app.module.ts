@@ -15,8 +15,6 @@ import { ResetPasswordCodeComponent } from './components/pages/reset-password/re
 import { ResetPassCodeFormComponent } from './components/forms/reset-password/reset-pass-code-form/reset-pass-code-form.component';
 import { ResetPasswordNewComponent } from './components/pages/reset-password/reset-password-new/reset-password-new.component';
 import { ResetPassNewFormComponent } from './components/forms/reset-password/reset-pass-new-form/reset-pass-new-form.component';
-import { RegisterComponent } from './components/pages/register/register.component';
-import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
 import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
@@ -26,7 +24,7 @@ import { NewIssueFormComponent } from './components/forms/new-issue-form/new-iss
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 @NgModule({
   declarations: [
