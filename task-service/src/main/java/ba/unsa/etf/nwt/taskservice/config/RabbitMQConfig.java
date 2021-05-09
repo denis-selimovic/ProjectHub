@@ -10,7 +10,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,22 +42,30 @@ public class RabbitMQConfig {
         }
     }
 
-    @Bean
-    public Queue deletingQueue() {
-        return new Queue("deleting-queue");
-    }
+    @Configuration
+    public static class RevertProjectDeleteQueueConfig {
 
-    @Bean
-    public DirectExchange deletingExchange() {
-        return new DirectExchange("deleting-exchange");
-    }
+        public static final String QUEUE_NAME = "revert-project-delete-queue";
+        public static final String EXCHANGE_NAME = "revert-project-delete-exchange";
+        public static final String ROUTING_KEY = "revert-project-delete-routing-key";
 
-    @Bean
-    public Binding deletingBinding(Queue deletingQueue, DirectExchange deletingExchange) {
-        return BindingBuilder
-                .bind(deletingQueue)
-                .to(deletingExchange)
-                .with("deleting-routing-key");
+        @Bean
+        public Queue revertProjectDeleteQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange revertProjectDeleteExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding revertProjectDeleteBinding(Queue revertProjectDeleteQueue, DirectExchange revertProjectDeleteExchange) {
+            return BindingBuilder
+                    .bind(revertProjectDeleteQueue)
+                    .to(revertProjectDeleteExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean

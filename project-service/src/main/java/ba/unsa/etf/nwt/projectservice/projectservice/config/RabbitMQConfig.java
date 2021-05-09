@@ -42,22 +42,30 @@ public class RabbitMQConfig {
         }
     }
 
-    @Bean
-    public Queue deletingQueue() {
-        return new Queue("delete-project-queue");
-    }
+    @Configuration
+    public static class DeleteProjectQueueConfig {
 
-    @Bean
-    public DirectExchange deletingExchange() {
-        return new DirectExchange("deleting-project-exchange");
-    }
+        public static final String QUEUE_NAME = "delete-project-queue";
+        public static final String EXCHANGE_NAME = "delete-project-exchange";
+        public static final String ROUTING_KEY = "delete-project-routing-key";
 
-    @Bean
-    public Binding deletingBinding(Queue deletingQueue, DirectExchange deletingExchange) {
-        return BindingBuilder
-                .bind(deletingQueue)
-                .to(deletingExchange)
-                .with("delete-project-routing-key");
+        @Bean
+        public Queue deleteProjectQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange deleteProjectExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding deleteProjectBinding(Queue deleteProjectQueue, DirectExchange deleteProjectExchange) {
+            return BindingBuilder
+                    .bind(deleteProjectQueue)
+                    .to(deleteProjectExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean
