@@ -14,6 +14,8 @@ import { NewTaskComponent } from './components/pages/new-task/new-task.component
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { NewProjectFormComponent } from './components/forms/new-project-form/new-project-form.component';
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
+import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
+import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { NewProjectComponent } from './components/pages/new-project/new-project.
     NewTaskFormComponent,
     NewTaskComponent,
     NewProjectFormComponent,
-    NewProjectComponent
+    NewProjectComponent,
+    NewIssueFormComponent,
+    NewIssueComponent
   ],
   imports: [
     BrowserModule,

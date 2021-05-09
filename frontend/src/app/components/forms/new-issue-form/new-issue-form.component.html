@@ -1,0 +1,45 @@
+<form class="new-issue" [formGroup]="newIssueForm" (ngSubmit)="onSubmit()">
+ <div class="form-content">
+  <div class="input-container">
+   <h2>
+    <span>New issue for: </span>
+    <span id="projectNameSpan">{{project.name}}</span>
+   </h2>
+
+   <label for="issue-name" class="input-label">Issue name*</label>
+   <input id="issue-name" formControlName="issueName" class="input-field">
+   <div class="error"
+    *ngIf="!newIssueForm?.get('issueName')?.valid && (newIssueForm?.get('issueName')?.dirty ||newIssueForm?.get('issueName')?.touched)">
+    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.required">
+     Issue name is required
+    </div>
+    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.maxlength">
+     Issue name can't contain more than 50 characters
+    </div>
+   </div>
+
+   <label for="description" class="input-label">Description*</label>
+   <textarea id="description" formControlName="description" class="input-field"></textarea>
+   <div class="error"
+    *ngIf="!newIssueForm?.get('description')?.valid && (newIssueForm?.get('description')?.dirty ||newIssueForm?.get('description')?.touched)">
+    <div class="error" *ngIf="newIssueForm?.get('description')?.errors?.required">
+     Description is required
+    </div>
+    <div class="error" *ngIf="newIssueForm?.get('description')?.errors?.maxlength">
+     Description can't contain more than 255 characters
+    </div>
+   </div>
+
+   <label for="priority" class="input-label">Priority*</label>
+   <br/>
+   <select class="select-option" name="priority" formControlName="priority">
+    <option *ngFor="let priority of priorities" [value]="priorities">
+     {{priority.priority}}
+    </option>
+   </select>
+ 
+   <button type="submit" [disabled]="newIssueForm.invalid" class="form-button">Add issue</button>
+
+  </div>
+ </div>
+</form>
