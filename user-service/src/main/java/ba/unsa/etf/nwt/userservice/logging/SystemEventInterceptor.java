@@ -24,9 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 @Qualifier("systemEventInterceptor")
 @RequiredArgsConstructor
 @ControllerAdvice
-public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyAdvice {
+public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyAdvice<Object> {
 
     private final SystemEventService systemEventService;
+    private Object cachedResponseBody;
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request,
@@ -36,7 +37,7 @@ public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyA
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
         HandlerMethod method = (HandlerMethod) handler;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        SystemEventRequest req = SystemEventFactory.createLogMessage(request, response, auth, method.getBeanType());
+        SystemEventRequest req = SystemEventFactory.createLogMessage(request, response, auth, method.getBeanType(), String.valueOf(cachedResponseBody));
         systemEventService.logSystemEvent(req);
     }
 
@@ -53,10 +54,7 @@ public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyA
                                   @NonNull Class aClass,
                                   @NonNull ServerHttpRequest serverHttpRequest,
                                   @NonNull ServerHttpResponse serverHttpResponse) {
-        System.out.println(o);
-        System.out.println(methodParameter);
-        System.out.println(mediaType);
-        System.out.println(aClass);
+        cachedResponseBody = o;
         return o;
     }
 }

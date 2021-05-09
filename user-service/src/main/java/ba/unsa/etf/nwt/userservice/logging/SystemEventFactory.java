@@ -16,7 +16,8 @@ public class SystemEventFactory {
     public static SystemEventRequest createLogMessage(@NonNull HttpServletRequest request,
                                                       @NonNull HttpServletResponse response,
                                                       @NonNull Authentication auth,
-                                                      @NonNull Class<?> bean) {
+                                                      @NonNull Class<?> bean,
+                                                      @NonNull String description) {
         Instant now = Instant.now();
         return SystemEventRequest.newBuilder()
                 .setMethod(request.getMethod())
@@ -27,6 +28,7 @@ public class SystemEventFactory {
                 .setStatus(response.getStatus())
                 .setTimestamp(Timestamp.newBuilder().setSeconds(now.getEpochSecond()).setNanos(now.getNano()).build())
                 .setService("user-service")
+                .setDescription(description)
                 .build();
     }
 
