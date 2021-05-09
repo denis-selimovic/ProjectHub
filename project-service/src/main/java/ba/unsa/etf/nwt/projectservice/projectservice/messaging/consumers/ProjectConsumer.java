@@ -13,7 +13,7 @@ public class ProjectConsumer implements Consumer<ProjectDTO> {
 
     private final ProjectRepository projectRepository;
 
-    @RabbitListener(queues = "deleting-queue")
+    @RabbitListener(queues = "revert-project-delete-queue")
     public void receive(ProjectDTO data) {
         projectRepository.find(data.getId()).ifPresent(p -> {
             p.setDeleted(false);

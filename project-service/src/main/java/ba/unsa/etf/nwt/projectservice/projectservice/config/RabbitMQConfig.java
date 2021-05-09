@@ -6,60 +6,66 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableRabbit
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class ProjectNotificationQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
+        public static final String QUEUE_NAME = "project-notification-queue";
+        public static final String EXCHANGE_NAME = "project-notification-exchange";
+        public static final String ROUTING_KEY = "project-notification-routing-key";
+
+        @Bean
+        public Queue projectNotificationQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange projectNotificationExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue projectNotificationQueue, DirectExchange projectNotificationExchange) {
+            return BindingBuilder
+                    .bind(projectNotificationQueue)
+                    .to(projectNotificationExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+    @Configuration
+    public static class DeleteProjectQueueConfig {
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange directExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(directExchange)
-                .with(routingKey);
-    }
+        public static final String QUEUE_NAME = "delete-project-queue";
+        public static final String EXCHANGE_NAME = "delete-project-exchange";
+        public static final String ROUTING_KEY = "delete-project-routing-key";
 
-    @Bean
-    public Queue deletingQueue() {
-        return new Queue("delete-project-queue");
-    }
+        @Bean
+        public Queue deleteProjectQueue() {
+            return new Queue(QUEUE_NAME);
+        }
 
-    @Bean
-    public DirectExchange deletingExchange() {
-        return new DirectExchange("deleting-project-exchange");
-    }
+        @Bean
+        public DirectExchange deleteProjectExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
 
-    @Bean
-    public Binding deletingBinding(Queue deletingQueue, DirectExchange deletingExchange) {
-        return BindingBuilder
-                .bind(deletingQueue)
-                .to(deletingExchange)
-                .with("delete-project-routing-key");
+        @Bean
+        public Binding deleteProjectBinding(Queue deleteProjectQueue, DirectExchange deleteProjectExchange) {
+            return BindingBuilder
+                    .bind(deleteProjectQueue)
+                    .to(deleteProjectExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean
