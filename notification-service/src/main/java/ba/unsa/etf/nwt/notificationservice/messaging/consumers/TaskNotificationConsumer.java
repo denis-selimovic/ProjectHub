@@ -5,11 +5,9 @@ import ba.unsa.etf.nwt.notificationservice.messaging.Consumer;
 import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
-import ba.unsa.etf.nwt.notificationservice.service.NotificationUserService;
 import ba.unsa.etf.nwt.notificationservice.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -23,7 +21,7 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
     private final SubscriptionService subscriptionService;
     private final NotificationService notificationService;
 
-    @RabbitListener(queues = "task-service")
+    @RabbitListener(queues = "task-notification-queue")
     public void receive(TaskNotificationDTO data) {
         updateSubscriptions(data);
         createNotifications(data);

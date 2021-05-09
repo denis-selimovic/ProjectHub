@@ -17,29 +17,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class TaskNotificationQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
-    }
+        public static final String QUEUE_NAME = "task-notification-queue";
+        public static final String EXCHANGE_NAME = "task-notification-exchange";
+        public static final String ROUTING_KEY = "task-notification-routing-key";
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+        @Bean
+        public Queue taskNotificationQueue() {
+            return new Queue(QUEUE_NAME);
+        }
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange directExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(directExchange)
-                .with(routingKey);
+        @Bean
+        public DirectExchange taskNotificationExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue taskNotificationQueue, DirectExchange taskNotificationExchange) {
+            return BindingBuilder
+                    .bind(taskNotificationQueue)
+                    .to(taskNotificationExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean
