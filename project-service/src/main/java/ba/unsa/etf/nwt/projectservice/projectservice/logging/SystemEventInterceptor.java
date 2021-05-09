@@ -52,7 +52,6 @@ public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyA
                                   @NonNull ServerHttpRequest serverHttpRequest,
                                   @NonNull ServerHttpResponse serverHttpResponse) {
         cachedResponseBody = o;
-        System.out.println(o);
         return o;
     }
 }
