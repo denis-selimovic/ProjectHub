@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 public class ProjectNotificationPublisher implements Publisher<ProjectNotificationDTO> {
 
     private final RabbitTemplate template;
-    private final DirectExchange exchange;
+    private final DirectExchange directExchange;
 
     @Value("${amqp.routing-key}")
     private String routingKey;
 
     @Override
     public void send(ProjectNotificationDTO data) {
-        this.template.convertAndSend(exchange.getName(), routingKey, data);
+        this.template.convertAndSend(directExchange.getName(), routingKey, data);
     }
 }
