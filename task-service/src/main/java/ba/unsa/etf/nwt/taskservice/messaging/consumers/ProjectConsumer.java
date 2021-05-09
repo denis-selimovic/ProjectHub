@@ -20,7 +20,7 @@ public class ProjectConsumer implements Consumer<ProjectDTO> {
     private final IssueService issueService;
     private final ProjectPublisher publisher;
 
-    @RabbitListener(queues = "project-service")
+    @RabbitListener(queues = "delete-project-queue")
     public void receive(ProjectDTO data) {
         try {
             deleteTasksAndIssues(data.getId());
@@ -29,7 +29,7 @@ public class ProjectConsumer implements Consumer<ProjectDTO> {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public void deleteTasksAndIssues(UUID projectId) {
         taskService.deleteTasksOnProject(projectId);
         issueService.deleteIssuesOnProject(projectId);

@@ -35,11 +35,29 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
+    public Binding binding(Queue queue, DirectExchange directExchange) {
         return BindingBuilder
                 .bind(queue)
-                .to(exchange)
+                .to(directExchange)
                 .with(routingKey);
+    }
+
+    @Bean
+    public Queue deletingQueue() {
+        return new Queue("deleting-queue");
+    }
+
+    @Bean
+    public DirectExchange deletingExchange() {
+        return new DirectExchange("deleting-exchange");
+    }
+
+    @Bean
+    public Binding deletingBinding(Queue deletingQueue, DirectExchange deletingExchange) {
+        return BindingBuilder
+                .bind(deletingQueue)
+                .to(deletingExchange)
+                .with("deleting-routing-key");
     }
 
     @Bean

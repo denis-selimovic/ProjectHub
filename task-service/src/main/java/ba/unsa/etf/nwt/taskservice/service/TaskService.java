@@ -95,6 +95,6 @@ public class TaskService {
     }
 
     public void deleteTasksOnProject(UUID projectId) {
-        taskRepository.deleteTaskByProjectId(projectId);
+        taskRepository.deleteAllByProjectId(projectId);
     }
 }
