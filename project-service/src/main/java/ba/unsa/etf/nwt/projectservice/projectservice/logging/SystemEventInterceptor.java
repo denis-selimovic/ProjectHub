@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @Qualifier("systemEventInterceptor")
 @RequiredArgsConstructor
+@ControllerAdvice
 public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyAdvice<Object> {
     private final SystemEventService systemEventService;
     private Object cachedResponseBody;
@@ -50,6 +52,7 @@ public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyA
                                   @NonNull ServerHttpRequest serverHttpRequest,
                                   @NonNull ServerHttpResponse serverHttpResponse) {
         cachedResponseBody = o;
+        System.out.println(o);
         return o;
     }
 }
