@@ -6,42 +6,40 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableRabbit
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class ProjectNotificationQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
-    }
+        public static final String QUEUE_NAME = "project-notification-queue";
+        public static final String EXCHANGE_NAME = "project-notification-exchange";
+        public static final String ROUTING_KEY = "project-notification-routing-key";
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+        @Bean
+        public Queue projectNotificationQueue() {
+            return new Queue(QUEUE_NAME);
+        }
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange directExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(directExchange)
-                .with(routingKey);
+        @Bean
+        public DirectExchange projectNotificationExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue projectNotificationQueue, DirectExchange projectNotificationExchange) {
+            return BindingBuilder
+                    .bind(projectNotificationQueue)
+                    .to(projectNotificationExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean

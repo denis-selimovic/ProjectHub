@@ -14,7 +14,7 @@ public class ProjectNotificationConsumer implements Consumer<ProjectNotification
 
     private final NotificationService notificationService;
 
-    @RabbitListener(queues = "project-service")
+    @RabbitListener(queues = "project-notification-queue")
     public void receive(ProjectNotificationDTO data) {
         Notification notification = notificationService.create(data.getTitle(), data.getDescription());
         notificationService.createNotificationUser(data.getUserId(), notification);
