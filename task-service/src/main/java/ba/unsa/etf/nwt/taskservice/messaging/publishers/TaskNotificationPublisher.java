@@ -19,7 +19,7 @@ import java.util.*;
 public class TaskNotificationPublisher implements Publisher<TaskNotificationDTO> {
 
     private final RabbitTemplate template;
-    private final DirectExchange exchange;
+    private final DirectExchange directExchange;
 
     @Value("${amqp.routing-key}")
     private String routingKey;
@@ -29,7 +29,7 @@ public class TaskNotificationPublisher implements Publisher<TaskNotificationDTO>
 
     @Override
     public void send(TaskNotificationDTO data) {
-        this.template.convertAndSend(exchange.getName(), routingKey, data);
+        this.template.convertAndSend(directExchange.getName(), routingKey, data);
     }
 
     public TaskNotificationDTO createNotification(Object[] previous, Object[] current, String[] properties, Task task) {

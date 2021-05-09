@@ -93,4 +93,8 @@ public class TaskService {
         task.setUpdatedBy(updatedBy);
         return taskRepository.save(task);
     }
+
+    public void deleteTasksOnProject(UUID projectId) {
+        taskRepository.deleteAllByProjectId(projectId);
+    }
 }

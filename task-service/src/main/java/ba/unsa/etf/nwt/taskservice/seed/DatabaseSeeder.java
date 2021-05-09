@@ -15,7 +15,7 @@ import static ba.unsa.etf.nwt.taskservice.model.Priority.PriorityType.*;
 import static ba.unsa.etf.nwt.taskservice.model.Status.StatusType.*;
 import static ba.unsa.etf.nwt.taskservice.model.Type.TaskType.*;
 
-@Component
+
 @RequiredArgsConstructor
 public class DatabaseSeeder {
     private final CommentRepository commentRepository;

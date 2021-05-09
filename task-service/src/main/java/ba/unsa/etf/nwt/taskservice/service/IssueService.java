@@ -72,4 +72,8 @@ public class IssueService {
         }
         return issueRepository.save(issue);
     }
+
+    public void deleteIssuesOnProject(UUID projectId) {
+        issueRepository.deleteAllByProjectId(projectId);
+    }
 }

@@ -23,6 +23,9 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, U
     @Query(value = "SELECT * FROM projects p where p.id = :id AND p.deleted = FALSE", nativeQuery = true)
     Optional<Project> findById(@NonNull UUID id);
 
+    @Query(value = "SELECT * from projects p where p.id = :id", nativeQuery = true)
+    Optional<Project> find(@NonNull UUID id);
+
     @Override
     @Query(value = "SELECT COUNT(*) FROM projects p WHERE p.deleted = FALSE", nativeQuery = true)
     long count();
