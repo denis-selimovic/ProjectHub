@@ -1,0 +1,43 @@
+@import "/src/app/styles/typography.scss";
+
+.not-found-page {
+  text-align: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .not-found-code {
+    margin: 0;
+    padding: 0;
+    font-size: 150px;
+    color: $blue;
+    letter-spacing: 10.5px;
+    text-shadow: 8px 10px 0 $light-gray;
+  }
+
+  .not-found-text {
+    color: $black;
+    font-size: $fs-large;
+    font-weight: normal;
+
+    .redirect-link {
+      color: $blue;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media screen and (min-width: $screen-medium) {
+    justify-content: flex-start;
+    .not-found-code {
+      font-size: 300px;
+    }
+  }
+}
