@@ -5,11 +5,13 @@ import ba.unsa.etf.nwt.taskservice.messaging.publishers.TaskNotificationPublishe
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
 @Component
+@Profile("dev")
 public class HibernateUtils extends EmptyInterceptor {
 
     @Override

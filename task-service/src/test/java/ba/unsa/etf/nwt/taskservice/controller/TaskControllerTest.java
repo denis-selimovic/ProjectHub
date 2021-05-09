@@ -641,6 +641,7 @@ public class TaskControllerTest {
         task.setStatus(status);
         task.setProjectId(projectId);
         task.setUserId(userId);
+        task.setUpdatedBy(UUID.randomUUID());
         return taskRepository.save(task);
     }
 
