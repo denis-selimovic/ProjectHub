@@ -10,6 +10,5 @@ CREATE TABLE IF NOT EXISTS "system_events" (
     resource VARCHAR(100) NOT NULL,
     request_url VARCHAR(255) NOT NULL,
     status INT NOT NULL,
-    response varchar(255) NOT NULL DEFAULT '',
     CONSTRAINT pkey_system_events PRIMARY KEY (id)
 );
