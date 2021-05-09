@@ -15,4 +15,5 @@ import java.util.UUID;
 public interface IssueRepository extends PagingAndSortingRepository<Issue, UUID> {
     Optional<Issue> findByNameAndProjectId(String name, UUID projectId);
     Page<IssueDTO> findAll(Specification<Issue> specification, Pageable pageable);
+    void deleteIssueByProjectId(UUID projectId);
 }
