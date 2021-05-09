@@ -14,7 +14,14 @@ eureka:
   instance:
     preferIpAddress: true
 
+ribbon:
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+
 zuul:
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
   routes:
     users:
       path: "/api/v1/users/**"

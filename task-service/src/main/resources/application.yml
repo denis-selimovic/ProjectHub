@@ -9,6 +9,20 @@ spring:
     import: optional:configserver:http://localhost:8888
   profiles:
     active: dev
+  jpa:
+    properties:
+      hibernate:
+        session_factory:
+          interceptor: ba.unsa.etf.nwt.taskservice.utility.HibernateUtils
+  rabbitmq:
+    host: localhost
+    password: password
+    username: projecthub
 
 server:
   port: 8083
+
+amqp:
+  queue: task-service
+  exchange: task-exchange
+  routing-key: task-routing-key

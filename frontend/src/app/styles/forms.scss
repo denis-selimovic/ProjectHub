@@ -5,11 +5,20 @@
   border: 1px solid $light-gray;
   border-radius: $border-radius;
   padding: 20px 20px;
+  margin-bottom: 40px;
 
   .input-field {
     box-sizing: border-box;
     margin: 5px 0px 10px 0px;
     width: 100%;
+    padding: 0.75em 5px;
+    border: 1px solid $light-gray;
+    border-radius: $border-radius;
+  }
+
+  .select-option {
+    box-sizing: border-box;
+    margin: 5px 0px 10px 0px;
     padding: 0.75em 5px;
     border: 1px solid $light-gray;
     border-radius: $border-radius;
@@ -67,5 +76,18 @@
 
   .error {
     color: $red;
+  }
+
+  .form-title {
+    width: 100%;
+    text-align: center;
+    color: $blue;
+    margin: 0 0 20px 0;
+  }
+
+  h2 {
+    color: $blue;
+    width: 100%;
+    text-align: center;
   }
 }

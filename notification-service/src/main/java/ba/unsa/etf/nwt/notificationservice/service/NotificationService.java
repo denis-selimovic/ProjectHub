@@ -25,20 +25,28 @@ public class NotificationService {
     private final NotificationUserRepository notificationUserRepository;
 
     public NotificationDTO create(CreateNotificationRequest request, ResourceOwner resourceOwner) {
-        Notification notification = new Notification();
-        notification.setTitle(request.getTitle());
-        notification.setDescription(request.getDescription());
-        notificationRepository.save(notification);
-        NotificationUser notificationUser = new NotificationUser();
-        notificationUser.setUserId(resourceOwner.getId());
-        notificationUser.setNotification(notification);
-        notificationUser.setRead(false);
-        notificationUserRepository.save(notificationUser);
+        Notification notification = create(request.getTitle(), request.getDescription());
+        NotificationUser notificationUser = createNotificationUser(resourceOwner.getId(), notification);
         return new NotificationDTO(notification, notificationUser.getRead());
     }
 
+    public Notification create(String title, String description) {
+        Notification notification = new Notification();
+        notification.setTitle(title);
+        notification.setDescription(description);
+        return notificationRepository.save(notification);
+    }
+
+    public NotificationUser createNotificationUser(UUID userId, Notification notification) {
+        NotificationUser notificationUser = new NotificationUser();
+        notificationUser.setUserId(userId);
+        notificationUser.setNotification(notification);
+        notificationUser.setRead(false);
+        return notificationUserRepository.save(notificationUser);
+    }
+
     public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
-        return  notificationUserRepository.findNotificationByUser(userId, pageable);
+        return notificationUserRepository.findNotificationByUser(userId, pageable);
     }
 
     public Notification findById(UUID notificationId) {

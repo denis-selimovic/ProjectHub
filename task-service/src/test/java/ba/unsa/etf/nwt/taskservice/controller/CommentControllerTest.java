@@ -156,6 +156,7 @@ public class CommentControllerTest {
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);
+        task.setUpdatedBy(UUID.randomUUID());
         task = taskRepository.save(task);
 
         mockMvc.perform(post(String.format("/api/v1/tasks/%s/comments", task.getId()))
@@ -285,6 +286,7 @@ public class CommentControllerTest {
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);
+        task.setUpdatedBy(UUID.randomUUID());
         return taskRepository.save(task);
     }
 
