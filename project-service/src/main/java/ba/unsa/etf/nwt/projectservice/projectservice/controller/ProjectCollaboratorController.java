@@ -4,6 +4,8 @@ import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectNotificationDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.messaging.publishers.ProjectNotificationPublisher;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.AddCollaboratorRequest;
@@ -34,6 +36,7 @@ public class ProjectCollaboratorController {
     private final ProjectService projectService;
     private final ProjectCollaboratorService projectCollaboratorService;
     private final UserService userService;
+    private final ProjectNotificationPublisher publisher;
 
     @PostMapping
     @ApiResponses(value = {
@@ -48,6 +51,7 @@ public class ProjectCollaboratorController {
         Project project = projectService.findById(projectId);
         projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
         ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(request.getCollaboratorId(), project);
+        publisher.send(new ProjectNotificationDTO(projectCollaborator));
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new ProjectCollaboratorDTO(projectCollaborator)));
     }
 
