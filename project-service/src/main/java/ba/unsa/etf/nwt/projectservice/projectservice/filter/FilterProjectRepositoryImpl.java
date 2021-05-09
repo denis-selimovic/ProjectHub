@@ -41,6 +41,8 @@ public class FilterProjectRepositoryImpl implements FilterProjectRepository {
             collab.on(criteriaBuilder.equal(collab.get("collaboratorId"), filter.getCollaboratorId()));
         }
 
+        predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
+
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
 
         int page = pageable.getPageNumber();
