@@ -56,7 +56,7 @@ public class ProjectController {
                                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
         projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
-        projectService.delete(projectId);
+        projectService.softDelete(project);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Project successfully deleted")));
     }
 

@@ -56,4 +56,9 @@ public class ProjectService {
         if (!ownerId.equals(resourceOwnerId))
             throw new ForbiddenException("You don't have permission for this activity");
     }
+
+    public void softDelete(Project project) {
+        project.setDeleted(true);
+        projectRepository.save(project);
+    }
 }

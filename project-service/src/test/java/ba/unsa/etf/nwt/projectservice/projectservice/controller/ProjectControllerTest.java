@@ -6,6 +6,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
+import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
 import org.hamcrest.Matchers;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,6 +41,8 @@ public class ProjectControllerTest {
     private ProjectRepository projectRepository;
     @Autowired
     private ProjectCollaboratorRepository projectCollaboratorRepository;
+    @Autowired
+    private ProjectService projectService;
     @Autowired
     private TokenGenerator tokenGenerator;
 
@@ -244,6 +247,24 @@ public class ProjectControllerTest {
                 .andExpect(jsonPath("$.metadata.has_next", Matchers.is(false)))
                 .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(true)))
                 .andExpect(jsonPath("$.data", hasSize(2)));
+    }
+
+    @Test
+    public void testGetProjectsForOwnerPagination3() throws Exception {
+        UUID userId = ResourceOwnerInjector.id;
+        Project p = createProjectInDB(userId, "P");
+        projectService.softDelete(p);
+
+        mockMvc.perform(get("/api/v1/projects?filter=owner&page=0&size=4")
+                .header("Authorization", token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metadata.page_number", Matchers.is(0)))
+                .andExpect(jsonPath("$.metadata.total_elements", Matchers.is(0)))
+                .andExpect(jsonPath("$.metadata.page_size", Matchers.is(0)))
+                .andExpect(jsonPath("$.metadata.has_next", Matchers.is(false)))
+                .andExpect(jsonPath("$.metadata.has_previous", Matchers.is(false)))
+                .andExpect(jsonPath("$.data", hasSize(0)))
+                .andReturn();
     }
 
     @Test
