@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 @Qualifier("systemEventInterceptor")
 @RequiredArgsConstructor
+@ControllerAdvice
 public class SystemEventInterceptor implements HandlerInterceptor, ResponseBodyAdvice<Object> {
     private final SystemEventService systemEventService;
     private Object cachedResponseBody;
