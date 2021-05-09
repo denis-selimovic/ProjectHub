@@ -52,7 +52,7 @@ public class TaskController {
         if (request.getUserId() != null) {
             projectService.findCollaboratorById(resourceOwner, request.getUserId(), request.getProjectId());
         }
-        Task task = taskService.create(request);
+        Task task = taskService.create(request, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
     }
 
@@ -102,7 +102,7 @@ public class TaskController {
         if(patchTaskRequest.getUserId().isPresent()){
             projectService.findCollaboratorById(resourceOwner, patchTaskRequest.getUserId().get(), task.getProjectId());
         }
-        taskService.patch(task, patchTaskRequest);
+        taskService.patch(task, patchTaskRequest, resourceOwner.getId());
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
 

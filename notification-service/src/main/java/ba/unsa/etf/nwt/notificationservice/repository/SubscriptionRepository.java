@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -14,4 +15,6 @@ public interface SubscriptionRepository extends PagingAndSortingRepository<Subsc
     boolean existsById(@Nullable UUID id);
     Optional<Subscription> findByTaskIdAndConfig(UUID taskId, SubscriptionConfig config);
     Optional<Subscription> findByIdAndConfig_UserId(UUID id, UUID userId);
+    Optional<Subscription> findByTaskIdAndConfig_UserId(UUID taskId, UUID userId);
+    Set<Subscription> findAllByTaskId(UUID taskId);
 }

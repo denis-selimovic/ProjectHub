@@ -48,7 +48,7 @@ public class SubscriptionController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<Response<SimpleResponse>> delete(@PathVariable UUID subscriptionId, ResourceOwner resourceOwner) {
-        subscriptionService.delete(subscriptionId, resourceOwner.getId());
+        subscriptionService.deleteBySubscription(subscriptionId, resourceOwner.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Subscription successfully deleted")));
     }
 
