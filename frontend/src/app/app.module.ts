@@ -9,6 +9,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
+import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
+import { NewTaskComponent } from './components/pages/new-task/new-task.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
@@ -18,12 +21,15 @@ import { RegisterFormComponent } from './components/forms/register-form/register
     FooterComponent,
     LoginFormComponent,
     RegisterComponent,
-    RegisterFormComponent
+    RegisterFormComponent,
+    NewTaskFormComponent,
+    NewTaskComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NoopAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

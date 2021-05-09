@@ -1,0 +1,56 @@
+<form class="new-task" [formGroup]="newTaskForm" (ngSubmit)="onSubmit()">
+ <div class="form-content">
+  <div class="input-container">
+   <h2>
+    <span>New task for: </span>
+    <span id="projectNameSpan">{{project.name}}</span>
+   </h2>
+
+   <label for="task-name" class="input-label">Task name*</label>
+   <input id="task-name" formControlName="taskName" class="input-field">
+    <div class="error"
+     *ngIf="!newTaskForm?.get('taskName')?.valid && (newTaskForm?.get('taskName')?.dirty ||newTaskForm?.get('taskName')?.touched)">
+     <div class="error" *ngIf="newTaskForm?.get('taskName')?.errors?.required">
+      Task name is required
+     </div>
+     <div class="error" *ngIf="newTaskForm?.get('taskName')?.errors?.maxlength">
+      Task name can't contain more than 50 characters
+     </div>
+    </div>
+
+   <label for="description" class="input-label">Description*</label>
+   <textarea id="description" formControlName="description" class="input-field"></textarea>
+   <div class="error"
+    *ngIf="!newTaskForm?.get('description')?.valid && (newTaskForm?.get('description')?.dirty ||newTaskForm?.get('description')?.touched)">
+    <div class="error" *ngIf="newTaskForm?.get('description')?.errors?.required">
+     Description is required
+    </div>
+    <div class="error" *ngIf="newTaskForm?.get('description')?.errors?.maxlength">
+     Description can't contain more than 255 characters
+    </div>
+   </div>
+
+   <div class="justified-container">
+    <label for="priority" class="input-label">Priority*</label>
+    <label for="collaborator" class="input-label"> Assigned to</label>
+   </div>
+
+   <div class="justified-container">
+   <select class="select-option" name="priority" formControlName="priority">
+    <option *ngFor="let priority of priorities" [value]="priorities">
+     {{priority.priority}}
+    </option>
+   </select>
+
+   <select class="select-option" name="collaborator" formControlName="collaborator">
+    <option *ngFor="let collaborator of collaborators" [value]="collaborators">
+     {{collaborator.email}}
+    </option>
+   </select>
+   </div>
+
+   <button type="submit" [disabled]="newTaskForm.invalid" class="form-button">Add task</button>
+
+  </div>
+ </div>
+</form>

@@ -16,6 +16,14 @@
     border-radius: $border-radius;
   }
 
+  .select-option {
+    box-sizing: border-box;
+    margin: 5px 0px 10px 0px;
+    padding: 0.75em 5px;
+    border: 1px solid $light-gray;
+    border-radius: $border-radius;
+  }
+
   .input-label {
     color: $dark-gray;
     font-size: $fs-medium;
@@ -75,5 +83,11 @@
     text-align: center;
     color: $blue;
     margin: 0 0 20px 0;
+  }
+
+  h2 {
+    color: $blue;
+    width: 100%;
+    text-align: center;
   }
 }
