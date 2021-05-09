@@ -1,0 +1,24 @@
+@import "/src/app/styles/forms.scss";
+@import "/src/app/styles/typography.scss";
+
+h2 {
+    color: $blue;
+    width: 100%;
+    text-align: center;
+  }
+
+p {
+    display: inline;
+    width: 100%;
+    justify-content: center;
+  }
+
+input {
+    width: 92%;
+    border: none;
+    height: 100%;
+  }
+
+input:focus {
+  outline: none;
+}

@@ -1,0 +1,21 @@
+<form class="login" [formGroup]="resetPassEmailForm">
+    <div class="form-content">
+        <h2>Reset password</h2>
+        <h3>Enter your email address below and we'll send you a code to reset your password.</h3>
+        <br>
+        <div class="input-container">
+            <label for="email" class="input-label">Email address:</label>
+            <input type="email" id="email" formControlName="email" class="input-field">
+            <div class="error" 
+            *ngIf="resetPassEmailForm?.get('email')?.touched && resetPassEmailForm?.get('email')?.invalid">
+                Valid email is required
+            </div>
+       </div>
+       <a routerLink="/reset-password-code"><button type="submit" [disabled]="resetPassEmailForm.invalid" class="form-button">Reset password</button></a>
+       <div class="form-info-text">
+        <p><a routerLink="/" class="redirect-link">Log In</a></p>
+        <p> or </p>
+        <p><a routerLink="/register" class="redirect-link">Register</a></p>
+       </div>
+    </div>
+</form>
