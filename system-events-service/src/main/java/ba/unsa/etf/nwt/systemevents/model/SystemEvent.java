@@ -49,7 +49,7 @@ public class SystemEvent {
     private String response;
 
     public SystemEvent(Instant timestamp, String service, String principal, String method,
-                       String action, String resource, String requestURL, int status, String description) {
+                       String action, String resource, String requestURL, int status, String response) {
         this.timestamp = timestamp;
         this.service = service;
         this.principal = principal;
@@ -58,6 +58,6 @@ public class SystemEvent {
         this.resource = resource;
         this.requestURL = requestURL;
         this.status = status;
-        this.response = description;
+        this.response = response;
     }
 }
