@@ -14,12 +14,5 @@ spring:
     password: password
     username: projecthub
 
-
 server:
   port: 8081
-
-amqp:
-  queue: user-service
-  exchange: user-exchange
-  routing-key: user-routing-key
-
