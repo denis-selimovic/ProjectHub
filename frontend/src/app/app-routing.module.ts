@@ -26,9 +26,7 @@ const routes: Routes = [
     pathMatch: 'full',
     component: ResetPasswordNewComponent
   }
-
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

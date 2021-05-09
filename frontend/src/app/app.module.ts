@@ -15,7 +15,6 @@ import { ResetPasswordCodeComponent } from './components/pages/reset-password/re
 import { ResetPassCodeFormComponent } from './components/forms/reset-password/reset-pass-code-form/reset-pass-code-form.component';
 import { ResetPasswordNewComponent } from './components/pages/reset-password/reset-password-new/reset-password-new.component';
 import { ResetPassNewFormComponent } from './components/forms/reset-password/reset-pass-new-form/reset-pass-new-form.component';
-
 @NgModule({
   declarations: [
     AppComponent,
