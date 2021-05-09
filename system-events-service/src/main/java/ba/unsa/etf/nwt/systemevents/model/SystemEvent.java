@@ -45,8 +45,11 @@ public class SystemEvent {
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "description")
+    private String description;
+
     public SystemEvent(Instant timestamp, String service, String principal, String method,
-                       String action, String resource, String requestURL, int status) {
+                       String action, String resource, String requestURL, int status, String description) {
         this.timestamp = timestamp;
         this.service = service;
         this.principal = principal;
@@ -55,5 +58,6 @@ public class SystemEvent {
         this.resource = resource;
         this.requestURL = requestURL;
         this.status = status;
+        this.description = description;
     }
 }
