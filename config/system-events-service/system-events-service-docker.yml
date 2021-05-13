@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://system-events-service-db:5432/system-events-service-dev
+    username: projecthub
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    url: jdbc:postgresql://system-events-service-db:5432/system-events-service-dev
+    user: projecthub
+    password: password
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    nonSecurePort: ${grpc.port}
+    metadata-map:
+      zone: zone1
+  client:
+    prefer-same-zone-eureka: true
+    register-with-eureka: true
+    fetch-registry: true
+    region: region1
+    service-url:
+      zone1: http://discovery-server:8761/eureka/
+    availability-zones:
+      region1: zone1
