@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: discovery-service
   cloud:
     config:
       discovery:
@@ -13,5 +15,14 @@ eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
+    region: region1
+    serviceUrl:
+      zone1: http://discovery-server:8761/eureka/
+    availability-zones:
+      region1: zone1
+  instance:
+    hostname: discovery-service
+    metadata-map:
+      zone: zone1
   server:
     waitTimeInMsWhenSyncEmpty: 5
