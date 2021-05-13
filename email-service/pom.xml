@@ -187,6 +187,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>email-service</finalName>
 	</build>
 
 </project>
