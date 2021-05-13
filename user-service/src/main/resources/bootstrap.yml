@@ -1,12 +1,14 @@
 spring:
   application:
-    name: notification-service
+    name: user-service
   cloud:
     config:
       password: secret
       username: root
-  config:
-    import: optional:configserver:http://localhost:8888
+      discovery:
+        enabled: true
+        service-id: config-service
+      enabled: true
   profiles:
     active: dev
   rabbitmq:
@@ -15,4 +17,4 @@ spring:
     username: projecthub
 
 server:
-  port: 8084
+  port: 8081

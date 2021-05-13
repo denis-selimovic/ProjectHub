@@ -5,8 +5,10 @@ spring:
     config:
       password: secret
       username: root
-  config:
-    import: optional:configserver:http://localhost:8888
+      discovery:
+        enabled: true
+        service-id: config-service
+      enabled: true
   profiles:
     active: dev
   rabbitmq:
