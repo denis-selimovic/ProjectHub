@@ -1,0 +1,268 @@
+version: '3.3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.16-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: projecthub
+      RABBITMQ_DEFAULT_PASSWORD: password
+    ports:
+      - 15672:5672
+    networks:
+      - projecthub
+
+  user-service-db:
+    container_name: user-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: user-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  project-service-db:
+    container_name: project-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: project-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  task-service-db:
+    container_name: task-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: task-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  notification-service-db:
+    container_name: notification-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: notification-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  email-service-db:
+    container_name: email-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: email-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  system-events-service-db:
+    container_name: system-events-service-db
+    image: postgres
+    environment:
+      POSTGRES_DB: system-events-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      - projecthub
+
+  configuration-service:
+    container_name: configuration-service
+    build:
+      context: ./configuration-service/
+      dockerfile: Dockerfile
+    image: configuration-service:latest
+    restart: always
+    environment:
+      PROJECTHUB_GIT_USERNAME: dselimovic1
+      PROJECTHUB_GIT_PASSWORD: Personifikacija123
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    networks:
+      - projecthub
+
+  eureka-service:
+    container_name: eureka-service
+    build:
+      context: ./eureka-server/
+      dockerfile: Dockerfile
+    image: eureka-service:latest
+    restart: always
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    networks:
+      - projecthub
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service/
+      dockerfile: Dockerfile
+    image: user-service:latest
+    restart: always
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - user-service-db
+    networks:
+      - projecthub
+
+  project-service:
+    container_name: project-service
+    build:
+      context: ./project-service/
+      dockerfile: Dockerfile
+    image: project-service:latest
+    restart: always
+    expose:
+      - 8082
+    ports:
+      - 8082:8082
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - project-service-db
+    networks:
+      - projecthub
+
+  task-service:
+    container_name: task-service
+    build:
+      context: ./task-service/
+      dockerfile: Dockerfile
+    image: task-service:latest
+    restart: always
+    expose:
+      - 8083
+    ports:
+      - 8083:8083
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - task-service-db
+    networks:
+      - projecthub
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    restart: always
+    expose:
+      - 8084
+    ports:
+      - 8084:8084
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - notification-service-db
+    networks:
+      - projecthub
+
+  email-service:
+    container_name: email-service
+    build:
+      context: ./email-service/
+      dockerfile: Dockerfile
+    image: email-service:latest
+    restart: always
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - email-service-db
+    networks:
+      - projecthub
+
+  system-events-service:
+    container_name: system-events-service
+    build:
+      context: ./system-events-service/
+      dockerfile: Dockerfile
+    image: system-events-service:latest
+    restart: always
+    expose:
+      - 8086
+    ports:
+      - 8086:8086
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - system-events-service-db
+    networks:
+      - projecthub
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    image: gateway-service:latest
+    restart: always
+    expose:
+      - 8080
+    ports:
+      - 80:8080
+    depends_on:
+      - configuration-service
+      - eureka-service
+      - user-service
+      - project-service
+      - task-service
+      - notification-service
+      - email-service
+    networks:
+      - projecthub
+
+networks:
+  projecthub:
+    driver: bridge
