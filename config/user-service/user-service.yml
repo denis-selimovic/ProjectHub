@@ -15,21 +15,6 @@ token:
       activation: 1800
       reset: 1800
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    metadata-map:
-      zone: zone1
-  client:
-    prefer-same-zone-eureka: true
-    register-with-eureka: true
-    fetch-registry: true
-    region: region1
-    service-url:
-      zone1: http://discovery-server:8761/eureka/
-    availability-zones:
-      region1: zone1
-
 feign:
   client:
     config:
