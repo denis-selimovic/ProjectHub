@@ -181,6 +181,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>project-service</finalName>
     </build>
 
 </project>
