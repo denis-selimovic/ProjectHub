@@ -1,15 +1,14 @@
 spring:
   application:
-    name: email-service
+    name: notification-service
   cloud:
     config:
       password: secret
       username: root
-      discovery:
-        enabled: true
-        service-id: config-service
       enabled: true
       uri: ${CONFIG_SERVER_URL}
+  config:
+    import: "optional:configserver:"
   profiles:
     active: dev
   rabbitmq:
@@ -27,4 +26,4 @@ eureka:
     fetch-registry: true
 
 server:
-  port: 8085
+  port: 8084

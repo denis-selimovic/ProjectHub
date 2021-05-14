@@ -142,7 +142,7 @@ services:
     restart: always
     environment:
       - PROJECTHUB_GIT_USERNAME=dselimovic1
-      - PROJECTHUB_GIT_PASSWORD=Personifikacija123
+      - PROJECTHUB_GIT_PASSWORD=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
     expose:
       - 8888
     ports:

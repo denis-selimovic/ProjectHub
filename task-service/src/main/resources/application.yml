@@ -1,17 +1,21 @@
 spring:
   application:
-    name: project-service
+    name: task-service
   cloud:
     config:
       password: secret
       username: root
-      discovery:
-        enabled: true
-        service-id: config-service
       enabled: true
       uri: ${CONFIG_SERVER_URL}
+  config:
+    import: "optional:configserver:"
   profiles:
     active: dev
+  jpa:
+    properties:
+      hibernate:
+        session_factory:
+          interceptor: ba.unsa.etf.nwt.taskservice.utility.HibernateUtils
   rabbitmq:
     host: localhost
     password: password
@@ -27,4 +31,4 @@ eureka:
     fetch-registry: true
 
 server:
-  port: 8082
+  port: 8083

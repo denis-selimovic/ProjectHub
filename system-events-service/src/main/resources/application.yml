@@ -5,11 +5,10 @@ spring:
     config:
       password: secret
       username: root
-      discovery:
-        enabled: true
-        service-id: config-service
       enabled: true
       uri: ${CONFIG_SERVER_URL}
+  config:
+    import: "optional:configserver:"
   profiles:
     active: dev
 
