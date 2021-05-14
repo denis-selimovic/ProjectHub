@@ -328,6 +328,8 @@ services:
       dockerfile: Dockerfile
     image: gateway-service:latest
     restart: always
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
     expose:
       - 8080
     ports:
