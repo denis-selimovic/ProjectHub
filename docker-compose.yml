@@ -2,14 +2,15 @@ version: '3.3'
 
 services:
   rabbitmq:
-    image: rabbitmq:3.8.16-management-alpine
     container_name: rabbitmq
     hostname: rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: projecthub
-      RABBITMQ_DEFAULT_PASSWORD: password
+    build:
+      context: ./rabbitmq/
+      dockerfile: Dockerfile
+    image: rabbitmq:latest
     ports:
       - 5672:5672
+      - 15672:15672
     networks:
       projecthub:
         aliases:
