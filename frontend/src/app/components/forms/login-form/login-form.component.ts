@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -8,18 +9,33 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
-  errorMessage: String
+  errorMessage: String;
+  failedLogin: boolean;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required)
     });
-    this.errorMessage = ""; //error message from server
+    this.errorMessage = "";
+    this.failedLogin = false;
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  onSubmit(): void { 
+    this.login();
   }
 
-  onSubmit(): void { }
+  login(): void {
+    this.userService.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
+    .subscribe((body: any) => {
+      this.failedLogin = false;
+      console.log(body);
+    }, (error: any) => {
+      this.failedLogin = true;
+      this.errorMessage = "Error while logging in. Try again";
+      console.log(error);
+    });
+  }
 }
