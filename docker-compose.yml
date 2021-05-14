@@ -4,13 +4,16 @@ services:
   rabbitmq:
     image: rabbitmq:3.8.16-management-alpine
     container_name: rabbitmq
+    hostname: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: projecthub
       RABBITMQ_DEFAULT_PASSWORD: password
     ports:
       - 5672:5672
     networks:
-      - projecthub
+      projecthub:
+        aliases:
+          - rabbitmq
 
   user-service-db:
     container_name: user-service-db
@@ -184,7 +187,8 @@ services:
     environment:
       - CONFIG_SERVER_URL=http://config-service:8888
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
-      - DATABASE_URL=jdbc:postgresql://user-service-db:5432/user-service-dev
+      - US_DATABASE_URL=jdbc:postgresql://user-service-db:5432/user-service-dev
+      - RABBITMQ_HOST=rabbitmq
     expose:
       - 8081
     ports:
@@ -197,7 +201,144 @@ services:
     networks:
       - projecthub
 
+  project-service:
+    container_name: project-service
+    build:
+      context: ./project-service/
+      dockerfile: Dockerfile
+    image: project-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - PS_DATABASE_URL=jdbc:postgresql://project-service-db:5432/project-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8082
+    ports:
+      - 8082:8082
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - project-service-db
+    networks:
+      - projecthub
 
+  task-service:
+    container_name: task-service
+    build:
+      context: ./task-service/
+      dockerfile: Dockerfile
+    image: task-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - TS_DATABASE_URL=jdbc:postgresql://task-service-db:5432/task-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8083
+    ports:
+      - 8083:8083
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - task-service-db
+    networks:
+      - projecthub
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - NS_DATABASE_URL=jdbc:postgresql://notification-service-db:5432/notification-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8084
+    ports:
+      - 8084:8084
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - notification-service-db
+    networks:
+      - projecthub
+
+  email-service:
+    container_name: email-service
+    build:
+      context: ./email-service/
+      dockerfile: Dockerfile
+    image: email-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - ES_DATABASE_URL=jdbc:postgresql://email-service-db:5432/email-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - email-service-db
+    networks:
+      - projecthub
+
+  system-events-service:
+    container_name: system-events-service
+    build:
+      context: ./system-events-service/
+      dockerfile: Dockerfile
+    image: system-events-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - SS_DATABASE_URL=jdbc:postgresql://system-events-service-db:5432/system-events-service-dev
+    expose:
+      - 8086
+    ports:
+      - 8086:8086
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - system-events-service-db
+    networks:
+      - projecthub
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    image: gateway-service:latest
+    restart: always
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - user-service
+      - project-service
+      - task-service
+      - notification-service
+      - email-service
+    networks:
+      - projecthub
 
 networks:
   projecthub:

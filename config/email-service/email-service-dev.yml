@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DATABASE_URL}
+    url: ${ES_DATABASE_URL}
     username: projecthub
     password: password
   jpa:
@@ -8,7 +8,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    url: ${DATABASE_URL}
+    url: ${ES_DATABASE_URL}
     user: projecthub
     password: password
   mail:
@@ -16,6 +16,10 @@ spring:
     port: 587
     username: f0daf554447d64120067f6f8d9c1a2bd
     password: 123658e6526109f8c5116167ff204819
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    password: password
+    username: projecthub
 
 mail:
   from: atlantic.project.hub@gmail.com
