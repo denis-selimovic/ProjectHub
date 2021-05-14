@@ -9,8 +9,18 @@ spring:
         enabled: true
         service-id: config-service
       enabled: true
+      uri: ${CONFIG_SERVER_URL}
   profiles:
     active: dev
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL}
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8086

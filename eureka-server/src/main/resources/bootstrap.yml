@@ -1,28 +1,17 @@
 spring:
   application:
-    name: discovery-service
-  cloud:
-    config:
-      discovery:
-        enabled: true
-        service-id: config-service
-      enabled: true
+    name: discovery-server
 
 server:
   port: 8761
 
 eureka:
+  instance:
+    hostname: ${HOSTNAME}
   client:
     registerWithEureka: false
     fetchRegistry: false
-    region: region1
-    serviceUrl:
-      zone1: http://discovery-server:8761/eureka/
-    availability-zones:
-      region1: zone1
-  instance:
-    hostname: discovery-service
-    metadata-map:
-      zone: zone1
+  serviceUrl:
+    defaultZone: ${EUREKA_SERVER_URL}
   server:
     waitTimeInMsWhenSyncEmpty: 5
