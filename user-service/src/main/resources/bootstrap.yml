@@ -5,14 +5,23 @@ spring:
     config:
       password: secret
       username: root
-  config:
-    import: optional:configserver:http://localhost:8888
+      enabled: true
+      uri: ${CONFIG_SERVER_URL}
   profiles:
     active: dev
   rabbitmq:
     host: localhost
     password: password
     username: projecthub
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL}
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8081

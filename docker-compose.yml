@@ -1,0 +1,204 @@
+version: '3.3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.16-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: projecthub
+      RABBITMQ_DEFAULT_PASSWORD: password
+    ports:
+      - 5672:5672
+    networks:
+      - projecthub
+
+  user-service-db:
+    container_name: user-service-db
+    hostname: user-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: user-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - user-service-db
+
+  project-service-db:
+    container_name: project-service-db
+    hostname: project-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: project-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - project-service-db
+
+  task-service-db:
+    container_name: task-service-db
+    hostname: task-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: task-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - task-service-db
+
+  notification-service-db:
+    container_name: notification-service-db
+    hostname: notification-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: notification-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - notification-service-db
+
+  email-service-db:
+    container_name: email-service-db
+    hostname: email-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: email-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - email-service-db
+
+  system-events-service-db:
+    container_name: system-events-service-db
+    hostname: system-events-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: system-events-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - system-events-service-db
+
+  configuration-service:
+    container_name: configuration-service
+    hostname: config-service
+    build:
+      context: ./configuration-service/
+      dockerfile: Dockerfile
+    image: configuration-service:latest
+    restart: always
+    environment:
+      - PROJECTHUB_GIT_USERNAME=dselimovic1
+      - PROJECTHUB_GIT_PASSWORD=Personifikacija123
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    depends_on:
+      - eureka-service
+    networks:
+      projecthub:
+        aliases:
+          - config-service
+
+  eureka-service:
+    container_name: eureka-service
+    hostname: discovery-server
+    build:
+      context: ./eureka-server/
+      dockerfile: Dockerfile
+    image: eureka-service:latest
+    restart: always
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - HOSTNAME=discovery-server
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    networks:
+      projecthub:
+        aliases:
+          - discovery-server
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service/
+      dockerfile: Dockerfile
+    image: user-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - DATABASE_URL=jdbc:postgresql://user-service-db:5432/user-service-dev
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - user-service-db
+    networks:
+      - projecthub
+
+
+
+networks:
+  projecthub:
+    driver: bridge

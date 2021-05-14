@@ -95,6 +95,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>3.0.2</version>
         </dependency>
@@ -181,6 +185,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>project-service</finalName>
     </build>
 
 </project>
