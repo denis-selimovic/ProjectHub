@@ -11,6 +11,7 @@ import { NewProjectComponent } from './components/pages/new-project/new-project.
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { ProjectsComponent } from './components/pages/projects/projects.component';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { ConfirmEmailComponent } from "./components/pages/confirm-email/confirm-email.component";
 import { GuardService } from './services/guard/guard.service';
 
 const routes: Routes = [
@@ -54,9 +55,9 @@ const routes: Routes = [
     component: NewProjectComponent
   },
   {
-    path: 'new-issue', 
+    path: 'new-issue',
     component: NewIssueComponent
-  }, 
+  },
   {
     path: 'not-found',
     pathMatch: 'full',
@@ -67,7 +68,12 @@ const routes: Routes = [
     component: ProjectsComponent
   },
   {
-    path: '**', 
+    path: 'confirm-email',
+    pathMatch: 'full',
+    component: ConfirmEmailComponent
+  },
+  {
+    path: '**',
     redirectTo: '/not-found'
   }
 ];

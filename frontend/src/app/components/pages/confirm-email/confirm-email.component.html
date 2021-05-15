@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-center align-items-center flex-column confirm-email">
+  <div class="spinner-border text-primary loader" role="status" *ngIf="loader">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="successful-confirm" *ngIf="success">
+    <img src="assets/successful-confirm.png" alt="Successful confirm" />
+  </div>
+  <div class="unsuccessful-confirm" *ngIf="failure">
+    <img src="assets/unsuccessful-confirm.png" alt="Unsuccessful confirm"/>
+  </div>
+  <div class="message">
+    <h2 *ngIf="loader">Confirming email. Please wait.</h2>
+  </div>
+</div>
