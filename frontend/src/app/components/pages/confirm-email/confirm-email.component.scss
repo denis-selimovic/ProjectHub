@@ -1,4 +1,5 @@
 @import "/src/app/styles/typography.scss";
+@import "/src/app/styles/variables.scss";
 
 .confirm-email {
 
@@ -13,5 +14,9 @@
 
   .message {
     margin-top: 20px;
+
+    .h2.link {
+      color: $blue;
+    }
   }
 }

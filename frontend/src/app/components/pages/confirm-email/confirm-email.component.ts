@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EmailService } from '../../../services/email/email.service';
 
 @Component({
   selector: 'app-confirm-email',
@@ -12,7 +13,7 @@ export class ConfirmEmailComponent implements OnInit {
   success = false;
   failure = false;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private emailService: EmailService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -21,7 +22,8 @@ export class ConfirmEmailComponent implements OnInit {
         this.setFailure();
       }
       else {
-
+        this.emailService.confirmEmail(token,
+          (body: any) => this.setSuccess(), (error: any) => this.setFailure());
       }
     });
   }
