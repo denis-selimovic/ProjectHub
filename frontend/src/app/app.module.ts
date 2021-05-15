@@ -29,6 +29,7 @@ import { UserService } from './services/user/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { GuardService } from './services/guard/guard.service';
+import { CookieService } from './services/cookie/cookie.service';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { GuardService } from './services/guard/guard.service';
   ],
   providers: [
     UserService,
-    GuardService
+    GuardService,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { CookieService } from '../cookie/cookie.service';
 
 export interface Token {
     accessToken: string;
@@ -21,9 +22,8 @@ export interface User {
 })
 export class UserService {
     private user: User | null = null;
-    private loggedIn : boolean = false;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private cookieService: CookieService) { }
 
     login(email: string, password: string): any {
         return this.http.post(`${environment.api}/oauth/token`, { email, password, "grant_type": "password" }, {
@@ -34,21 +34,22 @@ export class UserService {
     }
 
     getAccessToken(): string {
-        if (!this.user) {
-          return '';
-        }
-        return 'Bearer ' + this.user.token.accessToken;
+      let token = this.cookieService.getCookie("accessToken");
+      if (token === "") {
+        return '';
+      }
+      return 'Bearer ' + token;
     }
 
     getRefreshToken(): string {
-        return this.user?.token.refreshToken || '';
+      return this.user?.token.refreshToken || '';
     }
 
     isLoggedIn(): boolean {
-      return this.loggedIn;
+      return this.cookieService.getCookie("accessToken") !== "";
     }
 
-    setLoggedIn(val: boolean): void {
-      this.loggedIn = val;
+    setToken(accessToken: string, refreshToken: string, expiresInSec: number): void {
+      this.cookieService.setCookie("accessToken", accessToken, expiresInSec);
     }
 }

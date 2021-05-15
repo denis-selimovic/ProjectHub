@@ -37,8 +37,7 @@ export class LoginFormComponent implements OnInit {
     this.userService.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
     .subscribe((body: any) => {
       this.failedLogin = false;
-      this.userService.setLoggedIn(true);
-      //save token
+      this.userService.setToken(body.data.access_token, body.data.refresh_token, body.data.expires_in);
       this.route.queryParams.subscribe(queryParams => {
         if (queryParams.return) {
           this.router.navigate([queryParams.return]);
