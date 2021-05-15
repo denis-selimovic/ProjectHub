@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -16,26 +10,18 @@ import { UserService } from 'src/app/services/user/user.service';
 export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String;
-  failedLogin: boolean;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private userService: UserService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
     });
     this.errorMessage = '';
-    this.failedLogin = false;
   }
 
   ngOnInit(): void {
     this.loginForm.valueChanges.subscribe(() => {
       this.errorMessage = '';
-      this.failedLogin = false;
     });
   }
 
@@ -43,37 +29,17 @@ export class LoginFormComponent implements OnInit {
     this.login();
   }
 
+  private loginErrorHandler(error: any): void {
+    if (error.status === 400 || error.status === 401) {
+      this.errorMessage = 'Invalid credentials';
+    } else {
+      this.errorMessage = 'Error while logging in. Try again';
+    }
+  }
+
   login(): void {
-    this.userService
-      .login(
-        this.loginForm.get('email')?.value,
-        this.loginForm.get('password')?.value
-      )
-      .subscribe(
-        (body: any) => {
-          this.failedLogin = false;
-          //set user data (email)
-          this.userService.setToken(
-            body.data.access_token,
-            body.data.refresh_token,
-            body.data.expires_in
-          );
-          this.route.queryParams.subscribe((queryParams) => {
-            if (queryParams.return) {
-              this.router.navigate([queryParams.return]);
-            } else {
-              this.router.navigate(['dashboard']);
-            }
-          });
-        },
-        (error: any) => {
-          this.failedLogin = true;
-          if (error.status === 400 || error.status === 401) {
-            this.errorMessage = 'Invalid credentials';
-          } else {
-            this.errorMessage = 'Error while logging in. Try again';
-          }
-        }
-      );
+    const email = this.loginForm.get('email')?.value;
+    const password = this.loginForm.get('password')?.value;
+    this.userService.login(email, password, (error: any) => this.loginErrorHandler(error));
   }
 }
