@@ -24,10 +24,10 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    login(username: string, password: string): any {
-        return this.http.post(`${environment.api}/oauth/token`, { username, password, "grant_type": "password" }, {
+    login(email: string, password: string): any {
+        return this.http.post(`${environment.api}/oauth/token`, { email, password, "grant_type": "password" }, {
             headers: new HttpHeaders({
-              Authorization: "Basic" + btoa(`${environment.clientId}:${environment.secret}`)
+              Authorization: "Basic " + btoa(`${environment.clientId}:${environment.secret}`)
             })
         });
     }
