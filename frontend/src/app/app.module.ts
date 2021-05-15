@@ -36,6 +36,7 @@ import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
+import {EmailService} from "./services/email/email.service";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-
     UserService,
     GuardService,
     CookieService,
-    TokenService
+    TokenService,
+    EmailService
   ],
   bootstrap: [AppComponent]
 })

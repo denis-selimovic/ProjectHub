@@ -68,7 +68,7 @@ const routes: Routes = [
     component: ProjectsComponent
   },
   {
-    path: 'confirm-email',
+    path: 'confirm-email/:token',
     pathMatch: 'full',
     component: ConfirmEmailComponent
   },
