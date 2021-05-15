@@ -1,0 +1,17 @@
+@import "/src/app/styles/variables.scss";
+
+.mat-elevation-z8 {
+  margin: 40px;
+
+  table {
+    width: 100%;
+
+    td {
+      font-size: $fs-small;
+    }
+  }
+
+  mat-paginator {
+    font-size: $fs-small;
+  }
+}

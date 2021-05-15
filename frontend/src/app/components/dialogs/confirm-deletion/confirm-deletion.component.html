@@ -1,0 +1,7 @@
+<h1 mat-dialog-title>Confirm deletion</h1>
+<mat-dialog-content>Do you want to remove this collaborator from the project?
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+ <button  mat-dialog-close class="dialog-button">Cancel</button>
+ <button [mat-dialog-close]="true" cdkFocusInitial class="dialog-button">Delete</button>
+</mat-dialog-actions>

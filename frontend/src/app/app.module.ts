@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MatInputModule} from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
 import { LoginComponent } from './components/pages/login/login.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
@@ -45,8 +46,13 @@ import { LocalStorageService } from './services/local-storage/local-storage.serv
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ProjectDetailsComponent } from './components/pages/project-details/project-details.component';
 import { ModalComponent } from './components/modal/modal/modal.component';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
+import { CollaboratorsTableComponent } from './components/tables/collaborators-table/collaborators-table.component';
+import { NewCollaboratorFormComponent } from './components/forms/new-collaborator-form/new-collaborator-form.component';
+import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -76,6 +82,7 @@ import { ModalComponent } from './components/modal/modal/modal.component';
     RegisterComponent,
     RegisterFormComponent,
     NotFoundComponent,
+<<<<<<< HEAD
     DashboardComponent,
     ConfirmEmailComponent,
     IssuesComponent,
@@ -84,6 +91,13 @@ import { ModalComponent } from './components/modal/modal/modal.component';
     ProjectItemComponent,
     ProjectDetailsComponent,
     ModalComponent
+=======
+    ProjectDetailsComponent,
+    CollaboratorsComponent,
+    CollaboratorsTableComponent,
+    NewCollaboratorFormComponent,
+    ConfirmDeletionComponent,
+>>>>>>> Added page that shows project collaborators
   ],
   imports: [
     BrowserModule,
@@ -93,6 +107,7 @@ import { ModalComponent } from './components/modal/modal/modal.component';
     MatInputModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
+<<<<<<< HEAD
     MatPaginatorModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
@@ -105,6 +120,11 @@ import { ModalComponent } from './components/modal/modal/modal.component';
     TokenService,
     EmailService,
     LocalStorageService
+=======
+    MatTableModule,
+    MatPaginatorModule,
+    MatDialogModule
+>>>>>>> Added page that shows project collaborators
   ],
   bootstrap: [AppComponent]
 })

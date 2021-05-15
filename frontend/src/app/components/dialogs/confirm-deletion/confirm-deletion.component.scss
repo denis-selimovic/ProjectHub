@@ -1,0 +1,14 @@
+@import "/src/app/styles/typography.scss";
+@import "/src/app/styles/forms.scss";
+
+.dialog-button {
+  cursor: pointer;
+  font-size: $fs-small;
+  font-weight: bold;
+  padding: 0.5em 2.5em;
+  background: $blue;
+  color: $white;
+  border: transparent;
+  border-radius: $border-radius;
+  margin: 20px 0px 10px 0px;
+}

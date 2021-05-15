@@ -12,7 +12,8 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
 import { GuardService } from './services/guard/guard.service';
 import { IssuesComponent } from './components/pages/issues/issues.component';
-import {ProjectDetailsComponent} from './components/pages/project-details/project-details.component';
+import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,10 @@ const routes: Routes = [
     path: 'not-found',
     pathMatch: 'full',
     component: NotFoundComponent
+  }, 
+  {
+    path: 'collaborators',
+    component: CollaboratorsComponent
   },
   {
     path: 'projects/:id',
