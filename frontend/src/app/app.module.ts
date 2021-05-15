@@ -24,8 +24,6 @@ import { NewProjectFormComponent } from './components/forms/new-project-form/new
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
-import { RegisterComponent } from './components/pages/register/register.component';
-import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 @NgModule({
@@ -49,8 +47,6 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     NewProjectComponent,
     NewIssueFormComponent,
     NewIssueComponent,
-    RegisterComponent,
-    RegisterFormComponent,
     NotFoundComponent
   ],
   imports: [
