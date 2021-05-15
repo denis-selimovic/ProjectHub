@@ -25,6 +25,12 @@ import { NewProjectComponent } from './components/pages/new-project/new-project.
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { UserService } from './services/user/user.service';
+import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { GuardService } from './services/guard/guard.service';
+import { CookieService } from './services/cookie/cookie.service';
+import { TokenService } from './services/token/token.service';
 
 @NgModule({
   declarations: [
@@ -47,7 +53,11 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     NewProjectComponent,
     NewIssueFormComponent,
     NewIssueComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    RegisterComponent,
+    RegisterFormComponent,
+    NotFoundComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -55,9 +65,15 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     ReactiveFormsModule,
     MatInputModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    UserService,
+    GuardService,
+    CookieService,
+    TokenService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
