@@ -21,6 +21,7 @@ export interface User {
 })
 export class UserService {
     private user: User | null = null;
+    private loggedIn : boolean = false;
 
     constructor(private http: HttpClient) { }
 
@@ -41,5 +42,13 @@ export class UserService {
 
     getRefreshToken(): string {
         return this.user?.token.refreshToken || '';
+    }
+
+    isLoggedIn(): boolean {
+      return this.loggedIn;
+    }
+
+    setLoggedIn(val: boolean): void {
+      this.loggedIn = val;
     }
 }

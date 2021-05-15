@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { UserService } from 'src/app/services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -12,7 +13,7 @@ export class LoginFormComponent implements OnInit {
   errorMessage: String;
   failedLogin: boolean;
 
-  constructor(private formBuilder: FormBuilder, private userService: UserService) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router, private route: ActivatedRoute) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required)
@@ -24,6 +25,7 @@ export class LoginFormComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm.valueChanges.subscribe(() => {
       this.errorMessage = "";
+      this.failedLogin = false;
     });
   }
 
@@ -35,10 +37,18 @@ export class LoginFormComponent implements OnInit {
     this.userService.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
     .subscribe((body: any) => {
       this.failedLogin = false;
-      console.log(body);
+      this.userService.setLoggedIn(true);
+      //save token
+      this.route.queryParams.subscribe(queryParams => {
+        if (queryParams.return) {
+          this.router.navigate([queryParams.return]);
+        }
+        else {
+          this.router.navigate(['dashboard']);
+        }
+      });
     }, (error: any) => {
       this.failedLogin = true;
-      console.log(error);
       if(error.status === 400 || error.status === 401) {
         this.errorMessage = "Invalid credentials";
       }else {

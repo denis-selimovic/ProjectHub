@@ -25,8 +25,10 @@ import { NewProjectComponent } from './components/pages/new-project/new-project.
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { UserService } from './services/user.service';
+import { UserService } from './services/user/user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { GuardService } from './services/guard/guard.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,11 @@ import { HttpClientModule } from '@angular/common/http';
     NewProjectComponent,
     NewIssueFormComponent,
     NewIssueComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    RegisterComponent,
+    RegisterFormComponent,
+    NotFoundComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +67,8 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    UserService
+    UserService,
+    GuardService
   ],
   bootstrap: [AppComponent]
 })
