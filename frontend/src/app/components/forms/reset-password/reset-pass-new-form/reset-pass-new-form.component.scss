@@ -13,12 +13,28 @@ p {
     justify-content: center;
   }
 
-input {
-    width: 92%;
-    border: none;
-    height: 100%;
-  }
-
 input:focus {
   outline: none;
 }
+
+.in-field {
+  box-sizing: border-box;
+  margin: 5px 0px 10px 0px;
+  width: 100%;
+  padding: 5px 5px;
+  border: 1px solid $light-gray;
+  border-radius: $border-radius;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+input {
+  border: none;
+  float: left;
+}
+
+.material-icons {
+  float: right;
+}
+
