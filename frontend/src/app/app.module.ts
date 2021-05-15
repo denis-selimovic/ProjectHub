@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
+import { TokenService } from './services/token/token.service';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { CookieService } from './services/cookie/cookie.service';
   providers: [
     UserService,
     GuardService,
-    CookieService
+    CookieService,
+    TokenService
   ],
   bootstrap: [AppComponent]
 })

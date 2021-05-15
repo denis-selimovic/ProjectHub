@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CookieService } from '../cookie/cookie.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TokenService } from '../token/token.service';
 
 export interface User {
   id: string;
@@ -17,7 +18,11 @@ export interface User {
 export class UserService {
   private user: User | null = null;
 
-  constructor(private http: HttpClient, private cookieService: CookieService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, 
+    private tokenService: TokenService, 
+    private route: ActivatedRoute, 
+    private router: Router
+  ) {}
 
   login(email: string, password: string, errorHandler: any): any {
     this.http.post(`${environment.api}/oauth/token`,{ email, password, grant_type: 'password' },{
@@ -28,7 +33,7 @@ export class UserService {
       }
     ).subscribe((body: any) => {
       // set user data (email)
-      this.setToken(body.data.access_token, body.data.refresh_token, body.data.expires_in);
+      this.tokenService.setToken(body.data.access_token, body.data.refresh_token, body.data.expires_in);
       this.route.queryParams.subscribe((queryParams) => {
         if (queryParams.return) {
           this.router.navigate([queryParams.return]);
@@ -40,29 +45,12 @@ export class UserService {
   }
 
   logout(): void {
-    this.cookieService.deleteCookie('accessToken');
-    this.cookieService.deleteCookie('refreshToken');
+    this.tokenService.removeToken('accessToken');
+    this.tokenService.removeToken('refreshToken');
     this.router.navigate([""]);
   }
 
-  getAccessToken(): string {
-    let token = this.cookieService.getCookie('accessToken');
-    if (token === '') {
-      return '';
-    }
-    return 'Bearer ' + token;
-  }
-
-  getRefreshToken(): string {
-    return this.cookieService.getCookie('refreshToken') || '';
-  }
-
   isLoggedIn(): boolean {
-    return this.cookieService.getCookie('accessToken') !== '';
-  }
-
-  setToken(accessToken: string, refreshToken: string, expiresInSec: number): void {
-    this.cookieService.setCookie('accessToken', accessToken, expiresInSec);
-    this.cookieService.setCookie('refreshToken', refreshToken, 900);
+    return this.tokenService.getAccessToken() !== "";
   }
 }
