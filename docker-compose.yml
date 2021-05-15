@@ -1,0 +1,348 @@
+version: '3.3'
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    build:
+      context: ./rabbitmq/
+      dockerfile: Dockerfile
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      projecthub:
+        aliases:
+          - rabbitmq
+
+  user-service-db:
+    container_name: user-service-db
+    hostname: user-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: user-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - user-service-db
+
+  project-service-db:
+    container_name: project-service-db
+    hostname: project-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: project-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - project-service-db
+
+  task-service-db:
+    container_name: task-service-db
+    hostname: task-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: task-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - task-service-db
+
+  notification-service-db:
+    container_name: notification-service-db
+    hostname: notification-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: notification-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - notification-service-db
+
+  email-service-db:
+    container_name: email-service-db
+    hostname: email-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: email-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - email-service-db
+
+  system-events-service-db:
+    container_name: system-events-service-db
+    hostname: system-events-service-db
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    image: postgres-w-pgcrypto:latest
+    environment:
+      POSTGRES_DB: system-events-service-dev
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432
+    expose:
+      - 5432
+    networks:
+      projecthub:
+        aliases:
+          - system-events-service-db
+
+  configuration-service:
+    container_name: configuration-service
+    hostname: config-service
+    build:
+      context: ./configuration-service/
+      dockerfile: Dockerfile
+    image: configuration-service:latest
+    restart: always
+    environment:
+      - PROJECTHUB_GIT_USERNAME=dselimovic1
+      - PROJECTHUB_GIT_PASSWORD=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
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    depends_on:
+      - eureka-service
+    networks:
+      projecthub:
+        aliases:
+          - config-service
+
+  eureka-service:
+    container_name: eureka-service
+    hostname: discovery-server
+    build:
+      context: ./eureka-server/
+      dockerfile: Dockerfile
+    image: eureka-service:latest
+    restart: always
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - HOSTNAME=discovery-server
+    expose:
+      - 8761
+    ports:
+      - 8761:8761
+    networks:
+      projecthub:
+        aliases:
+          - discovery-server
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service/
+      dockerfile: Dockerfile
+    image: user-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - US_DATABASE_URL=jdbc:postgresql://user-service-db:5432/user-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - user-service-db
+    networks:
+      - projecthub
+
+  project-service:
+    container_name: project-service
+    build:
+      context: ./project-service/
+      dockerfile: Dockerfile
+    image: project-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - PS_DATABASE_URL=jdbc:postgresql://project-service-db:5432/project-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8082
+    ports:
+      - 8082:8082
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - project-service-db
+    networks:
+      - projecthub
+
+  task-service:
+    container_name: task-service
+    build:
+      context: ./task-service/
+      dockerfile: Dockerfile
+    image: task-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - TS_DATABASE_URL=jdbc:postgresql://task-service-db:5432/task-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8083
+    ports:
+      - 8083:8083
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - task-service-db
+    networks:
+      - projecthub
+
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service/
+      dockerfile: Dockerfile
+    image: notification-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - NS_DATABASE_URL=jdbc:postgresql://notification-service-db:5432/notification-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8084
+    ports:
+      - 8084:8084
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - notification-service-db
+    networks:
+      - projecthub
+
+  email-service:
+    container_name: email-service
+    build:
+      context: ./email-service/
+      dockerfile: Dockerfile
+    image: email-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - ES_DATABASE_URL=jdbc:postgresql://email-service-db:5432/email-service-dev
+      - RABBITMQ_HOST=rabbitmq
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - email-service-db
+    networks:
+      - projecthub
+
+  system-events-service:
+    container_name: system-events-service
+    build:
+      context: ./system-events-service/
+      dockerfile: Dockerfile
+    image: system-events-service:latest
+    restart: always
+    environment:
+      - CONFIG_SERVER_URL=http://config-service:8888
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+      - SS_DATABASE_URL=jdbc:postgresql://system-events-service-db:5432/system-events-service-dev
+    expose:
+      - 8086
+    ports:
+      - 8086:8086
+    depends_on:
+      - rabbitmq
+      - configuration-service
+      - eureka-service
+      - system-events-service-db
+    networks:
+      - projecthub
+
+  gateway-service:
+    container_name: gateway-service
+    build:
+      context: ./gateway-service/
+      dockerfile: Dockerfile
+    image: gateway-service:latest
+    restart: always
+    environment:
+      - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - user-service
+      - project-service
+      - task-service
+      - notification-service
+      - email-service
+    networks:
+      - projecthub
+
+networks:
+  projecthub:
+    driver: bridge

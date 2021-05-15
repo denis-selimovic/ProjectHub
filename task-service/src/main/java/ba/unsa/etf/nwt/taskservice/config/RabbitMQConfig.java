@@ -10,36 +10,62 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class TaskNotificationQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
+        public static final String QUEUE_NAME = "task-notification-queue";
+        public static final String EXCHANGE_NAME = "task-notification-exchange";
+        public static final String ROUTING_KEY = "task-notification-routing-key";
+
+        @Bean
+        public Queue taskNotificationQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange taskNotificationExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue taskNotificationQueue, DirectExchange taskNotificationExchange) {
+            return BindingBuilder
+                    .bind(taskNotificationQueue)
+                    .to(taskNotificationExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+    @Configuration
+    public static class RevertProjectDeleteQueueConfig {
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey);
+        public static final String QUEUE_NAME = "revert-project-delete-queue";
+        public static final String EXCHANGE_NAME = "revert-project-delete-exchange";
+        public static final String ROUTING_KEY = "revert-project-delete-routing-key";
+
+        @Bean
+        public Queue revertProjectDeleteQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange revertProjectDeleteExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding revertProjectDeleteBinding(Queue revertProjectDeleteQueue, DirectExchange revertProjectDeleteExchange) {
+            return BindingBuilder
+                    .bind(revertProjectDeleteQueue)
+                    .to(revertProjectDeleteExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean

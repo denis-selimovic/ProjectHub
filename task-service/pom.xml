@@ -190,6 +190,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>task-service</finalName>
     </build>
 
 </project>

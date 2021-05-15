@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.messaging.publishers;
 
+import ba.unsa.etf.nwt.taskservice.config.RabbitMQConfig;
 import ba.unsa.etf.nwt.taskservice.dto.TaskNotificationDTO;
 import ba.unsa.etf.nwt.taskservice.messaging.Publisher;
 import ba.unsa.etf.nwt.taskservice.model.Priority;
@@ -7,29 +8,30 @@ import ba.unsa.etf.nwt.taskservice.model.Status;
 import ba.unsa.etf.nwt.taskservice.model.Task;
 import ba.unsa.etf.nwt.taskservice.model.Type;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class TaskNotificationPublisher implements Publisher<TaskNotificationDTO> {
 
     private final RabbitTemplate template;
-    private final DirectExchange exchange;
-
-    @Value("${amqp.routing-key}")
-    private String routingKey;
 
     private final Set<String> properties =
             new HashSet<>(Arrays.asList("description", "name", "priority", "status", "type", "updatedBy", "userId"));
 
     @Override
     public void send(TaskNotificationDTO data) {
-        this.template.convertAndSend(exchange.getName(), routingKey, data);
+        this.template.convertAndSend(
+                RabbitMQConfig.TaskNotificationQueueConfig.EXCHANGE_NAME,
+                RabbitMQConfig.TaskNotificationQueueConfig.ROUTING_KEY,
+                data
+        );
     }
 
     public TaskNotificationDTO createNotification(Object[] previous, Object[] current, String[] properties, Task task) {

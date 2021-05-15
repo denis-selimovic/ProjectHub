@@ -26,7 +26,8 @@ public class SystemEventService extends SystemEventServiceGrpc.SystemEventServic
                 request.getAction(),
                 request.getResource(),
                 request.getRequestURL(),
-                request.getStatus()
+                request.getStatus(),
+                request.getResponse()
         );
         systemEventRepository.save(systemEvent);
         SystemEventResponse response = SystemEventResponse.newBuilder()

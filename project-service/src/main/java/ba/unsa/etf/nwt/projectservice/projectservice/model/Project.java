@@ -50,4 +50,7 @@ public class Project {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Column(name = "deleted")
+    private Boolean deleted = false;
 }

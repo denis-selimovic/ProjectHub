@@ -1,16 +1,6 @@
 grpc:
   port: 9090
 
-eureka:
-  instance:
-    prefer-ip-address: true
-    nonSecurePort: ${grpc.port}
-  client:
-    serviceUrl:
-       defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-
 spring:
   jackson:
     property-naming-strategy: SNAKE_CASE

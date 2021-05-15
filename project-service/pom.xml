@@ -98,6 +98,10 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>3.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.grpc</groupId>
@@ -177,6 +181,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>project-service</finalName>
     </build>
 
 </project>

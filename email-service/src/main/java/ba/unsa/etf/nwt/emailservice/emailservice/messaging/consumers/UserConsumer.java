@@ -16,7 +16,7 @@ public class UserConsumer implements Consumer<UserDTO> {
     private final EmailConfigService emailConfigService;
     private final UserPublisher userPublisher;
 
-    @RabbitListener(queues = "user-service")
+    @RabbitListener(queues = "create-user-queue")
     public void receive(UserDTO data) {
         try {
             emailConfigService.create(data);

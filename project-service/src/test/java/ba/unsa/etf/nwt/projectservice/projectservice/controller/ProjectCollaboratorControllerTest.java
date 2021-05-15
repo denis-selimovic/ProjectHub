@@ -4,12 +4,15 @@ import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.projectservice.projectservice.config.token.TokenGenerator;
+import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectNotificationDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.NotFoundException;
+import ba.unsa.etf.nwt.projectservice.projectservice.messaging.publishers.ProjectNotificationPublisher;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectRepository;
+import ba.unsa.etf.nwt.projectservice.projectservice.service.ProjectService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,8 +50,12 @@ public class ProjectCollaboratorControllerTest {
     private ProjectCollaboratorRepository projectCollaboratorRepository;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectService projectService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private ProjectNotificationPublisher publisher;
 
     private String token;
 
@@ -107,6 +114,7 @@ public class ProjectCollaboratorControllerTest {
 
     @Test
     public void addCollaboratorSuccess() throws Exception {
+        Mockito.doNothing().when(publisher).send(Mockito.any(ProjectNotificationDTO.class));
         Project project = createProjectInDB(ResourceOwnerInjector.id);
         mockMvc.perform(post(String.format("/api/v1/projects/%s/collaborators", project.getId()))
                 .header("Authorization", token)
@@ -145,6 +153,17 @@ public class ProjectCollaboratorControllerTest {
                 .header("Authorization", token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.message", Matchers.is("Project collaborator successfully deleted")));
+        assertEquals(0, projectCollaboratorRepository.count());
+    }
+
+    @Test
+    public void deleteCollaboratorOnDeletedProject() throws Exception {
+        Project project = createProjectInDB(ResourceOwnerInjector.id);
+        ProjectCollaborator collaborator = createCollaboratorInDB(project);
+        projectService.softDelete(project);
+        mockMvc.perform(delete(String.format("/api/v1/projects/%s/collaborators/%s", project.getId(), collaborator.getCollaboratorId()))
+                .header("Authorization", token))
+                .andExpect(status().isNotFound());
         assertEquals(0, projectCollaboratorRepository.count());
     }
 
