@@ -13,6 +13,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -23,6 +24,8 @@ public class EmailService {
 
     @Value("${mail.from}")
     private String from;
+    @Value("${mail.redirect}")
+    private String redirect;
 
     private final TemplateEngine templateEngine;
     private final JavaMailSender javaMailSender;
@@ -31,10 +34,11 @@ public class EmailService {
         boolean activation = request.getType().equals("activation");
         String subject = activation ? "Activate your accounts" : "Reset your password";
         String template = activation ? "emails/activate" : "emails/reset";
+        String route = activation ? "/confirm-email/" : "/reset-password/";
         try {
             sendEmail(subject, request.getEmail(), template, Map.of(
                     "name", request.getFirstName(),
-                    "token", request.getToken()
+                    "redirect", redirect + route + request.getToken()
             ));
         } catch (MessagingException e) {
             throw new BadRequestException("Bad request");
@@ -60,7 +64,9 @@ public class EmailService {
 
     private String loadTemplate(String path, Map<String, String> params) {
         Context context = new Context();
-        params.forEach(context::setVariable);
+        for (var k: params.entrySet()) {
+            context.setVariable(k.getKey(), k.getValue());
+        }
         return templateEngine.process(path, context);
     }
 }
