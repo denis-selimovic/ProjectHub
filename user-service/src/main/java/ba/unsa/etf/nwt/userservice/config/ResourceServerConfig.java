@@ -24,7 +24,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private final String[] unprotectedEndpoints = {
             "/oauth/token/**",
-            "/api/v1/users/**",
+            "/api/v1/users",
+            "/api/v1/users/request-password-reset",
+            "/api/v1/users/confirm-email",
+            "/api/v1/users/reset-password",
             "/swagger-resources/**",
             "/webjars/**",
             "/v3/**",
