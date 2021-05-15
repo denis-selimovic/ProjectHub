@@ -13,19 +13,11 @@ import { ConfirmDeletionComponent } from '../../dialogs/confirm-deletion/confirm
 
 export class CollaboratorsTableComponent implements AfterViewInit {
   displayedColumns: string[] = ['name', 'collaboratorTag', 'email', 'deleteCollaborator'];
-  owner: User;
-  collaborators: User[];
+  collaborators: Array<User>;
   dataSource: MatTableDataSource<User>
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(public dialog: MatDialog) {    
-    this.owner = {
-      id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-      email: "ajsahaj@gmail.com",
-      firstName: "Ajsa",
-      lastName: "Hajradinovic"
-    }
-
     this.collaborators = [
       {
         id: "13e08bf2-b4b2-4003-9288-507136ab459a",
@@ -62,13 +54,9 @@ export class CollaboratorsTableComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // console.log(id)
-        // const index = this.collaborators.findIndex(x => x.id === id)
-        // this.collaborators.splice(index,);
-        // this.dataSource = new MatTableDataSource<User>(this.collaborators);
-        this.dataSource.data = this.dataSource.data.filter(i => i.id !== id)
+        // this.collaborators = this.collaborators.filter(i => i.id !== id);
+        this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
       }
-      console.log(`Dialog result: ${result}`);
     });
   }
 

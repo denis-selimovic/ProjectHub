@@ -2,7 +2,7 @@
  <div class="title">
   <h3>Project details</h3>
   <div class="tag">
-   owner
+   {{ isOwner === true ? "owner" : "collaborator" }}
   </div>
  </div>
  <label for="projectName">Project name: </label>

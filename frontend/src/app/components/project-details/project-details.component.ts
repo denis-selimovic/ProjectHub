@@ -12,6 +12,8 @@ export class ProjectDetailsComponent implements OnInit {
   isOwner: boolean
 
   constructor() { 
+    this.isOwner = true;
+
     this.project = {
       name: "NWT Project"
     }
@@ -43,7 +45,6 @@ export class ProjectDetailsComponent implements OnInit {
         lastName: "Selimovics"
       },
     ]
-    this.isOwner = true
   }
 
   ngOnInit(): void {
