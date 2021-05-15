@@ -21,7 +21,11 @@ export class LoginFormComponent implements OnInit {
     this.failedLogin = false;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loginForm.valueChanges.subscribe(() => {
+      this.errorMessage = "";
+    });
+  }
 
   onSubmit(): void { 
     this.login();
@@ -34,8 +38,12 @@ export class LoginFormComponent implements OnInit {
       console.log(body);
     }, (error: any) => {
       this.failedLogin = true;
-      this.errorMessage = "Error while logging in. Try again";
       console.log(error);
+      if(error.status === 400 || error.status === 401) {
+        this.errorMessage = "Invalid credentials";
+      }else {
+        this.errorMessage = "Error while logging in. Try again";
+      }
     });
   }
 }
