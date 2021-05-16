@@ -28,6 +28,12 @@ import { NewIssueComponent } from './components/pages/new-issue/new-issue.compon
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { ProjectsComponent } from './components/pages/projects/projects.component';
 import { ProjectsTableComponent } from './components/tables/projects-table/projects-table.component';
+import { UserService } from './services/user/user.service';
+import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { GuardService } from './services/guard/guard.service';
+import { CookieService } from './services/cookie/cookie.service';
+import { TokenService } from './services/token/token.service';
 
 @NgModule({
   declarations: [
@@ -52,7 +58,11 @@ import { ProjectsTableComponent } from './components/tables/projects-table/proje
     NewIssueComponent,
     NotFoundComponent,
     ProjectsComponent,
-    ProjectsTableComponent
+    ProjectsTableComponent,
+    RegisterComponent,
+    RegisterFormComponent,
+    NotFoundComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -61,9 +71,15 @@ import { ProjectsTableComponent } from './components/tables/projects-table/proje
     MatInputModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    UserService,
+    GuardService,
+    CookieService,
+    TokenService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

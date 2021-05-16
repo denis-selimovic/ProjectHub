@@ -10,12 +10,20 @@ import { NewTaskComponent } from './components/pages/new-task/new-task.component
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { ProjectsComponent } from './components/pages/projects/projects.component';
+import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
+import { GuardService } from './services/guard/guard.service';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     component: LoginComponent
+  },
+  {
+    path: 'dashboard',
+    pathMatch: 'full',
+    component: DashboardComponent,
+    canActivate: [GuardService]
   },
   {
     path: 'reset-password-email',
