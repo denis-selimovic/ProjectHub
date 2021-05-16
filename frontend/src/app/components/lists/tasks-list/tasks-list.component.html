@@ -1,0 +1,9 @@
+<div *ngIf="tasks.length > 0" >
+<div class="list" *ngFor="let task of tasks">
+ <app-tasks-item [task]="task"></app-tasks-item>
+</div>
+</div>
+
+<div class="empty-list" *ngIf="tasks.length == 0">
+ <p>No records found</p>
+</div>

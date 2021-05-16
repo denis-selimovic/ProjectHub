@@ -14,6 +14,7 @@ import { GuardService } from './services/guard/guard.service';
 import { IssuesComponent } from './components/pages/issues/issues.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
+import { TasksComponent } from './components/pages/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -84,7 +85,11 @@ const routes: Routes = [
     component: IssuesComponent
   },
   {
-    path: '**',
+    path: 'tasks',
+    component: TasksComponent
+  },
+  {
+    path: '**', 
     redirectTo: '/not-found'
   }
 ];

@@ -52,7 +52,11 @@ import { CollaboratorsComponent } from './components/pages/collaborators/collabo
 import { CollaboratorsTableComponent } from './components/tables/collaborators-table/collaborators-table.component';
 import { NewCollaboratorFormComponent } from './components/forms/new-collaborator-form/new-collaborator-form.component';
 import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
-import {MatDialogModule} from '@angular/material/dialog';
+import { TasksComponent } from './components/pages/tasks/tasks.component';
+import { TasksListComponent } from './components/lists/tasks-list/tasks-list.component';
+import { TasksItemComponent } from './components/lists/tasks-item/tasks-item.component';
+import { NewTaskModalComponent } from './components/modals/new-task-modal/new-task-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -94,7 +98,11 @@ import {MatDialogModule} from '@angular/material/dialog';
     CollaboratorsComponent,
     CollaboratorsTableComponent,
     NewCollaboratorFormComponent,
-    ConfirmDeletionComponent
+    ConfirmDeletionComponent,
+    TasksComponent,
+    TasksListComponent,
+    TasksItemComponent,
+    NewTaskModalComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +117,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatTableModule,
     MatDialogModule,
     MDBBootstrapModule.forRoot(),
-    NgbModule
+    NgbModule,
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [
     UserService,
