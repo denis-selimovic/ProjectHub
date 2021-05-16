@@ -49,6 +49,7 @@ export class UserService {
   logout(): void {
     this.tokenService.removeToken('accessToken');
     this.tokenService.removeToken('refreshToken');
+    this.storageService.clearStorage();
     this.router.navigate([""]);
   }
 
