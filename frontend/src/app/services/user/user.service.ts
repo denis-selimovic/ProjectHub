@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { CookieService } from '../cookie/cookie.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../token/token.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 export interface User {
   id: string;
@@ -18,10 +19,11 @@ export interface User {
 export class UserService {
   private user: User | null = null;
 
-  constructor(private http: HttpClient,
-    private tokenService: TokenService,
-    private route: ActivatedRoute,
-    private router: Router
+  constructor(private http: HttpClient, 
+    private tokenService: TokenService, 
+    private route: ActivatedRoute, 
+    private router: Router,
+    private storageService: LocalStorageService
   ) {}
 
   login(email: string, password: string, errorHandler: any): any {
@@ -32,8 +34,8 @@ export class UserService {
         }),
       }
     ).subscribe((body: any) => {
-      // set user data (email)
       this.tokenService.setToken(body.data.access_token, body.data.refresh_token, body.data.expires_in);
+      this.fetchUserDetails();
       this.route.queryParams.subscribe((queryParams) => {
         if (queryParams.return) {
           this.router.navigate([queryParams.return]);
@@ -59,5 +61,27 @@ export class UserService {
       (data: any) => success(data),
       (error: any) => failure(error)
     );
+  }
+  
+  fetchUserDetails(): void {
+    this.http.get(`${environment.api}/api/v1/users/user-details`,{
+      headers: new HttpHeaders({
+        Authorization: this.tokenService.getAccessToken()
+      }),
+    }).subscribe((response: any) => {
+      console.log(response);
+      this.user = this.getUserFromResponseData(response.data);
+      this.storageService.saveObject(this.user, "user");
+    }, (error: any) => {
+      console.log(error);
+    });
+  }
+
+  private getUserFromResponseData(responseData: any): User {
+    return {id: responseData.id,
+      firstName: responseData.first_name, 
+      lastName: responseData.last_name,
+      email: responseData.email
+    };
   }
 }
