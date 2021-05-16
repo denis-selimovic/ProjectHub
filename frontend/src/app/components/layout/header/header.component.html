@@ -1,4 +1,4 @@
 <header class="header">
     <a routerLink="/dashboard">Project Hub</a>
-    <p>Hello {{fullname()}}</p>
+    <p *ngIf="isUserLoggedIn()">Hello {{fullname()}}</p>
 </header>

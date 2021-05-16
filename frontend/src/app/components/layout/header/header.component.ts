@@ -18,4 +18,8 @@ export class HeaderComponent implements OnInit {
     return `${currentUser.firstName} ${currentUser.lastName.charAt(0)}.`
   }
 
+  isUserLoggedIn(): boolean {
+    return this.userService.isLoggedIn();
+  }
+
 }
