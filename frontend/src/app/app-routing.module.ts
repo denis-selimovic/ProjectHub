@@ -9,6 +9,7 @@ import { RegisterComponent } from './components/pages/register/register.componen
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
+import { ProjectsComponent } from './components/pages/projects/projects.component';
 
 const routes: Routes = [
   {
@@ -52,6 +53,10 @@ const routes: Routes = [
     path: 'not-found',
     pathMatch: 'full',
     component: NotFoundComponent
+  },
+  {
+    path: 'projects',
+    component: ProjectsComponent
   },
   {
     path: '**', 

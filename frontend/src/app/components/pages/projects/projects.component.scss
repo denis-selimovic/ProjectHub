@@ -1,0 +1,61 @@
+@import "/src/app/styles/global.scss";
+@import "/src/app/styles/typography.scss";
+@import "/src/app/styles/forms.scss";
+
+.projects-page {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 20px;
+
+  .page-content {
+    margin: 0px;
+  }
+
+  .form-button {
+    cursor: pointer;
+    font-size: $fs-small;
+    padding: 0.5em 0.5em;
+    background: $blue;
+    color: $white;
+    border: transparent;
+    border-radius: $border-radius;
+    margin: 10px 10px 10px 10px;
+
+    &:disabled {
+      background: $light-gray;
+    }
+  }
+
+  .controls {
+    box-sizing: border-box;
+    margin: 5px 0px 15px 0px;
+    width: 100%;
+    background-color: $white;
+    border: none;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media screen and (max-width: $screen-small) {
+    .page-content {
+      width: 80%;
+    }
+  }
+
+  @media screen and (min-width: $screen-medium) {
+    .page-content {
+      width: 90%;
+    }
+  }
+
+  @media screen and (min-width: $screen-large) {
+    .page-content {
+      width: 60%;
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +26,8 @@ import { NewProjectComponent } from './components/pages/new-project/new-project.
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { ProjectsComponent } from './components/pages/projects/projects.component';
+import { ProjectsTableComponent } from './components/tables/projects-table/projects-table.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,9 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     NewProjectComponent,
     NewIssueFormComponent,
     NewIssueComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ProjectsComponent,
+    ProjectsTableComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +60,8 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     ReactiveFormsModule,
     MatInputModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
