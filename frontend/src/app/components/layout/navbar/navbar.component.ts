@@ -5,14 +5,10 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
-  links: Array<{ text: string, path: string }>;
 
-  constructor() { 
-    this.links = new Array();
-    this.links.push({text: "projects", path: ""});
-    this.links.push({text: "my account", path: ""});
-  }
+export class NavbarComponent implements OnInit {
+
+  constructor() { }
 
   ngOnInit(): void {
   }
