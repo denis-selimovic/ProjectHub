@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -70,4 +71,8 @@ public class Task {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Column(name = "updated_by")
+    @JsonIgnore
+    private UUID updatedBy;
 }

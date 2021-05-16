@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/project-service-dev
+    url: ${PS_DATABASE_URL}
     username: projecthub
     password: password
   jpa:
@@ -8,7 +8,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    url: jdbc:postgresql://localhost:5432/project-service-dev
+    url: ${PS_DATABASE_URL}
     user: projecthub
     password: password
-
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    password: password
+    username: projecthub

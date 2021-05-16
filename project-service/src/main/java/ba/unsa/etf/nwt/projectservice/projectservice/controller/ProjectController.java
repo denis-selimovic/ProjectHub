@@ -3,6 +3,7 @@ package ba.unsa.etf.nwt.projectservice.projectservice.controller;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.filter.ProjectFilter;
+import ba.unsa.etf.nwt.projectservice.projectservice.messaging.publishers.ProjectPublisher;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.CreateProjectRequest;
 import ba.unsa.etf.nwt.projectservice.projectservice.request.PatchProjectRequest;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class ProjectController {
     private final ProjectService projectService;
     private final ProjectCollaboratorService projectCollaboratorService;
+    private final ProjectPublisher publisher;
 
     @PostMapping
     @ApiResponses(value = {
@@ -56,7 +58,8 @@ public class ProjectController {
                                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
         projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
-        projectService.delete(projectId);
+        projectService.softDelete(project);
+        publisher.send(new ProjectDTO(project));
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Project successfully deleted")));
     }
 

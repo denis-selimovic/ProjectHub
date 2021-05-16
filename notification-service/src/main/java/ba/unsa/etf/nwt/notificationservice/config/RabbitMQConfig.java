@@ -10,36 +10,36 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class DeleteUserQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
-    }
+        public static final String QUEUE_NAME = "delete-user-queue";
+        public static final String EXCHANGE_NAME = "delete-user-exchange";
+        public static final String ROUTING_KEY = "delete-user-routing-key";
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+        @Bean
+        public Queue deleteUserQueue() {
+            return new Queue(QUEUE_NAME);
+        }
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey);
+        @Bean
+        public DirectExchange deleteUserExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue deleteUserQueue, DirectExchange deleteUserExchange) {
+            return BindingBuilder
+                    .bind(deleteUserQueue)
+                    .to(deleteUserExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean

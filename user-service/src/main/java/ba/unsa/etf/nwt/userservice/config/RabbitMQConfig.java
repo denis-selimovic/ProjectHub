@@ -3,13 +3,14 @@ package ba.unsa.etf.nwt.userservice.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,29 +18,30 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class RabbitMQConfig {
 
-    @Value("${amqp.queue}")
-    private String queueName;
-    @Value("${amqp.exchange}")
-    private String exchangeName;
-    @Value("${amqp.routing-key}")
-    private String routingKey;
+    @Configuration
+    public static class CreateUserQueueConfig {
 
-    @Bean
-    public Queue queue() {
-        return new Queue(queueName);
-    }
+        public static final String QUEUE_NAME = "create-user-queue";
+        public static final String EXCHANGE_NAME = "create-user-exchange";
+        public static final String ROUTING_KEY = "create-user-routing-key";
 
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
+        @Bean
+        public Queue createUserQueue() {
+            return new Queue(QUEUE_NAME);
+        }
 
-    @Bean
-    public Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(exchange)
-                .with(routingKey);
+        @Bean
+        public DirectExchange createUserExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding binding(Queue createUserQueue, DirectExchange createUserExchange) {
+            return BindingBuilder
+                    .bind(createUserQueue)
+                    .to(createUserExchange)
+                    .with(ROUTING_KEY);
+        }
     }
 
     @Bean

@@ -112,7 +112,9 @@
         <div class="header vertical-spacer">Hi <span th:text="${name}"></span>,</div>
         <div class="text">Thank you for registering with us.</div>
         <div class="text vertical-spacer">Please click the button below to activate your account.</div>
-        <button class="click"><a href="">Activate your account</a></button>
+        <button class="click">
+            <a th:href="${redirect}">Activate your account</a>
+        </button>
         <p class="vertical-spacer text smaller-text">Thanks, ProjectHub</p>
     </div>
     <div class="footer left-spacer">

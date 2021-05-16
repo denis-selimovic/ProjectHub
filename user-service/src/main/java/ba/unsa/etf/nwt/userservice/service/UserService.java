@@ -58,4 +58,10 @@ public class UserService {
             userRepository.save(u);
         });
     }
+
+    public User getUserDetails(final String email) {
+        return findByEmail(email).orElseThrow(() -> {
+            throw new NotFoundException("User with this email doesn't exist");
+        });
+    }
 }

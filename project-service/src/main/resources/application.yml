@@ -5,10 +5,21 @@ spring:
     config:
       password: secret
       username: root
+      enabled: true
+      uri: ${CONFIG_SERVER_URL}
   config:
-    import: optional:configserver:http://localhost:8888
+    import: "optional:configserver:"
   profiles:
     active: dev
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL}
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8082

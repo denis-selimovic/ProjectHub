@@ -1,0 +1,47 @@
+<form class="login" [formGroup]="resetPassNewForm">
+    <div class="form-content">
+        <h2>Reset password</h2>
+        <h3>Enter new password.</h3>
+
+        <div class="input-container">
+            <label for="password" class="input-label">Password:</label>
+            <div class="in-field">
+                <span><input matInput type="password" [type]="hide ? 'password':'text'"  id="password"  formControlName="password" class="input-in-div"></span>
+                <span><i class="material-icons" matSuffix (click) = "hide = !hide">
+                    {{hide ? 'visibility' : 'visibility_off'}}
+                </i></span>
+            </div>
+            <div class="error" *ngIf="resetPassNewForm?.get('password')?.touched && resetPassNewForm?.get('password')?.errors?.required">
+                Password is required
+            </div>
+            <div class="error" *ngIf="resetPassNewForm?.get('password')?.errors?.pattern || resetPassNewForm?.get('password')?.errors?.minlength">
+                Password must contain at least 8 characters with at least one lowercase, one uppercase, one digit and one special character
+            </div>
+        </div>
+
+        <div class="input-container">
+            <label for="confirmPassword" class="input-label">Confirm password:</label>
+            <div class="in-field">
+                <span><input matInput type="password" [type]="hideConf ? 'password':'text'" id="confirmPassword"  formControlName="confirmPassword" class="field"></span>
+                <span><i class="material-icons" matSuffix (click) = "hideConf = !hideConf">
+                    {{hideConf ? 'visibility' : 'visibility_off'}}
+                </i></span>
+            </div>
+            <div class="error" 
+            *ngIf="!resetPassNewForm?.get('confirmPassword')?.valid && (resetPassNewForm?.get('confirmPassword')?.dirty ||resetPassNewForm?.get('confirmPassword')?.touched)">
+                <div class="error" *ngIf="resetPassNewForm?.get('confirmPassword')?.errors?.required">
+                   Confirm password is required
+                </div>
+            <div class="error" *ngIf="resetPassNewForm?.get('confirmPassword')?.errors?.mustMatch">Passwords must match</div>
+        </div>
+        </div>
+
+        <a routerLink="/"><button type="submit" [disabled]="resetPassNewForm.invalid" class="form-button">Change password</button></a>
+       <div class="form-info-text">
+        <p><a routerLink="/" class="redirect-link">Log In</a></p>
+        <p> or </p>
+        <p><a routerLink="/register" class="redirect-link">Register</a></p>
+       </div>
+
+    </div>
+</form>

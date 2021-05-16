@@ -5,10 +5,26 @@ spring:
     config:
       password: secret
       username: root
+      enabled: true
+      uri: ${CONFIG_SERVER_URL}
   config:
-    import: optional:configserver:http://localhost:8888
+    import: "optional:configserver:"
   profiles:
     active: dev
+  jpa:
+    properties:
+      hibernate:
+        session_factory:
+          interceptor: ba.unsa.etf.nwt.taskservice.utility.HibernateUtils
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL}
+    register-with-eureka: true
+    fetch-registry: true
 
 server:
   port: 8083

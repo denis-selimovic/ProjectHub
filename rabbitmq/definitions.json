@@ -1,0 +1,169 @@
+{
+  "users": [
+    {
+      "name": "projecthub",
+      "password": "password",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": "administrator"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "projecthub",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "delete-user-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "create-user-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "task-notification-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "project-notification-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "revert-project-delete-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "delete-project-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "delete-user-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "create-user-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "task-notification-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "project-notification-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "revert-project-delete-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "delete-project-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "delete-user-exchange",
+      "vhost": "/",
+      "destination": "delete-user-queue",
+      "destination_type": "queue",
+      "routing_key": "delete-user-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "create-user-exchange",
+      "vhost": "/",
+      "destination": "create-user-queue",
+      "destination_type": "queue",
+      "routing_key": "create-user-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "task-notification-exchange",
+      "vhost": "/",
+      "destination": "task-notification-queue",
+      "destination_type": "queue",
+      "routing_key": "task-notification-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "project-notification-exchange",
+      "vhost": "/",
+      "destination": "project-notification-queue",
+      "destination_type": "queue",
+      "routing_key": "project-notification-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "revert-project-delete-exchange",
+      "vhost": "/",
+      "destination": "revert-project-delete-queue",
+      "destination_type": "queue",
+      "routing_key": "revert-project-delete-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "delete-project-exchange",
+      "vhost": "/",
+      "destination": "delete-project-queue",
+      "destination_type": "queue",
+      "routing_key": "delete-project-routing-key",
+      "arguments": {}
+    }
+  ]
+}

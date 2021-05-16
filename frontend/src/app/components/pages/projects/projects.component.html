@@ -1,0 +1,20 @@
+<head>
+    <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css" type='text/css'>
+</head>
+<div class="body">
+    <div class="projects-page">
+        <div class="page-content">
+
+            <app-projects-table></app-projects-table>
+
+            <div class="controls">
+                <div class="left">
+                    <span><button class="form-button">Add a new project</button></span>
+                </div>
+                <div class="right">
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

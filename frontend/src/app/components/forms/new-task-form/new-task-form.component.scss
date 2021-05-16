@@ -1,0 +1,14 @@
+@import "/src/app/styles/forms.scss";
+
+.justified-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+#projectNameSpan {
+  color: $black;
+}
+
+textarea {
+  resize: none;
+}
