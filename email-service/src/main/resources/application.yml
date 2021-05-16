@@ -23,3 +23,6 @@ eureka:
 
 server:
   port: 8085
+
+mail:
+  redirect: ${EMAIL_SERVICE_REDIRECT_URL}

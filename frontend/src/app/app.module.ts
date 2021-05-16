@@ -20,7 +20,8 @@ import { RegisterComponent } from './components/pages/register/register.componen
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
 import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations'
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MDBBootstrapModule } from "angular-bootstrap-md";
 import { NewProjectFormComponent } from './components/forms/new-project-form/new-project-form.component';
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
@@ -34,6 +35,8 @@ import { DashboardComponent } from './components/pages/dashboard/dashboard.compo
 import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
+import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
+import {EmailService} from "./services/email/email.service";
 
 @NgModule({
   declarations: [
@@ -62,7 +65,8 @@ import { TokenService } from './services/token/token.service';
     RegisterComponent,
     RegisterFormComponent,
     NotFoundComponent,
-    DashboardComponent
+    DashboardComponent,
+    ConfirmEmailComponent
   ],
   imports: [
     BrowserModule,
@@ -72,13 +76,15 @@ import { TokenService } from './services/token/token.service';
     BrowserAnimationsModule,
     NoopAnimationsModule,
     MatPaginatorModule,
-    HttpClientModule
+    HttpClientModule,
+    MDBBootstrapModule.forRoot()
   ],
   providers: [
     UserService,
     GuardService,
     CookieService,
-    TokenService
+    TokenService,
+    EmailService
   ],
   bootstrap: [AppComponent]
 })
