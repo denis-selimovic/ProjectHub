@@ -286,6 +286,7 @@ services:
       - EUREKA_SERVER_URL=http://discovery-server:8761/eureka/
       - ES_DATABASE_URL=jdbc:postgresql://email-service-db:5432/email-service-dev
       - RABBITMQ_HOST=rabbitmq
+      - EMAIL_SERVICE_REDIRECT_URL=http://localhost:4200
     expose:
       - 8085
     ports:

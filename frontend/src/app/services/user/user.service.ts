@@ -18,9 +18,9 @@ export interface User {
 export class UserService {
   private user: User | null = null;
 
-  constructor(private http: HttpClient, 
-    private tokenService: TokenService, 
-    private route: ActivatedRoute, 
+  constructor(private http: HttpClient,
+    private tokenService: TokenService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
@@ -52,5 +52,12 @@ export class UserService {
 
   isLoggedIn(): boolean {
     return this.tokenService.getAccessToken() !== "";
+  }
+
+  register(registerForm: any, success: any, failure: any): any {
+    this.http.post(`${environment.api}/api/v1/users`, registerForm).subscribe(
+      (data: any) => success(data),
+      (error: any) => failure(error)
+    );
   }
 }

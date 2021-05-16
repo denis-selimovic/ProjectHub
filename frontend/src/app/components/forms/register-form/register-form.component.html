@@ -4,7 +4,7 @@
         <div class="input-container">
             <label for="firstName" class="input-label">First name*</label>
             <input type="text" id="firstName" formControlName="firstName" class="input-field">
-            <div class="error" 
+            <div class="error"
             *ngIf="!registerForm?.get('firstName')?.valid && (registerForm?.get('firstName')?.dirty ||registerForm?.get('firstName')?.touched)"
             >
                 <div class="error" *ngIf="registerForm?.get('firstName')?.errors?.required">
@@ -17,9 +17,9 @@
        </div>
 
        <div class="input-container">
-        <label for="lastName" class="input-label">First name*</label>
+        <label for="lastName" class="input-label">Last name*</label>
         <input type="text" id="lastName" formControlName="lastName" class="input-field">
-        <div class="error" 
+        <div class="error"
         *ngIf="!registerForm?.get('lastName')?.valid && (registerForm?.get('lastName')?.dirty ||registerForm?.get('lastName')?.touched)"
         >
             <div class="error" *ngIf="registerForm?.get('lastName')?.errors?.required">
@@ -34,7 +34,7 @@
        <div class="input-container">
             <label for="email" class="input-label">Email*</label>
             <input type="email" id="email" formControlName="email" class="input-field">
-            <div class="error" 
+            <div class="error"
             *ngIf="!registerForm?.get('email')?.valid && (registerForm?.get('email')?.dirty ||registerForm?.get('email')?.touched)">
                 <div class="error" *ngIf="registerForm?.get('email')?.errors?.required">
                     Email is required
@@ -44,7 +44,7 @@
                 </div>
             </div>
        </div>
-    
+
         <div class="input-container">
             <label for="password" class="input-label">Password*</label>
             <input type="password" id="password"  formControlName="password" class="input-field">
@@ -59,7 +59,7 @@
         <div class="input-container">
             <label for="confirmPassword" class="input-label">Confirm Password*</label>
             <input type="password" id="confirmPassword"  formControlName="confirmPassword" class="input-field">
-            <div class="error" 
+            <div class="error"
             *ngIf="!registerForm?.get('confirmPassword')?.valid && (registerForm?.get('confirmPassword')?.dirty ||registerForm?.get('confirmPassword')?.touched)">
                 <div class="error" *ngIf="registerForm?.get('confirmPassword')?.errors?.required">
                    Confirm password is required
@@ -68,9 +68,14 @@
             </div>
         </div>
 
-        <button type="submit" [disabled]="registerForm.invalid" class="form-button">Register</button>
+        <button type="submit" [disabled]="registerForm.invalid" class="form-button">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+          <span *ngIf="!loader">Register</span>
+        </button>
+
         <p class="form-info-text">Already have an account? <span><a routerLink="" class="redirect-link">Login</a></span></p>
         <br/>
-        <p class="form-info-text error">{{errorMessage}}</p>
+        <p class="form-info-text error">{{message}}</p>
+        <p class="form-info-text" *ngIf="redirect">You registered successfully. Please checkout out your email.</p>
     </div>
 </form>
