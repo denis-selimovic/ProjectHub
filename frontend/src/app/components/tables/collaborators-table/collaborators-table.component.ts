@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
@@ -13,35 +13,15 @@ import { ConfirmDeletionComponent } from '../../dialogs/confirm-deletion/confirm
 
 export class CollaboratorsTableComponent implements AfterViewInit {
   displayedColumns: string[] = ['name', 'collaboratorTag', 'email', 'deleteCollaborator'];
-  collaborators: Array<User>;
+  @Input() collaborators: Array<User>;
   dataSource: MatTableDataSource<User>
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(public dialog: MatDialog) {    
-    this.collaborators = [
-      {
-        id: "13e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "lamijavrnjak@gmail.com",
-        firstName: "Lamija",
-        lastName: "Vrnjak"
-      },
-      {
-        id: "14e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "amilazigo@gmail.com",
-        firstName: "Amila",
-        lastName: "Zigo"
-      },
-      {
-        id: "15e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "denisselimovic@gmail.com",
-        firstName: "Denis",
-        lastName: "Selimovic"
-      }
-    ]
-    this.dataSource = new MatTableDataSource<User>(this.collaborators);
   }
 
   ngOnInit(): void {
+    this.dataSource = new MatTableDataSource<User>(this.collaborators);
   }
   
   ngAfterViewInit(): void {

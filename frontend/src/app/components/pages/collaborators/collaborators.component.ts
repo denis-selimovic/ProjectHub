@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/User';
 
 
@@ -11,9 +11,17 @@ import { User } from 'src/app/models/User';
 export class CollaboratorsComponent implements OnInit {
   owner: User;
   collaborators: Array<User>;
+  project: any;
 
   constructor() { 
-    this.owner = {
+  }
+
+  ngOnInit(): void {
+    this.project = {
+      name: "NWT Project"
+    }
+
+     this.owner = {
       id: "12e08bf2-b4b2-4003-9288-507136ab459a",
       email: "ajsahaj@gmail.com",
       firstName: "Ajsa",
@@ -40,9 +48,6 @@ export class CollaboratorsComponent implements OnInit {
         lastName: "Selimovic"
       }
     ]
-  }
-
-  ngOnInit(): void {
   }
 
 }
