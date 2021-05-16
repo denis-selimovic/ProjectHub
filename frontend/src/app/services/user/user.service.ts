@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { CookieService } from '../cookie/cookie.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../token/token.service';
 import { LocalStorageService } from '../local-storage/local-storage.service';
@@ -35,13 +34,14 @@ export class UserService {
       }
     ).subscribe((body: any) => {
       this.tokenService.setToken(body.data.access_token, body.data.refresh_token, body.data.expires_in);
-      this.fetchUserDetails();
-      this.route.queryParams.subscribe((queryParams) => {
-        if (queryParams.return) {
-          this.router.navigate([queryParams.return]);
-        } else {
-          this.router.navigate(['dashboard']);
-        }
+      this.fetchUserDetails(() => {
+        this.route.queryParams.subscribe((queryParams) => {
+          if (queryParams.return) {
+            this.router.navigate([queryParams.return]);
+          } else {
+            this.router.navigate(['dashboard']);
+          }
+        });
       });
     },(error: any) => {errorHandler(error);});
   }
@@ -63,16 +63,20 @@ export class UserService {
       (error: any) => failure(error)
     );
   }
-  
-  fetchUserDetails(): void {
+
+  getCurrentUser(): User {
+    return this.storageService.retrieveObject("user");
+  }
+
+  private fetchUserDetails(successHandler: any): void {
     this.http.get(`${environment.api}/api/v1/users/user-details`,{
       headers: new HttpHeaders({
         Authorization: this.tokenService.getAccessToken()
       }),
     }).subscribe((response: any) => {
-      console.log(response);
       this.user = this.getUserFromResponseData(response.data);
       this.storageService.saveObject(this.user, "user");
+      successHandler();
     }, (error: any) => {
       console.log(error);
     });
