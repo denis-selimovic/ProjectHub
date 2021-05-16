@@ -50,7 +50,7 @@ export class UserService {
     this.tokenService.removeToken('accessToken');
     this.tokenService.removeToken('refreshToken');
     this.storageService.clearStorage();
-    this.router.navigate([""]);
+    this.router.navigate(["/login"]);
   }
 
   isLoggedIn(): boolean {
@@ -77,8 +77,6 @@ export class UserService {
       this.user = this.getUserFromResponseData(response.data);
       this.storageService.saveObject(this.user, "user");
       successHandler();
-    }, (error: any) => {
-      console.log(error);
     });
   }
 

@@ -18,6 +18,11 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    redirectTo: "/dashboard"
+  },
+  {
+    path: 'login',
+    pathMatch: 'full',
     component: LoginComponent
   },
   {

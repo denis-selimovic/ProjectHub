@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
 
   fullname(): string {
     const currentUser = this.userService.getCurrentUser();
+    if(!currentUser) return "";
     return `${currentUser.firstName} ${currentUser.lastName.charAt(0)}.`
   }
 
@@ -22,4 +23,7 @@ export class HeaderComponent implements OnInit {
     return this.userService.isLoggedIn();
   }
 
+  logout(): void {
+    this.userService.logout();
+  }
 }

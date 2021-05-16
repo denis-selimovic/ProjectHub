@@ -15,7 +15,7 @@ export class GuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!this.userService.isLoggedIn()) {
-      this.router.navigate([''], {
+      this.router.navigate(['login'], {
         queryParams: { return: state.url},
       });
       return false;

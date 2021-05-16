@@ -7,10 +7,8 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor(private userService: UserService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    const user = this.userService.getCurrentUser();
-    console.log(user);
   }
 }
