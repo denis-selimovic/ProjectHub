@@ -1,5 +1,5 @@
 <div class="list" *ngFor="let row of obs | async">
     <app-issue-item [issue]="row"></app-issue-item>
 </div>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons></mat-paginator>
 
