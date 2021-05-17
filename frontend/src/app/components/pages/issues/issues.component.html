@@ -2,8 +2,10 @@
     <div class="issues-page">
         <div class="page-content">
             <div id="create-btn">
-                <button class="form-button">Create issue</button>
+                <button class="form-button btn">Create issue</button>
             </div>
+            <app-issue-item></app-issue-item>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
 
     </div>

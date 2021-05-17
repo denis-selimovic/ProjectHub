@@ -38,6 +38,7 @@ import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
 import { EmailService } from "./services/email/email.service";
 import { IssuesComponent } from './components/pages/issues/issues.component';
+import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { IssuesComponent } from './components/pages/issues/issues.component';
     NotFoundComponent,
     DashboardComponent,
     ConfirmEmailComponent,
-    IssuesComponent
+    IssuesComponent,
+    IssueItemComponent
   ],
   imports: [
     BrowserModule,

@@ -37,6 +37,14 @@
       padding: 0;
   }
 
+  .btn {
+    margin-right: 0;
+  }
+
+  ::ng-deep .mat-paginator-container {
+    padding: 0;
+  }
+
   .controls {
     box-sizing: border-box;
     margin: 5px 0px 15px 0px;
@@ -62,7 +70,7 @@
 
   @media screen and (min-width: $screen-large) {
     .page-content {
-      width: 90%;
+      width: 60%;
     }
   }
 }
