@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Project } from 'src/app/models/Project';
 
 @Component({
@@ -8,10 +8,16 @@ import { Project } from 'src/app/models/Project';
 })
 export class ProjectItemComponent implements OnInit {
   @Input() project: Project;
+  @Output() newItemEvent  = new EventEmitter<String>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  removeProject(value: String): void {
+    //todo confirm deletion
+    this.newItemEvent.emit(value);
   }
 
 }

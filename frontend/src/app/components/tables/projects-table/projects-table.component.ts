@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild, EventEmitter} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs/internal/Observable';
@@ -32,6 +32,10 @@ export class ProjectsTableComponent implements AfterViewInit {
   ngOnDestroy(): void {
     if (this.dataSource) 
       this.dataSource.disconnect(); 
+  }
+
+  removeProjectFromTable(id: String): void {
+    this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
   }
 
 }
