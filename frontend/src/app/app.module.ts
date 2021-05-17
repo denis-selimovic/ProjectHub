@@ -40,6 +40,7 @@ import { EmailService } from "./services/email/email.service";
 import { IssuesComponent } from './components/pages/issues/issues.component';
 import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
 import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
+import { LocalStorageService } from './services/local-storage/local-storage.service';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { IssuesTableComponent } from './components/tables/issues-table/issues-ta
     GuardService,
     CookieService,
     TokenService,
-    EmailService
+    EmailService,
+    LocalStorageService
   ],
   bootstrap: [AppComponent]
 })

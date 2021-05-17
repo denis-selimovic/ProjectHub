@@ -9,6 +9,8 @@ spring:
       uri: ${CONFIG_SERVER_URL}
   config:
     import: "optional:configserver:"
+  main:
+    allow-bean-definition-overriding: true
   profiles:
     active: dev
 
