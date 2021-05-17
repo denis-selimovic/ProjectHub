@@ -2,7 +2,7 @@
     <div class="issues-page">
         <div class="page-content">
             <div id="create-btn">
-                <button class="form-button btn">Create issue</button>
+                <a class="form-button btn" routerLink="/new-issue">Create issue</a>
             </div>
             <app-issues-table [issues]="issues"></app-issues-table>
         </div>
