@@ -7,6 +7,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
+  projects: Array<Project>;
 
   constructor() {
    }
