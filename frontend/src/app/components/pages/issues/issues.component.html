@@ -4,7 +4,7 @@
             <div id="create-btn">
                 <button class="form-button btn">Create issue</button>
             </div>
-            <app-issue-item></app-issue-item>
+            <app-issues-table [issues]="issues"></app-issues-table>
             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
         </div>
 

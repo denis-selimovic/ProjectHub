@@ -39,6 +39,7 @@ import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-
 import { EmailService } from "./services/email/email.service";
 import { IssuesComponent } from './components/pages/issues/issues.component';
 import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
+import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { IssueItemComponent } from './components/items/issue-item/issue-item.com
     DashboardComponent,
     ConfirmEmailComponent,
     IssuesComponent,
-    IssueItemComponent
+    IssueItemComponent,
+    IssuesTableComponent
   ],
   imports: [
     BrowserModule,

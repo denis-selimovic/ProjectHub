@@ -10,6 +10,9 @@ export class IssuesComponent implements OnInit {
   issues: Array<Issue>;
 
   constructor() {
+   }
+
+  ngOnInit(): void {
     this.issues = [
       {
         id: "e7165476-b729-11eb-8529-0242ac130003", 
@@ -40,9 +43,5 @@ export class IssuesComponent implements OnInit {
         priority: "LOW"
       }
     ]
-   }
-
-  ngOnInit(): void {
   }
-
 }

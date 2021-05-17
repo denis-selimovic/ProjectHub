@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Issue } from 'src/app/models/Issue';
 
 @Component({
   selector: 'app-issue-item',
@@ -6,17 +7,30 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./issue-item.component.scss']
 })
 export class IssueItemComponent implements OnInit {
-  issue: any;
+  @Input() issue: Issue;
+  imageSrc: String;
 
   constructor() {
-    this.issue = {
-      name: "First issue",
-      description: "This is description",
-      priority: "HIGH"
-    }
    }
 
   ngOnInit(): void {
+    switch (this.issue.priority) {
+      case "CRITICAL":
+        this.imageSrc = "assets/critical.png";
+        break;
+      case "HIGH":
+        this.imageSrc = "assets/high.png";
+        break;
+      case "MEDIUM":
+        this.imageSrc = "assets/medium.png";
+        break;
+      case "LOW":
+        this.imageSrc = "assets/low.png";
+        break;
+      default:
+        this.imageSrc = "assets/undefined.png";
+        break;
+    }
   }
 
 }
