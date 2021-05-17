@@ -19,7 +19,9 @@ export class IssuesTableComponent implements AfterViewInit {
    }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   ngOnInit(): void {
