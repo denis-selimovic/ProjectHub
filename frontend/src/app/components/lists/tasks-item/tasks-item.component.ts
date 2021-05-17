@@ -20,16 +20,16 @@ export class TasksItemComponent implements OnInit {
     this.initials = this.task === undefined ? '' :firstLastName[0][0] + firstLastName[1][0];
     switch (this.task.type.type) {
       case "HIGH":
-        this.imageSrc = "../../../../assets/priority_high.png";        
+        this.imageSrc = "assets/priority_high.png";        
         break;
       case "MEDIUM":
-        this.imageSrc = "../../../../assets/priority_medium.png";        
+        this.imageSrc = "assets/priority_medium.png";        
         break;
       case "LOW":
-        this.imageSrc = "../../../../assets/priority_low.png";        
+        this.imageSrc = "assets/priority_low.png";        
         break;
       case "CRITICAL":
-        this.imageSrc = "../../../../assets/priority_critical.png";        
+        this.imageSrc = "assets/priority_critical.png";        
         break;
     }
   }

@@ -1,0 +1,22 @@
+@import "../../pages/task-details/task-details.component.scss";
+
+.comment {
+  box-sizing: border-box;
+  padding: 5px;
+  border: 1px solid $light-gray;
+  border-radius: $border-radius;
+  font-size: $fs-small;
+  background: $white;
+  // padding: 5px;
+  // height: fit-content;
+  margin-bottom: 20px;
+
+  .grid-container {
+    grid-template-columns: min-content auto;
+
+    .initials-container {
+      margin-right: 10px;
+      margin-top: 10px;
+    }
+  }
+}

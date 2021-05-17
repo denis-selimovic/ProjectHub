@@ -1,0 +1,35 @@
+<!-- comment: id, text, user {id, firstName, lastName, email}, task {id, ...} -->
+<div class="comment">
+ <div class="grid-container">
+ <div class="initials-container">
+  {{comment.user.firstName[0]}}{{comment.user.lastName[0]}}
+ </div>
+
+ <div class="comment-edit">
+  <form class="comment-form" [formGroup]="commentForm">
+   <textarea id="comment" formControlName="comment" rows="4" [readonly]="comment.user.id !== currentUser.id"></textarea>
+    <div class="error"
+     *ngIf="!commentForm?.get('comment')?.valid && (commentForm?.get('comment')?.dirty ||commentForm?.get('comment')?.touched)">
+     <div class="error" *ngIf="commentForm?.get('comment')?.errors?.required">
+      Comment is required
+     </div>
+     <div class="error" *ngIf="commentForm?.get('comment')?.errors?.maxlength">
+      Comment can't contain more than 255 characters
+     </div>
+    </div>
+  </form>
+  <div *ngIf="comment.user.id === currentUser.id" class="buttons-container">
+   <button class="red-button" (click)="deleteComment()">Delete</button>
+   <button class="red-button" (click)="commentForm?.get('comment').setValue(comment.text)">Clear changes</button>
+    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('comment')?.valid"
+     (click)="patchComment(commentForm?.get('comment').value)">Save changes</button>
+  </div>
+  <!-- <div class="buttons-container">
+   <button class="red-button">Cancel</button>
+   <button type="submit" class="blue-button" [disabled]="!commentForm?.get('comment')?.valid"
+    (click)="patchComment(commentForm?.get('comment').value)">Save</button>
+  </div> -->
+ </div>
+ </div>
+
+</div>

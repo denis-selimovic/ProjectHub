@@ -1,0 +1,98 @@
+<h2 style="margin-left: 20px;">{{project.name}}: {{task.name}}</h2>
+<div class="grid-container">
+  <form class="left-form" [formGroup]="leftForm">
+   <textarea rows="4" id="description" formControlName="description"></textarea>
+   <div class="error"
+    *ngIf="!leftForm?.get('description')?.valid && (leftForm?.get('description')?.dirty ||leftForm?.get('description')?.touched)">
+    <div class="error" *ngIf="leftForm?.get('description')?.errors?.required">
+     Description is required
+    </div>
+    <div class="error" *ngIf="leftForm?.get('description')?.errors?.maxlength">
+     Description can't contain more than 255 characters
+    </div>
+   </div>
+
+   <div class="buttons-container">
+    <button class="red-button" (click)="leftForm?.get('description').setValue(task.description)">Clear changes</button>
+    <button type="submit" class="blue-button" [disabled]="!leftForm?.get('description')?.valid" (click)="patchDescription(leftForm?.get('description').value)">Save</button>
+   </div>
+
+   <textarea rows="4" id="comment" formControlName="comment" placeholder="Enter your thoughts here..."></textarea>
+   <div class="error"
+    *ngIf="!leftForm?.get('comment')?.valid && (leftForm?.get('comment')?.dirty ||leftForm?.get('comment')?.touched)">
+    <div class="error" *ngIf="leftForm?.get('comment')?.errors?.required">
+     Comment is required
+    </div>
+    <div class="error" *ngIf="leftForm?.get('comment')?.errors?.maxlength">
+     Comment can't contain more than 255 characters
+    </div>
+   </div>
+
+   <div class="buttons-container">
+    <button type="submit" class="blue-button" [disabled]="!leftForm?.get('comment')?.valid"
+     (click)="addComment(leftForm?.get('comment').value)">Comment</button>
+   </div>
+
+   <div>
+     <app-comments-list [comments]="comments" [currentUser]="currentUser"></app-comments-list>
+   </div>
+  </form>
+
+  <div>
+    <form class="right-form" [formGroup]="rightForm" (ngSubmit)="patch2()">
+      
+      <div class="flex-container">
+      <div>
+        Reporter: {{currentUser.firstName}} {{currentUser.lastName}}
+      </div>
+      <div class="initials-container">
+        {{currentUser.firstName[0]}}{{currentUser.lastName[0]}}
+      </div>
+      </div>
+
+      <div class="flex-container">
+      <div>
+        Assignee:&nbsp;
+        <select formControlName="collaborator" [(ngModel)]="selectedCollaborator" name="collaborators">
+          <option [ngValue]="null">None</option>
+          <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
+            {{collaborator.firstName}} {{collaborator.lastName}}
+          </option>
+        </select>
+      </div>
+      <div *ngIf="selectedCollaborator!=null" class="initials-container">
+        {{selectedCollaborator.firstName[0]}}{{selectedCollaborator.lastName[0]}}
+      </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <select formControlName="priority" [(ngModel)]="selectedPriority" name="priorities">
+        <option [ngValue]="null" disabled>None</option>
+        <option *ngFor="let priority of priorities" [ngValue]="priority">
+          {{priority.priority}}
+        </option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <select formControlName="status" [(ngModel)]="selectedStatus" name="statuses">
+          <option [ngValue]="null" disabled>None</option>
+          <option *ngFor="let status of statuses" [ngValue]="status">
+            {{status.status}}
+          </option>
+        </select>
+      </div>
+
+      <div class="buttons-container">
+        <button type="submit" class="blue-button">Save</button>
+      </div>
+    </form>
+
+      <div class="buttons-container">
+        <button class="grey-button" (click)="subscribe()">Subscribe</button>
+      </div>
+      <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
+        <p>*By subscribing you agree to receiving notifications for given task</p>
+      </div>
+  </div>
+</div>

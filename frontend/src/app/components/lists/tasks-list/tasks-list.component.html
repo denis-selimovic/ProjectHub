@@ -1,6 +1,6 @@
 <div *ngIf="tasks.length > 0" >
 <div class="list" *ngFor="let task of tasks">
- <app-tasks-item [task]="task"></app-tasks-item>
+ <app-tasks-item routerLink="/tasks/details" [task]="task"></app-tasks-item>
 </div>
 </div>
 

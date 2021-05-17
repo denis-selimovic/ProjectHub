@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { LoginComponent } from './components/pages/login/login.component';
 import { HeaderComponent } from './components/layout/header/header.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginFormComponent } from './components/forms/login-form/login-form.component';
 import { ResetPasswordEmailComponent } from './components/pages/reset-password/reset-password-email/reset-password-email.component';
 import { ResetPassEmailFormComponent } from './components/forms/reset-password/reset-pass-email-form/reset-pass-email-form.component';
@@ -51,12 +51,16 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
 import { CollaboratorsTableComponent } from './components/tables/collaborators-table/collaborators-table.component';
 import { NewCollaboratorFormComponent } from './components/forms/new-collaborator-form/new-collaborator-form.component';
-import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
 import { TasksComponent } from './components/pages/tasks/tasks.component';
 import { TasksListComponent } from './components/lists/tasks-list/tasks-list.component';
 import { TasksItemComponent } from './components/lists/tasks-item/tasks-item.component';
-import { NewTaskModalComponent } from './components/modals/new-task-modal/new-task-modal.component';
+import { NewTaskModalComponent } from './components/dialogs/new-task-modal/new-task-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TaskDetailsComponent } from './components/pages/task-details/task-details.component';
+import {MatSelectModule} from '@angular/material/select';
+import { CommentsListComponent } from './components/lists/comments-list/comments-list.component';
+import { CommentsItemComponent } from './components/lists/comments-item/comments-item.component';
+import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
 
 @NgModule({
   declarations: [
@@ -102,12 +106,17 @@ import { MatDialogModule } from '@angular/material/dialog';
     TasksComponent,
     TasksListComponent,
     TasksItemComponent,
-    NewTaskModalComponent
+    NewTaskModalComponent,
+    TaskDetailsComponent,
+    CommentsListComponent,
+    CommentsItemComponent,
+    ConfirmDeletionComponent
   ],
   imports: [
     BrowserModule,
     CommonModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     MatInputModule,
     BrowserAnimationsModule,
@@ -119,7 +128,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MDBBootstrapModule.forRoot(),
     NgbModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
   ],
   providers: [
     UserService,
@@ -132,6 +142,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatPaginatorModule,
     MatDialogModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ConfirmDeletionComponent,
+    NewTaskModalComponent
+  ]
 })
 export class AppModule { }

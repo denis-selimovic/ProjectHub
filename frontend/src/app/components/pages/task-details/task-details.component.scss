@@ -1,0 +1,127 @@
+@import "../../../styles/variables.scss";
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .left-form,
+  .right-form,
+  .white-container,
+  .flex-container,
+  textarea {
+    box-sizing: border-box;
+    border: 1px solid $light-gray;
+    border-radius: $border-radius;
+  }
+
+  textarea {
+    margin: 5px 0px 5px 0px;
+    width: 100%;
+    padding: 0.75em 5px;
+    resize: none;
+    color: $black;
+  }
+
+  .error {
+    color: $red;
+  }
+
+  .left-form,
+  .right-form {
+    background: $light-gray;
+    padding: 10px 10px;
+    margin: 20px;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+
+    .blue-button,
+    .red-button,
+    .grey-button {
+      width: fit-content;
+      cursor: pointer;
+      font-size: $fs-small;
+      color: $white;
+      border: transparent;
+      border-radius: $border-radius;
+      margin: 10px 5px 10px 0px;
+      padding: 5px;
+    }
+
+    .blue-button {
+      background: $blue;
+
+      &:disabled {
+        background: $dark-gray;
+      }
+    }
+
+    .red-button {
+      background: $red;
+    }
+
+    .grey-button {
+      background: $light-gray;
+      color: $black;
+      margin-right: 20px;
+    }
+  }
+
+  .white-container,
+  .flex-container {
+    background: $white;
+    padding: 5px;
+    height: fit-content;
+    margin-bottom: 20px;
+  }
+
+  .right-form {
+    font-size: $fs-small;
+    color: $black;
+
+    .flex-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    select {
+      box-sizing: border-box;
+      padding: 5px;
+      border: 1px solid $light-gray;
+      border-radius: $border-radius;
+      font-size: $fs-small;
+    }
+  }
+
+  .initials-container {
+    width: fit-content;
+    height: fit-content;
+    padding: 4px;
+    background-color: #bbb;
+    border-radius: 50%;
+  }
+
+  p {
+    color: $dark-gray;
+    font-size: $fs-small;
+  }
+}
+
+@media screen and (max-width: $screen-small) {
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+  }
+}
+
+// @media screen and (max-width: $screen-medium) {
+//   .grid-container {
+//     display: flex;
+//     flex-direction: column;
+//     row-gap: 20px;
+//   }
+// }

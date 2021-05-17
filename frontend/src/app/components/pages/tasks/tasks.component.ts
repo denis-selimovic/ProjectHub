@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Task } from 'src/app/models/Task';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { NewTaskModalComponent } from '../../modals/new-task-modal/new-task-modal.component';
+import { NewTaskModalComponent } from '../../dialogs/new-task-modal/new-task-modal.component';
 
 @Component({
   selector: 'app-tasks',
