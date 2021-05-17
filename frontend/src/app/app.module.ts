@@ -38,6 +38,7 @@ import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
 import {EmailService} from "./services/email/email.service";
 import { LocalStorageService } from './services/local-storage/local-storage.service';
+import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { LocalStorageService } from './services/local-storage/local-storage.serv
     RegisterFormComponent,
     NotFoundComponent,
     DashboardComponent,
-    ConfirmEmailComponent
+    ConfirmEmailComponent,
+    ProjectItemComponent
   ],
   imports: [
     BrowserModule,
