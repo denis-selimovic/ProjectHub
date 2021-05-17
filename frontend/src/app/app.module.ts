@@ -37,6 +37,7 @@ import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
 import {EmailService} from "./services/email/email.service";
+import { LocalStorageService } from './services/local-storage/local-storage.service';
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import {EmailService} from "./services/email/email.service";
     GuardService,
     CookieService,
     TokenService,
-    EmailService
+    EmailService,
+    LocalStorageService
   ],
   bootstrap: [AppComponent]
 })
