@@ -13,6 +13,7 @@ import { ProjectsComponent } from './components/pages/projects/projects.componen
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { ConfirmEmailComponent } from "./components/pages/confirm-email/confirm-email.component";
 import { GuardService } from './services/guard/guard.service';
+import { IssuesComponent } from './components/pages/issues/issues.component';
 
 const routes: Routes = [
   {
@@ -71,6 +72,10 @@ const routes: Routes = [
     path: 'confirm-email/:token',
     pathMatch: 'full',
     component: ConfirmEmailComponent
+  },
+  {
+    path: 'issues',
+    component: IssuesComponent
   },
   {
     path: '**',

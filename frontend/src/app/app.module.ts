@@ -36,7 +36,8 @@ import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
-import {EmailService} from "./services/email/email.service";
+import { EmailService } from "./services/email/email.service";
+import { IssuesComponent } from './components/pages/issues/issues.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import {EmailService} from "./services/email/email.service";
     RegisterFormComponent,
     NotFoundComponent,
     DashboardComponent,
-    ConfirmEmailComponent
+    ConfirmEmailComponent,
+    IssuesComponent
   ],
   imports: [
     BrowserModule,
