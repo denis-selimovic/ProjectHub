@@ -21,4 +21,23 @@
     margin: 0;
     font-weight: bold;
   }
+
+  .user-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .sign-out {
+      display: inline;
+      margin-inline-start: 20px;
+      color: $white;
+      background: transparent;
+      border: transparent;
+      cursor: pointer;
+      padding: 0;
+      &:focus,
+      &:hover {
+        outline: transparent;
+      }
+    }
+  }
 }
