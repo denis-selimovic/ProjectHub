@@ -1,4 +1,10 @@
+<head>
+    <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css" type='text/css'>
+</head>
 <header class="header">
     <a routerLink="/dashboard">Project Hub</a>
-    <p *ngIf="isUserLoggedIn()">Hello {{fullname()}}</p>
+    <div *ngIf="isUserLoggedIn()" class="user-data">
+        <p>Hello {{fullname()}}</p>
+        <button (click)="logout()" class="sign-out"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
 </header>
