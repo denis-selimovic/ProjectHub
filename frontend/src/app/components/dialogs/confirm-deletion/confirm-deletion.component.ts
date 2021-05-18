@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-deletion',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./confirm-deletion.component.scss']
 })
 export class ConfirmDeletionComponent implements OnInit {
+  @Input() message: String;
 
   constructor() { }
 

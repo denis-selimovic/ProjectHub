@@ -21,7 +21,7 @@ export class CollaboratorsComponent implements OnInit {
       name: "NWT Project"
     }
 
-     this.owner = {
+    this.owner = {
       id: "12e08bf2-b4b2-4003-9288-507136ab459a",
       email: "ajsahaj@gmail.com",
       firstName: "Ajsa",
@@ -48,6 +48,14 @@ export class CollaboratorsComponent implements OnInit {
         lastName: "Selimovic"
       }
     ]
+  }
+
+  deleteCollaborator(id: any) {
+    this.collaborators = this.collaborators.filter(i => i.id !== id);
+  }
+
+  addCollaborator(collaborator: User) {
+    this.collaborators.push(collaborator);
   }
 
 }
