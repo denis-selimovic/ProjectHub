@@ -4,17 +4,10 @@
 <div class="body">
     <div class="projects-page">
         <div class="page-content">
-
-            <app-projects-table></app-projects-table>
-
-            <div class="controls">
-                <div class="left">
-                    <span><button class="form-button">Add a new project</button></span>
-                </div>
-                <div class="right">
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                </div>
+            <div id="create-btn">
+                <a class="form-button btn" routerLink="/new-project">Add a new project</a>
             </div>
+            <app-projects-table [projects]="projects"></app-projects-table>
         </div>
     </div>
 </div>
