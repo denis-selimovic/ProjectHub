@@ -11,7 +11,6 @@
     display: flex;
     justify-content: space-between;
     background-color: $light-light-gray;
-    align-items: center;
 }
 
 .form-button {
@@ -28,7 +27,7 @@
       background: $light-gray;
     }
 }
-
+  
 #projectName {
     margin: 0px;
     height: 100%;

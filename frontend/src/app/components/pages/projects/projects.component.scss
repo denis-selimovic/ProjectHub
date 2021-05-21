@@ -30,15 +30,15 @@
     }
   }
 
-  .controls {
-    box-sizing: border-box;
-    margin: 5px 0px 15px 0px;
-    width: 100%;
-    background-color: $white;
-    border: none;
-    padding: 0px;
+  #create-btn {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 0;
+  }
+
+  .btn {
+    margin-right: 0;
   }
 
   ::ng-deep .mat-paginator-container {

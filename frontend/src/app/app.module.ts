@@ -18,6 +18,7 @@ import { ResetPasswordNewComponent } from './components/pages/reset-password/res
 import { ResetPassNewFormComponent } from './components/forms/reset-password/reset-pass-new-form/reset-pass-new-form.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { RegisterFormComponent } from './components/forms/register-form/register-form.component';
+import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -41,6 +42,7 @@ import { IssuesComponent } from './components/pages/issues/issues.component';
 import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
 import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
+import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,7 @@ import { LocalStorageService } from './services/local-storage/local-storage.serv
     ResetPassNewFormComponent,
     RegisterComponent,
     RegisterFormComponent,
+    NavbarComponent,
     NewTaskFormComponent,
     NewTaskComponent,
     NewProjectFormComponent,
@@ -73,7 +76,8 @@ import { LocalStorageService } from './services/local-storage/local-storage.serv
     ConfirmEmailComponent,
     IssuesComponent,
     IssueItemComponent,
-    IssuesTableComponent
+    IssuesTableComponent,
+    ProjectItemComponent
   ],
   imports: [
     BrowserModule,
