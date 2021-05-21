@@ -1,0 +1,60 @@
+@import "/src/app/styles/global.scss";
+@import "/src/app/styles/typography.scss";
+
+.one-project {
+    box-sizing: border-box;
+    margin: 5px 0px 15px 0px;
+    width: 100%;
+    padding: 10px 10px;
+    border: 1px solid $light-gray;
+    border-radius: $border-radius;
+    display: flex;
+    justify-content: space-between;
+    background-color: $light-light-gray;
+    align-items: center;
+}
+
+.form-button {
+    cursor: pointer;
+    font-size: $fs-small;
+    padding: 0.5em 0.5em;
+    background: $blue;
+    color: $white;
+    border: transparent;
+    border-radius: $border-radius;
+    margin: 10px 10px 10px 10px;
+
+    &:disabled {
+      background: $light-gray;
+    }
+}
+
+#projectName {
+    margin: 0px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $fs-small;
+}
+
+@media screen and (max-width: $screen-small) {
+    .one-project {
+      flex-direction: column;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-button {
+      width: 150px;
+    }
+
+    #projectName {
+      margin: 10px;
+    }
+}

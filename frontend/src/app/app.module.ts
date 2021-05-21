@@ -37,7 +37,10 @@ import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
-import {EmailService} from "./services/email/email.service";
+import { EmailService } from "./services/email/email.service";
+import { IssuesComponent } from './components/pages/issues/issues.component';
+import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
+import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 
@@ -71,6 +74,9 @@ import { ProjectItemComponent } from './components/items/project-item/project-it
     NotFoundComponent,
     DashboardComponent,
     ConfirmEmailComponent,
+    IssuesComponent,
+    IssueItemComponent,
+    IssuesTableComponent,
     ProjectItemComponent
   ],
   imports: [

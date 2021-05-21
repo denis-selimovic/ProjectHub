@@ -2,7 +2,7 @@
 @import "/src/app/styles/typography.scss";
 @import "/src/app/styles/forms.scss";
 
-.projects-page {
+.issues-page {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -31,10 +31,10 @@
   }
 
   #create-btn {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    padding: 0;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      padding: 0;
   }
 
   .btn {
@@ -42,7 +42,18 @@
   }
 
   ::ng-deep .mat-paginator-container {
-    padding: 0;
+    margin-bottom: 30px;
+  }
+
+  .controls {
+    box-sizing: border-box;
+    margin: 5px 0px 15px 0px;
+    width: 100%;
+    background-color: $white;
+    border: none;
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
   }
 
   @media screen and (max-width: $screen-small) {
