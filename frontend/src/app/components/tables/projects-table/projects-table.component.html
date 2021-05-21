@@ -1,4 +1,12 @@
-<div class="list" *ngFor="let row of obs | async">
-    <app-project-item [project]="row" (newItemEvent)="removeProjectFromTable($event)"></app-project-item>
+<div class="one-project" *ngFor="let project of projects">
+    <div class="left">
+        <span><h5 id="projectName">{{project?.name}}</h5></span>
+    </div>
+    <div class="right">
+        <span><button class="form-button">Collaborators</button></span>
+        <span><button class="form-button">Tasks</button></span>
+        <span><button class="form-button">Issues</button></span>
+        <span><i class='far fa-trash-alt fa-lg'></i></span>
+    </div>
 </div>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

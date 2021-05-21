@@ -9,10 +9,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 20px;
+  padding: 0 20px;
 
   .page-content {
-    margin: 0px;
+    margin: 20px 0 0 0;
   }
 
   .form-button {
@@ -23,7 +23,7 @@
     color: $white;
     border: transparent;
     border-radius: $border-radius;
-    margin: 10px 10px 10px 10px;
+    margin: 0 10px 10px 10px;
 
     &:disabled {
       background: $light-gray;
@@ -48,6 +48,11 @@
   @media screen and (max-width: $screen-small) {
     .page-content {
       width: 80%;
+    }
+
+    .form-button {
+      min-width: 80px;
+      max-height: 70px;
     }
   }
 
