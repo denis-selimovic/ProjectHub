@@ -29,4 +29,15 @@ export class ProjectService {
       (err: any) => error(err)
     );
   }
+
+  createProject(form: any, callback: any, error: any): any {
+    this.http.post(`${environment.api}/api/v1/projects`, form, {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data): any => callback(data),
+      (err: any) => error(err)
+    );
+  }
 }
