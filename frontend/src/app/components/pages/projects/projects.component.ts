@@ -1,8 +1,8 @@
 import { PageEvent } from '@angular/material/paginator';
 import { Project, ProjectService } from '../../../services/project/project.service';
 import {Component, OnInit} from '@angular/core';
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {NewProjectComponent} from "../new-project/new-project.component";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NewProjectComponent} from '../new-project/new-project.component';
 
 @Component({
   selector: 'app-projects',
@@ -15,6 +15,7 @@ export class ProjectsComponent implements OnInit {
   size = 5;
   projects: Array<Project> = [];
   pageOptions = [5, 10, 20];
+  err: string | null = null;
 
   constructor(private projectService: ProjectService, private modal: NgbModal) { }
 
@@ -39,7 +40,7 @@ export class ProjectsComponent implements OnInit {
   loadProjects(): any {
     this.projectService.getProjects('owner', this.page, this.size,
       (data: any) => this.onProjectsLoad(data),
-      () => {}
+      () => this.err = 'Error while loading data. Please try again later.'
     );
   }
 

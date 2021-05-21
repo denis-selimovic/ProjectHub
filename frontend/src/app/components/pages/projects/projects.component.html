@@ -4,7 +4,10 @@
 <div class="body">
     <div class="projects-page">
         <div class="page-content">
-
+            <div class="message-container">
+              <h3 class="info message" *ngIf="projectNum == 0">You don't have any projects. Create new project below.</h3>
+              <h3 class="error message" *ngIf="err">{{err}}</h3>
+            </div>
             <app-projects-table [projects]="projects"></app-projects-table>
 
             <div class="controls">

@@ -13,6 +13,25 @@
 
   .page-content {
     margin: 20px 0 0 0;
+
+    .message-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .message {
+      font-size: $fs-medium;
+
+    }
+
+    .info {
+      color: $blue;
+    }
+
+    .error {
+      color: $red;
+    }
   }
 
   .form-button {
