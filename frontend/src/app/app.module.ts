@@ -43,8 +43,9 @@ import { IssueItemComponent } from './components/items/issue-item/issue-item.com
 import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectDetailsComponent } from './components/pages/project-details/project-details.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     IssuesComponent,
     IssueItemComponent,
     IssuesTableComponent,
-    ProjectItemComponent
+    ProjectItemComponent,
+    ProjectDetailsComponent
   ],
   imports: [
     BrowserModule,
