@@ -44,6 +44,7 @@ import { IssuesTableComponent } from './components/tables/issues-table/issues-ta
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 import {CommonModule} from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import {CommonModule} from '@angular/common';
     NoopAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    NgbModule
   ],
   providers: [
     UserService,

@@ -1,1 +1,11 @@
 @import "/src/app/styles/forms.scss";
+
+.new-project {
+  .form-content {
+    border: 0;
+  }
+
+  .form-button {
+    font-size: $fs-medium;
+  }
+}

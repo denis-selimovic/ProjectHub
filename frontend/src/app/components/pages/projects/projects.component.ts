@@ -1,6 +1,8 @@
 import { PageEvent } from '@angular/material/paginator';
 import { Project, ProjectService } from '../../../services/project/project.service';
 import {Component, OnInit} from '@angular/core';
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NewProjectComponent} from "../new-project/new-project.component";
 
 @Component({
   selector: 'app-projects',
@@ -14,7 +16,7 @@ export class ProjectsComponent implements OnInit {
   projects: Array<Project> = [];
   pageOptions = [5, 10, 20];
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private projectService: ProjectService, private modal: NgbModal) { }
 
   ngOnInit(): void {
     this.loadProjects();
@@ -39,5 +41,9 @@ export class ProjectsComponent implements OnInit {
       (data: any) => this.onProjectsLoad(data),
       () => {}
     );
+  }
+
+  createProject(): any {
+    const modal = this.modal.open(NewProjectComponent, { size: 'xl' });
   }
 }

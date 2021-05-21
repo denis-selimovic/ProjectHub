@@ -9,7 +9,7 @@
 
             <div class="controls">
                 <div class="left">
-                    <span><button class="form-button">New project</button></span>
+                    <span><button class="form-button" (click)="createProject()">New project</button></span>
                 </div>
                 <div class="right">
                     <mat-paginator [pageSizeOptions]="pageOptions" (page)="paginate($event)" [length]="projectNum"></mat-paginator>
@@ -19,3 +19,4 @@
         </div>
     </div>
 </div>
+<template ngbModalContainer></template>

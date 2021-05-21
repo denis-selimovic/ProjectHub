@@ -57,10 +57,6 @@ const routes: Routes = [
     component: NewTaskComponent
   },
   {
-    path: 'new-project',
-    component: NewProjectComponent
-  },
-  {
     path: 'new-issue',
     component: NewIssueComponent
   },
