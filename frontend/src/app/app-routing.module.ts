@@ -7,13 +7,12 @@ import { ResetPasswordNewComponent } from './components/pages/reset-password/res
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { RegisterComponent } from './components/pages/register/register.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
-import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueComponent } from './components/pages/new-issue/new-issue.component';
-import { ProjectsComponent } from './components/pages/projects/projects.component';
 import { DashboardComponent } from './components/pages/dashboard/dashboard.component';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
 import { GuardService } from './services/guard/guard.service';
 import { IssuesComponent } from './components/pages/issues/issues.component';
+import {ProjectDetailsComponent} from './components/pages/project-details/project-details.component';
 
 const routes: Routes = [
   {
@@ -66,8 +65,9 @@ const routes: Routes = [
     component: NotFoundComponent
   },
   {
-    path: 'projects',
-    component: ProjectsComponent
+    path: 'projects/:id',
+    component: ProjectDetailsComponent,
+    canActivate: [GuardService]
   },
   {
     path: 'confirm-email/:token',
