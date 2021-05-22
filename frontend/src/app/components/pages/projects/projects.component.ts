@@ -37,7 +37,7 @@ export class ProjectsComponent implements OnInit {
 
   onProjectsLoad(data: any): any {
     this.projects = data.data;
-    this.projectNum = this.projects.length;
+    this.projectNum = data.metadata.total_elements;
     if (this.projectNum === 0) {
       this.title = (this.type === 'owner') ? 'You don\'t own any projects. Create new project here' : 'You don\'t collaborate on any project';
     }

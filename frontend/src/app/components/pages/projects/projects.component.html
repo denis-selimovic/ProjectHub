@@ -4,16 +4,15 @@
 <div class="body">
     <div class="projects-page">
         <div class="page-content">
-            <div class="left">
-              <span *ngIf="type === 'owner'"><button class="form-button" (click)="createProject()">New project</button></span>
-            </div>
-
             <app-projects-table  [readonly]="type !== 'owner'" [title]="title" [projects]="projects"
                                  (projectDelete)="onProjectDelete()"></app-projects-table>
             <div class="controls">
                 <div class="right">
                     <mat-paginator [pageSizeOptions]="pageOptions" (page)="paginate($event)" [length]="projectNum"></mat-paginator>
                 </div>
+            </div>
+            <div class="new-project-btn">
+              <span *ngIf="type === 'owner'"><button class="form-button" (click)="createProject()">New project</button></span>
             </div>
     </div>
 </div>
