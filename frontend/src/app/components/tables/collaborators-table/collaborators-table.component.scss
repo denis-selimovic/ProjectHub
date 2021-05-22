@@ -1,0 +1,18 @@
+@import "/src/app/styles/variables.scss";
+
+.mat-elevation-z8 {
+  margin: 40px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+
+    td {
+      font-size: $fs-small;
+    }
+  }
+
+  mat-paginator {
+    font-size: $fs-small;
+  }
+}

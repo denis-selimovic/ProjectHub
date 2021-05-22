@@ -1,0 +1,24 @@
+@import "/src/app/styles/forms.scss";
+@import "/src/app/styles/typography.scss";
+
+.new-collaborator-page {
+  .title {
+    text-align: center;
+
+    h2 {
+      color: $blue;
+    }
+  }
+
+  @media screen and (min-width: $screen-medium) {
+    .page-content {
+      width: 70%;
+    }
+  }
+
+  @media screen and (min-width: $screen-large) {
+    .page-content {
+      width: 50%;
+    }
+  }
+}
