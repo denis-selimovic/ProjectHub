@@ -27,7 +27,7 @@
                     {{hideConf ? 'visibility' : 'visibility_off'}}
                 </i></span>
             </div>
-            <div class="error" 
+            <div class="error"
             *ngIf="!resetPassNewForm?.get('confirmPassword')?.valid && (resetPassNewForm?.get('confirmPassword')?.dirty ||resetPassNewForm?.get('confirmPassword')?.touched)">
                 <div class="error" *ngIf="resetPassNewForm?.get('confirmPassword')?.errors?.required">
                    Confirm password is required
@@ -36,11 +36,17 @@
         </div>
         </div>
 
-        <a routerLink="/"><button type="submit" [disabled]="resetPassNewForm.invalid" class="form-button">Change password</button></a>
+      <button type="submit" [disabled]="resetPassNewForm.invalid" class="form-button" (click)="submitForm()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+        <span *ngIf="!loader">Change password</span>
+      </button>
        <div class="form-info-text">
-        <p><a routerLink="/login" class="redirect-link">Log In</a></p>
-        <p> or </p>
-        <p><a routerLink="/register" class="redirect-link">Register</a></p>
+         <p>{{message}}</p>
+         <p class="error">{{error}}</p>
+         <br/>
+         <p><a routerLink="/login" class="redirect-link">Log In</a></p>
+         <p> or </p>
+         <p><a routerLink="/register" class="redirect-link">Register</a></p>
        </div>
 
     </div>

@@ -6,16 +6,21 @@
         <div class="input-container">
             <label for="email" class="input-label">Email address:</label>
             <input type="email" id="email" formControlName="email" class="input-field">
-            <div class="error" 
+            <div class="error"
             *ngIf="resetPassEmailForm?.get('email')?.touched && resetPassEmailForm?.get('email')?.invalid">
                 Valid email is required
             </div>
        </div>
-       <a routerLink="/reset-password-code"><button type="submit" [disabled]="resetPassEmailForm.invalid" class="form-button">Reset password</button></a>
+       <button type="submit" [disabled]="resetPassEmailForm.invalid" class="form-button" (click)="requestPasswordReset()">
+         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+         <span *ngIf="!loader">Reset password</span>
+       </button>
        <div class="form-info-text">
-        <p><a routerLink="/login" class="redirect-link">Log In</a></p>
-        <p> or </p>
-        <p><a routerLink="/register" class="redirect-link">Register</a></p>
+         <p>{{message}}</p>
+         <br/>
+         <p><a routerLink="/login" class="redirect-link">Log In</a></p>
+         <p> or </p>
+         <p><a routerLink="/register" class="redirect-link">Register</a></p>
        </div>
     </div>
 </form>
