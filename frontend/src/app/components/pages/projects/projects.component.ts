@@ -52,4 +52,8 @@ export class ProjectsComponent implements OnInit {
       }
     }, err => {});
   }
+
+  onProjectDelete(): any {
+    this.loadProjects();
+  }
 }

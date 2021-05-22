@@ -6,7 +6,7 @@
         <span><button class="form-button" routerLink="/projects/{{project.id}}/collaborators">Collaborators</button></span>
         <span><button class="form-button" routerLink="/projects/{{project.id}}/tasks">Tasks</button></span>
         <span><button class="form-button" routerLink="/projects/{{project.id}}/issues">Issues</button></span>
-        <span><i class='far fa-trash-alt fa-lg'></i></span>
+        <span><i class='far fa-trash-alt fa-lg delete-project' (click)="deleteProject($event, project.id)"></i></span>
     </div>
 </div>
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<template ngbModalContainer></template>

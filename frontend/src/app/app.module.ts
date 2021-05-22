@@ -46,6 +46,7 @@ import { ProjectItemComponent } from './components/items/project-item/project-it
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectDetailsComponent } from './components/pages/project-details/project-details.component';
+import { ModalComponent } from './components/modal/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { ProjectDetailsComponent } from './components/pages/project-details/proj
     IssueItemComponent,
     IssuesTableComponent,
     ProjectItemComponent,
-    ProjectDetailsComponent
+    ProjectDetailsComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
