@@ -82,7 +82,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     RegisterComponent,
     RegisterFormComponent,
     NotFoundComponent,
-<<<<<<< HEAD
     DashboardComponent,
     ConfirmEmailComponent,
     IssuesComponent,
@@ -90,14 +89,12 @@ import {MatDialogModule} from '@angular/material/dialog';
     IssuesTableComponent,
     ProjectItemComponent,
     ProjectDetailsComponent,
-    ModalComponent
-=======
+    ModalComponent,
     ProjectDetailsComponent,
     CollaboratorsComponent,
     CollaboratorsTableComponent,
     NewCollaboratorFormComponent,
     ConfirmDeletionComponent,
->>>>>>> Added page that shows project collaborators
   ],
   imports: [
     BrowserModule,
@@ -107,7 +104,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatInputModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
-<<<<<<< HEAD
     MatPaginatorModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
@@ -119,12 +115,10 @@ import {MatDialogModule} from '@angular/material/dialog';
     CookieService,
     TokenService,
     EmailService,
-    LocalStorageService
-=======
+    LocalStorageService,
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule
->>>>>>> Added page that shows project collaborators
   ],
   bootstrap: [AppComponent]
 })
