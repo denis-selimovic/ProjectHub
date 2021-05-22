@@ -1,8 +1,8 @@
 import { PageEvent } from '@angular/material/paginator';
 import { Project, ProjectService } from '../../../services/project/project.service';
-import {Component, OnInit} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NewProjectComponent} from '../new-project/new-project.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NewProjectComponent } from '../new-project/new-project.component';
 
 @Component({
   selector: 'app-projects',
@@ -10,12 +10,15 @@ import {NewProjectComponent} from '../new-project/new-project.component';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
+
+  @Input() type: string;
+  @Input() title: string;
+
   projectNum = 0;
   page = 0;
   size = 5;
   projects: Array<Project> = [];
   pageOptions = [5, 10, 20];
-  err: string | null = null;
 
   constructor(private projectService: ProjectService, private modal: NgbModal) { }
 
@@ -33,14 +36,17 @@ export class ProjectsComponent implements OnInit {
   }
 
   onProjectsLoad(data: any): any {
-    this.projectNum = data.metadata.total_elements;
     this.projects = data.data;
+    this.projectNum = data.metadata.total_elements;
+    if (this.projectNum === 0) {
+      this.title = (this.type === 'owner') ? 'You don\'t own any projects. Create new project here' : 'You don\'t collaborate on any project';
+    }
   }
 
   loadProjects(): any {
-    this.projectService.getProjects('owner', this.page, this.size,
+    this.projectService.getProjects(this.type, this.page, this.size,
       (data: any) => this.onProjectsLoad(data),
-      () => this.err = 'Error while loading data. Please try again later.'
+      () => this.title = 'Error while loading data. Please try again later.'
     );
   }
 

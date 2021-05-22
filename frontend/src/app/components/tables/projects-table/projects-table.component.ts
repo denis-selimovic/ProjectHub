@@ -10,6 +10,8 @@ import {ProjectService} from '../../../services/project/project.service';
 })
 export class ProjectsTableComponent implements OnInit {
 
+  @Input() title: string;
+  @Input() readonly = false;
   @Input() projects: any = [];
   @Output() projectDelete: EventEmitter<any> = new EventEmitter<any>();
 

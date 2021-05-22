@@ -34,6 +34,18 @@
   cursor: pointer;
 }
 
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    color: $blue;
+    font-weight: bolder !important;
+    font-size: $fs-large;
+  }
+}
+
 #projectName {
     margin: 0px;
     height: 100%;
