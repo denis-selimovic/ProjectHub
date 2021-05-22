@@ -1,0 +1,9 @@
+<div *ngIf="comments.length > 0">
+ <div class="list" *ngFor="let comment of comments">
+  <app-comments-item (onDelete)="deleteComment(comment)"  [comment]="comment" [currentUser]="currentUser"></app-comments-item>
+ </div>
+</div>
+
+<div class="empty-list" *ngIf="comments.length == 0">
+ <p>No records found</p>
+</div>

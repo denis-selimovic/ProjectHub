@@ -14,6 +14,8 @@ import { GuardService } from './services/guard/guard.service';
 import { IssuesComponent } from './components/pages/issues/issues.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
+import { TasksComponent } from './components/pages/tasks/tasks.component';
+import { TaskDetailsComponent } from './components/pages/task-details/task-details.component';
 
 const routes: Routes = [
   {
@@ -84,7 +86,17 @@ const routes: Routes = [
     component: IssuesComponent
   },
   {
-    path: '**',
+    path: 'tasks',
+    pathMatch: 'full',
+    component: TasksComponent
+  },
+  {
+    path: 'tasks/details',
+    pathMatch: 'full',
+    component: TaskDetailsComponent
+  },
+  {
+    path: '**', 
     redirectTo: '/not-found'
   }
 ];
