@@ -22,7 +22,7 @@ import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { NewTaskFormComponent } from './components/forms/new-task-form/new-task-form.component';
 import { NewTaskComponent } from './components/pages/new-task/new-task.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MDBBootstrapModule } from "angular-bootstrap-md";
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { NewProjectFormComponent } from './components/forms/new-project-form/new-project-form.component';
 import { NewProjectComponent } from './components/pages/new-project/new-project.component';
 import { NewIssueFormComponent } from './components/forms/new-issue-form/new-issue-form.component';
@@ -37,12 +37,16 @@ import { GuardService } from './services/guard/guard.service';
 import { CookieService } from './services/cookie/cookie.service';
 import { TokenService } from './services/token/token.service';
 import { ConfirmEmailComponent } from './components/pages/confirm-email/confirm-email.component';
-import { EmailService } from "./services/email/email.service";
+import { EmailService } from './services/email/email.service';
 import { IssuesComponent } from './components/pages/issues/issues.component';
 import { IssueItemComponent } from './components/items/issue-item/issue-item.component';
 import { IssuesTableComponent } from './components/tables/issues-table/issues-table.component';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectDetailsComponent } from './components/pages/project-details/project-details.component';
+import { ModalComponent } from './components/modal/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -77,10 +81,13 @@ import { ProjectItemComponent } from './components/items/project-item/project-it
     IssuesComponent,
     IssueItemComponent,
     IssuesTableComponent,
-    ProjectItemComponent
+    ProjectItemComponent,
+    ProjectDetailsComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -88,7 +95,8 @@ import { ProjectItemComponent } from './components/items/project-item/project-it
     NoopAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    NgbModule
   ],
   providers: [
     UserService,

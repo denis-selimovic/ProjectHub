@@ -9,10 +9,29 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 20px;
+  padding: 0 20px;
 
   .page-content {
-    margin: 0px;
+    margin: 20px 0 0 0;
+
+    .message-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .message {
+      font-size: $fs-medium;
+
+    }
+
+    .info {
+      color: $blue;
+    }
+
+    .error {
+      color: $red;
+    }
   }
 
   .form-button {
@@ -23,7 +42,7 @@
     color: $white;
     border: transparent;
     border-radius: $border-radius;
-    margin: 10px 10px 10px 10px;
+    margin: 0 10px 10px 10px;
 
     &:disabled {
       background: $light-gray;
@@ -49,6 +68,11 @@
     .page-content {
       width: 80%;
     }
+
+    .form-button {
+      min-width: 80px;
+      max-height: 70px;
+    }
   }
 
   @media screen and (min-width: $screen-medium) {
@@ -62,4 +86,7 @@
       width: 60%;
     }
   }
+}
+
+::ng-deep .mat-paginator-page-size-select {
 }

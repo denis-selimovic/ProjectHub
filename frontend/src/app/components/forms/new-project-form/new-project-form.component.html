@@ -3,18 +3,24 @@
   <h2>New project</h2>
   <div class="input-container">
    <label for="project-name" class="input-label">Project name*</label>
-   <input id="project-name" formControlName="projectName" class="input-field">
+   <input id="project-name" formControlName="name" class="input-field">
    <div class="error"
-    *ngIf="!newProjectForm?.get('projectName')?.valid && (newProjectForm?.get('projectName')?.dirty ||newProjectForm?.get('projectName')?.touched)">
-    <div class="error" *ngIf="newProjectForm?.get('projectName')?.errors?.required">
+    *ngIf="!newProjectForm?.get('name')?.valid && (newProjectForm?.get('name')?.dirty ||newProjectForm?.get('name')?.touched)">
+    <div class="error" *ngIf="newProjectForm?.get('name')?.errors?.required">
      Project name is required
     </div>
-    <div class="error" *ngIf="newProjectForm?.get('projectName')?.errors?.maxlength">
+    <div class="error" *ngIf="newProjectForm?.get('name')?.errors?.maxlength">
      Project name can't contain more than 50 characters
     </div>
    </div>
   </div>
 
-  <button type="submit" [disabled]="newProjectForm.invalid" class="form-button">Add project</button>
+  <button type="submit" [disabled]="newProjectForm.invalid" class="form-button">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+    <span *ngIf="!loader">Create project</span>
+  </button>
+
+   <p class="form-info-text error">{{errorMessage}}</p>
+   <p class="form-info-text">{{successMessage}}</p>
  </div>
 </form>

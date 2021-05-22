@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Project } from 'src/app/models/Project';
+import { PageEvent } from '@angular/material/paginator';
+import { Project, ProjectService } from '../../../services/project/project.service';
+import {Component, OnInit} from '@angular/core';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NewProjectComponent} from '../new-project/new-project.component';
 
 @Component({
   selector: 'app-projects',
@@ -7,49 +10,50 @@ import { Project } from 'src/app/models/Project';
   styleUrls: ['./projects.component.scss']
 })
 export class ProjectsComponent implements OnInit {
-  projects: Array<Project>;
+  projectNum = 0;
+  page = 0;
+  size = 5;
+  projects: Array<Project> = [];
+  pageOptions = [5, 10, 20];
+  err: string | null = null;
 
-  constructor() {
-   }
+  constructor(private projectService: ProjectService, private modal: NgbModal) { }
 
   ngOnInit(): void {
-    this.projects = [
-      {
-        id: "e1165476-b729-11eb-8529-0242ac130003",
-        name: "First project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e2265476-b729-11eb-8529-0242ac130003",
-        name: "Second project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e3365476-b729-11eb-8529-0242ac130003",
-        name: "Third project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e4465476-b729-11eb-8529-0242ac130003",
-        name: "Fourth project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e5565476-b729-11eb-8529-0242ac130003",
-        name: "Fifth project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e6665476-b729-11eb-8529-0242ac130003",
-        name: "Sixth project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      },
-      {
-        id: "e7765476-b729-11eb-8529-0242ac130003",
-        name: "Seventh project",
-        ownerId: "a9328394-b729-11eb-8529-0242ac130003"
-      }
-    ]
+    this.loadProjects();
   }
 
+  paginate($event: PageEvent): any {
+    if (this.page === $event.pageIndex && this.size === $event.pageSize ) {
+      return;
+    }
+    this.page = $event.pageIndex;
+    this.size = $event.pageSize;
+    this.loadProjects();
+  }
+
+  onProjectsLoad(data: any): any {
+    this.projectNum = data.metadata.total_elements;
+    this.projects = data.data;
+  }
+
+  loadProjects(): any {
+    this.projectService.getProjects('owner', this.page, this.size,
+      (data: any) => this.onProjectsLoad(data),
+      () => this.err = 'Error while loading data. Please try again later.'
+    );
+  }
+
+  createProject(): any {
+    const modal = this.modal.open(NewProjectComponent, { size: 'xl' });
+    modal.result.then(result => {
+      if (result === 'success') {
+        this.loadProjects();
+      }
+    }, err => {});
+  }
+
+  onProjectDelete(): any {
+    this.loadProjects();
+  }
 }

@@ -4,10 +4,21 @@
 <div class="body">
     <div class="projects-page">
         <div class="page-content">
-            <div id="create-btn">
-                <a class="form-button btn" routerLink="/new-project">Add a new project</a>
+            <div class="message-container">
+              <h3 class="info message" *ngIf="projectNum == 0">You don't have any projects. Create new project below.</h3>
+              <h3 class="error message" *ngIf="err">{{err}}</h3>
             </div>
-            <app-projects-table [projects]="projects"></app-projects-table>
+            <app-projects-table [projects]="projects" (projectDelete)="onProjectDelete()"></app-projects-table>
+
+            <div class="controls">
+                <div class="left">
+                    <span><button class="form-button" (click)="createProject()">New project</button></span>
+                </div>
+                <div class="right">
+                    <mat-paginator [pageSizeOptions]="pageOptions" (page)="paginate($event)" [length]="projectNum"></mat-paginator>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<template ngbModalContainer></template>
