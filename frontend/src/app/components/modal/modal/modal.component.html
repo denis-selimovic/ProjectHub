@@ -1,0 +1,15 @@
+<div class="container-modal">
+  <h5>{{message}}</h5>
+  <div class="button-group">
+    <div class="button-grid">
+      <button class="form-button left" (click)="cancel()">Cancel</button>
+      <button class="form-button right" (click)="confirm()">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+        <span *ngIf="!loader">Confirm</span>
+      </button>
+    </div>
+  </div>
+  <br/>
+  <p class="info-text ok">{{successMessage}}</p>
+  <p class="info-text error">{{errorMessage}}</p>
+</div>
