@@ -15,6 +15,7 @@ export class ResetPassNewFormComponent implements OnInit {
   loader = false;
 
   @Input() message = '';
+  @Input() error = '';
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {

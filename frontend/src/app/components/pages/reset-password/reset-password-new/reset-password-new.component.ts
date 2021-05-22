@@ -11,6 +11,7 @@ export class ResetPasswordNewComponent implements OnInit {
 
   token: string | null = null;
   message = '';
+  error = '';
 
   constructor(private route: ActivatedRoute, private router: Router, private emailService: EmailService) { }
 
@@ -27,7 +28,7 @@ export class ResetPasswordNewComponent implements OnInit {
         this.message = 'Password was successfully reset. Try to login now.';
         setTimeout(() => this.router.navigate(['/login']), 1000);
       },
-      (err: any) => this.message = 'Error occurred. Try again later.'
+      (err: any) => this.error = 'Invalid token. Try password reset again.'
     );
   }
 }
