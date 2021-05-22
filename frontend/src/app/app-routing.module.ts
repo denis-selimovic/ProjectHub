@@ -42,7 +42,7 @@ const routes: Routes = [
     component: ResetPasswordCodeComponent
   },
   {
-    path: 'reset-password-new',
+    path: 'reset-password/:token',
     pathMatch: 'full',
     component: ResetPasswordNewComponent
   },
