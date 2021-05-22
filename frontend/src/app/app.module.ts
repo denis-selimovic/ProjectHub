@@ -94,7 +94,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     CollaboratorsComponent,
     CollaboratorsTableComponent,
     NewCollaboratorFormComponent,
-    ConfirmDeletionComponent,
+    ConfirmDeletionComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +106,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     NoopAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
+    MatTableModule,
+    MatDialogModule,
     MDBBootstrapModule.forRoot(),
     NgbModule
   ],
