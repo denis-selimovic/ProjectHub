@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, Form, FormsModule } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
-import { MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-reset-pass-new-form',
@@ -11,16 +10,16 @@ import { MatInputModule} from '@angular/material/input';
 
 export class ResetPassNewFormComponent implements OnInit {
   resetPassNewForm: FormGroup;
-  errorMessage: String;
-  hide: boolean;
-  hideConf: boolean
+  message = '';
+  hide = true;
+  hideConf = true;
+  loader = false;
+
+  @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {
-    this.errorMessage = ""; //error message from server
-    this.hide = true;
-    this.hideConf = true;
     this.resetPassNewForm = this.formBuilder.group({
-    password: new FormControl('',[Validators.required, 
+    password: new FormControl('', [Validators.required,
       Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=()!?.\"]).{4,}$'),
       Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required])
@@ -29,8 +28,25 @@ export class ResetPassNewFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  submitForm(): any {
+    this.loader = true;
+    const form = this.getFormValue();
+    this.resetPassNewForm.reset();
+    setTimeout(() => this.emitPasswordReset(form), 1200);
   }
 
+  private emitPasswordReset(form: any): any {
+    this.loader = false;
+    this.formSubmit.emit(form);
+  }
+
+  private getFormValue(): any {
+    return {
+      password: this.resetPassNewForm.get('password').value,
+      confirm_password: this.resetPassNewForm.get('confirmPassword').value
+    };
+  }
 }
 

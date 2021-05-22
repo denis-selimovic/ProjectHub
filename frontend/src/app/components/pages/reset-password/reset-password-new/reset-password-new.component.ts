@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password-new',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResetPasswordNewComponent implements OnInit {
 
-  constructor() { }
+  token: string | null = null;
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.token = params.token;
+    });
   }
 
+  onFormSubmit(form: any): any {
+    const tokenForm = { ...form, token: this.token };
+    console.log(tokenForm);
+  }
 }
