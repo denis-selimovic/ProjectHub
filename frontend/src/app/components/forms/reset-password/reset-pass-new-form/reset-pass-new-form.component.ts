@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
 
@@ -10,11 +10,11 @@ import { FieldsMatch } from 'src/app/validators/fieldsMatch.validator';
 
 export class ResetPassNewFormComponent implements OnInit {
   resetPassNewForm: FormGroup;
-  message = '';
   hide = true;
   hideConf = true;
   loader = false;
 
+  @Input() message = '';
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {

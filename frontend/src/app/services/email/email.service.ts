@@ -25,4 +25,12 @@ export class EmailService {
         (err: any) => error(err)
       );
   }
+
+  resetPassword(form: any, callback: any, error: any): any {
+    this.http.post(`${environment.api}/api/v1/users/reset-password`, form)
+      .subscribe(
+        (data: any) => callback(data),
+        (err: any) => error(err)
+      );
+  }
 }
