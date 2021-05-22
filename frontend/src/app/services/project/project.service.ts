@@ -40,4 +40,15 @@ export class ProjectService {
       (err: any) => error(err)
     );
   }
+
+  deleteProject(id: string, callback: any, error: any): any {
+    this.http.delete(`${environment.api}/api/v1/projects/${id}`, {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(data),
+      (err: any) => error(err)
+    );
+  }
 }
