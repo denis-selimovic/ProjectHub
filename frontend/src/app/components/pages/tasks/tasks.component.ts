@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Task } from 'src/app/models/Task';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NewTaskModalComponent } from '../../dialogs/new-task-modal/new-task-modal.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-task-modal.component';
 
 @Component({
   selector: 'app-tasks',
@@ -16,7 +18,7 @@ export class TasksComponent implements OnInit {
   inTestingTasks: Array<Task>
   doneTasks: Array<Task>
 
-  constructor(public matDialog: MatDialog) {}
+  constructor(public matDialog: MatDialog, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.tasks = [
@@ -104,8 +106,9 @@ export class TasksComponent implements OnInit {
   }
 
   openModal() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    this.matDialog.open(NewTaskModalComponent, dialogConfig);
+    const modalRef = this.modalService.open(CreateTaskModalComponent);
+    // const dialogConfig = new MatDialogConfig();
+    // dialogConfig.disableClose = true;
+    // this.matDialog.open(NewTaskModalComponent, dialogConfig);
   }
 }

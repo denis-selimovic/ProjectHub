@@ -61,6 +61,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { CommentsListComponent } from './components/lists/comments-list/comments-list.component';
 import { CommentsItemComponent } from './components/lists/comments-item/comments-item.component';
 import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
+import { CreateTaskModalComponent } from './components/modals/create-task-modal/create-task-modal.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +111,8 @@ import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/
     TaskDetailsComponent,
     CommentsListComponent,
     CommentsItemComponent,
-    ConfirmDeletionComponent
+    ConfirmDeletionComponent,
+    CreateTaskModalComponent
   ],
   imports: [
     BrowserModule,
@@ -129,7 +131,8 @@ import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/
     NgbModule,
     HttpClientModule,
     MatDialogModule,
-    MatSelectModule
+    MatSelectModule,
+    NgbModule
   ],
   providers: [
     UserService,

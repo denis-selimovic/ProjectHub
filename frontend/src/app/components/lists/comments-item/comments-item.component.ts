@@ -27,15 +27,15 @@ export class CommentsItemComponent implements OnInit {
   }
 
   deleteComment() {
-    this.onDelete.emit();
-    // let dialogRef = this.dialog.open(ConfirmDeletionComponent);
-    // let instance = dialogRef.componentInstance;
-    // instance.message = "Are you sure you want to delete this comment?";
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.onDelete.emit();
-    //   }
-    // });
+    // this.onDelete.emit();
+    let dialogRef = this.dialog.open(ConfirmDeletionComponent, {});
+    let instance = dialogRef.componentInstance;
+    instance.message = "Are you sure you want to delete this comment?";
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.onDelete.emit();
+      }
+    });
   }
 
 }

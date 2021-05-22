@@ -14,11 +14,11 @@
     margin-top: 40px;
 
     .initials-container {
-      height: fit-content;
-      width: fit-content;
+      display: inline-block;
       padding: 5px;
       background-color: #bbb;
       border-radius: 50%;
+      text-align: center;
     }
   }
 }
