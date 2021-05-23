@@ -324,6 +324,7 @@ services:
 
   gateway-service:
     container_name: gateway-service
+    hostname: gateway-service
     build:
       context: ./gateway-service/
       dockerfile: Dockerfile
@@ -341,6 +342,24 @@ services:
       - task-service
       - notification-service
       - email-service
+    networks:
+      projecthub:
+        aliases:
+          - gateway-service
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: frontend:latest
+    restart: always
+    expose:
+      - 80
+    ports:
+      - 80:80
+    depends_on:
+      - gateway-service
     networks:
       - projecthub
 
