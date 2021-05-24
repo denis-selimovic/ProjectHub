@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Issue } from 'src/app/models/Issue';
 
 @Component({
   selector: 'app-new-issue-form',
@@ -14,7 +16,7 @@ export class NewIssueFormComponent implements OnInit {
   priorities: any;
   collaborators: any;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private modalService: NgbModal) {
     this.newIssueForm = this.formBuilder.group( {
       issueName: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
       description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
