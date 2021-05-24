@@ -3,9 +3,9 @@
         <div class="reset-form">
             <app-reset-pass-new-form [title]="title" 
             [links]="links" 
-            [submit]="changePassword"
             [error]="error" 
-            [message]="message"></app-reset-pass-new-form>
+            [message]="message"
+            (formSubmit)="onFormSubmit($event)"></app-reset-pass-new-form>
         </div>
     </div>
 </div>

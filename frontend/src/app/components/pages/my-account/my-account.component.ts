@@ -17,7 +17,7 @@ export class MyAccountComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changePassword = (form: any) => {
+  onFormSubmit(form: any): any {
     this.userService.changePassword(form, 
       (response) => {this.message = "Password successfully changed!"},
       (error) => {this.error = "Something went wrong, try again later."});
