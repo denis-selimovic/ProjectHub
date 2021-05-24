@@ -2,9 +2,9 @@
     <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css" type='text/css'>
 </head>
 <nav class="stroke" *ngIf="userService.isLoggedIn() === true"> 
-    <ul *ngIf="router.url === '/dashboard'">
+    <ul *ngIf="router.url === '/dashboard' || router.url === '/my-account'">
         <li><a routerLink="dashboard">Projects</a></li>
-        <li><a routerLink="my account">My account</a></li>
+        <li><a routerLink="my-account">My account</a></li>
     </ul>
     <ul *ngIf="router.url === '/issues' || router.url === '/tasks' || router.url === '/collaborators'">
         <li><a routerLink="collaborators">Collaborators</a></li>
