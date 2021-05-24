@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Issue } from 'src/app/models/Issue';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-task-modal.component';
 
 @Component({
   selector: 'app-issue-item',
@@ -10,7 +12,7 @@ export class IssueItemComponent implements OnInit {
   @Input() issue: Issue;
   imageSrc: String;
 
-  constructor() {
+  constructor(private modalService: NgbModal) {
    }
 
   ngOnInit(): void {
@@ -31,6 +33,10 @@ export class IssueItemComponent implements OnInit {
         this.imageSrc = "assets/undefined.png";
         break;
     }
+  }
+
+  openModal() {
+    const modalRef = this.modalService.open(CreateTaskModalComponent);
   }
 
 }

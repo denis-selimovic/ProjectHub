@@ -62,6 +62,7 @@ import { CommentsListComponent } from './components/lists/comments-list/comments
 import { CommentsItemComponent } from './components/lists/comments-item/comments-item.component';
 import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
 import { CreateTaskModalComponent } from './components/modals/create-task-modal/create-task-modal.component';
+import { CreateIssueModalComponent } from './components/modals/create-issue-modal/create-issue-modal.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { CreateTaskModalComponent } from './components/modals/create-task-modal/
     CommentsListComponent,
     CommentsItemComponent,
     ConfirmDeletionComponent,
-    CreateTaskModalComponent
+    CreateTaskModalComponent,
+    CreateIssueModalComponent
   ],
   imports: [
     BrowserModule,

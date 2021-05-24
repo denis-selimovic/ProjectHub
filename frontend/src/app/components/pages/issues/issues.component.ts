@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Issue } from 'src/app/models/Issue';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CreateIssueModalComponent } from '../../modals/create-issue-modal/create-issue-modal.component';
 @Component({
   selector: 'app-issues',
   templateUrl: './issues.component.html',
@@ -9,7 +10,7 @@ import { Issue } from 'src/app/models/Issue';
 export class IssuesComponent implements OnInit {
   issues: Array<Issue>;
 
-  constructor() {
+  constructor(private modalService: NgbModal) {
    }
 
   ngOnInit(): void {
@@ -99,5 +100,8 @@ export class IssuesComponent implements OnInit {
         priority: "LOW"
       }
     ]
+  }
+  openModal() {
+    const modalRef = this.modalService.open(CreateIssueModalComponent);
   }
 }
