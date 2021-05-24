@@ -1,6 +1,6 @@
 <form class="login" [formGroup]="resetPassNewForm">
     <div class="form-content">
-        <h2>Reset password</h2>
+        <h2>{{title}}</h2>
         <h3>Enter new password.</h3>
 
         <div class="input-container">
@@ -44,10 +44,11 @@
          <p>{{message}}</p>
          <p class="error">{{error}}</p>
          <br/>
-         <p><a routerLink="/login" class="redirect-link">Log In</a></p>
-         <p> or </p>
-         <p><a routerLink="/register" class="redirect-link">Register</a></p>
+         <div *ngIf="links">
+            <p><a routerLink="/login" class="redirect-link">Log In</a></p>
+            <p> or </p>
+            <p><a routerLink="/register" class="redirect-link">Register</a></p>
+        </div>
        </div>
-
     </div>
 </form>

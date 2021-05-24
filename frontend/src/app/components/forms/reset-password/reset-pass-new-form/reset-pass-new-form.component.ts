@@ -16,6 +16,8 @@ export class ResetPassNewFormComponent implements OnInit {
 
   @Input() message = '';
   @Input() error = '';
+  @Input() title = 'Reset password';
+  @Input() links = true;
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {
