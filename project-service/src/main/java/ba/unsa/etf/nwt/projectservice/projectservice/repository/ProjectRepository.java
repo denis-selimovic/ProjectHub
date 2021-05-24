@@ -2,6 +2,8 @@ package ba.unsa.etf.nwt.projectservice.projectservice.repository;
 
 import ba.unsa.etf.nwt.projectservice.projectservice.filter.FilterProjectRepository;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.lang.NonNull;
@@ -29,4 +31,11 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, U
     @Override
     @Query(value = "SELECT COUNT(*) FROM projects p WHERE p.deleted = FALSE", nativeQuery = true)
     long count();
+
+    Page<Project> findAllByOwnerIdAndDeletedIsFalse(final UUID ownerId, final Pageable pageable);
+
+    @Query(value = "select p  " +
+            "from Project p, ProjectCollaborator pc " +
+            "where pc.project = p and pc.collaboratorId = ?1 and p.deleted = false")
+    Page<Project> findAllByCollaboratorIdAndDeletedIsFalse(final UUID collaboratorId, final Pageable pageable);
 }
