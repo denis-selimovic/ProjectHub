@@ -40,6 +40,14 @@ nav ul li a:hover {
   color: $blue
 }
 
+nav ul li a:active {
+  color: $blue
+}
+
+nav ul li a:focus {
+  color: $blue
+}
+
 nav.stroke {
   padding: 0%;
   display: flex;
@@ -66,6 +74,7 @@ nav.stroke {
 .sign-out:hover {
   color: $blue;
 }
+
 
 nav.stroke ul li a,
 nav.fill ul li a {

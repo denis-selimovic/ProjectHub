@@ -1,8 +1,12 @@
 <head>
     <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css" type='text/css'>
 </head>
-<nav class="stroke">
-    <ul>
+<nav class="stroke" *ngIf="userService.isLoggedIn() === true"> 
+    <ul *ngIf="router.url === '/dashboard'">
+        <li><a routerLink="dashboard">Projects</a></li>
+        <li><a routerLink="my account">My account</a></li>
+    </ul>
+    <ul *ngIf="router.url === '/issues' || router.url === '/tasks' || router.url === '/collaborators'">
         <li><a routerLink="collaborators">Collaborators</a></li>
         <li><a routerLink="tasks">Tasks</a></li>
         <li><a routerLink="issues">Issues</a></li>
@@ -11,3 +15,5 @@
         <i class="far fa-bell fa-lg bell"></i>
     </div>
 </nav>
+
+
