@@ -4,6 +4,7 @@ import ba.unsa.etf.nwt.userservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.userservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.userservice.model.User;
 import ba.unsa.etf.nwt.userservice.repository.UserRepository;
+import ba.unsa.etf.nwt.userservice.request.user.ChangePasswordRequest;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
 import ba.unsa.etf.nwt.userservice.request.user.ResetPasswordRequest;
 import lombok.RequiredArgsConstructor;
@@ -63,5 +64,11 @@ public class UserService {
         return findByEmail(email).orElseThrow(() -> {
             throw new NotFoundException("User with this email doesn't exist");
         });
+    }
+
+    public User changeUserPassword(final User user, final ChangePasswordRequest request) {
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+        return user;
     }
 }
