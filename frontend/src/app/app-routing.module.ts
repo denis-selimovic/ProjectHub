@@ -99,7 +99,8 @@ const routes: Routes = [
   {
     path: 'my-account',
     pathMatch: 'full',
-    component: MyAccountComponent
+    component: MyAccountComponent,
+    canActivate: [GuardService]
   },
   {
     path: '**', 

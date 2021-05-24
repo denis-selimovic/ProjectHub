@@ -68,6 +68,17 @@ export class UserService {
     return this.storageService.retrieveObject("user");
   }
 
+  changePassword(form: any, success: any, failure: any): void {
+    this.http.post(`${environment.api}/api/v1/users/change-password`, form, {
+      headers: new HttpHeaders({
+        Authorization: this.tokenService.getAccessToken()
+      }),
+    }).subscribe(
+      (data: any) => success(data),
+      (error: any) => failure(error)
+    );
+  }
+
   private fetchUserDetails(successHandler: any): void {
     this.http.get(`${environment.api}/api/v1/users/user-details`,{
       headers: new HttpHeaders({
