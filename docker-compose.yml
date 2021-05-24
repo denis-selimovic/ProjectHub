@@ -8,9 +8,9 @@ services:
       context: ./rabbitmq/
       dockerfile: Dockerfile
     image: rabbitmq:latest
-    ports:
-      - 5672:5672
-      - 15672:15672
+    expose:
+      - 5672
+      - 15672
     networks:
       projecthub:
         aliases:
@@ -27,8 +27,6 @@ services:
       POSTGRES_DB: user-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -47,8 +45,6 @@ services:
       POSTGRES_DB: project-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -67,8 +63,6 @@ services:
       POSTGRES_DB: task-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -87,8 +81,6 @@ services:
       POSTGRES_DB: notification-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -107,8 +99,6 @@ services:
       POSTGRES_DB: email-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -127,8 +117,6 @@ services:
       POSTGRES_DB: system-events-service-dev
       POSTGRES_USER: projecthub
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432
     expose:
       - 5432
     networks:
@@ -149,8 +137,6 @@ services:
       - PROJECTHUB_GIT_PASSWORD=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
     expose:
       - 8888
-    ports:
-      - 8888:8888
     depends_on:
       - eureka-service
     networks:
@@ -171,8 +157,6 @@ services:
       - HOSTNAME=discovery-server
     expose:
       - 8761
-    ports:
-      - 8761:8761
     networks:
       projecthub:
         aliases:
@@ -192,8 +176,6 @@ services:
       - RABBITMQ_HOST=rabbitmq
     expose:
       - 8081
-    ports:
-      - 8081:8081
     depends_on:
       - rabbitmq
       - configuration-service
@@ -216,8 +198,6 @@ services:
       - RABBITMQ_HOST=rabbitmq
     expose:
       - 8082
-    ports:
-      - 8082:8082
     depends_on:
       - rabbitmq
       - configuration-service
@@ -240,8 +220,6 @@ services:
       - RABBITMQ_HOST=rabbitmq
     expose:
       - 8083
-    ports:
-      - 8083:8083
     depends_on:
       - rabbitmq
       - configuration-service
@@ -264,8 +242,6 @@ services:
       - RABBITMQ_HOST=rabbitmq
     expose:
       - 8084
-    ports:
-      - 8084:8084
     depends_on:
       - rabbitmq
       - configuration-service
@@ -289,8 +265,6 @@ services:
       - EMAIL_SERVICE_REDIRECT_URL=http://localhost:4200
     expose:
       - 8085
-    ports:
-      - 8085:8085
     depends_on:
       - rabbitmq
       - configuration-service
@@ -312,8 +286,7 @@ services:
       - SS_DATABASE_URL=jdbc:postgresql://system-events-service-db:5432/system-events-service-dev
     expose:
       - 8086
-    ports:
-      - 8086:8086
+      - 9090
     depends_on:
       - rabbitmq
       - configuration-service

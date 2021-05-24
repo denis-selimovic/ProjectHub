@@ -7,4 +7,5 @@ FROM openjdk:15
 COPY --from=maven /usr/src/app/target /usr/src/app/target
 WORKDIR /usr/src/app
 EXPOSE 8086
+EXPOSE 9090
 ENTRYPOINT ["java", "-jar", "target/system-events-service.jar"]
