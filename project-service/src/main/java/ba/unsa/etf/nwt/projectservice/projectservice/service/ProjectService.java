@@ -43,7 +43,15 @@ public class ProjectService {
     }
 
     public Page<Project> findByFilter(final ProjectFilter filter, Pageable pageable) {
-        return projectRepository.findAllByFilter(filter, pageable);
+        if(filter.getOwnerId() != null) {
+            return projectRepository.findAllByOwnerIdAndDeletedIsFalse(filter.getOwnerId(), pageable);
+        }
+
+        if (filter.getCollaboratorId() != null) {
+            return projectRepository.findAllByCollaboratorIdAndDeletedIsFalse(filter.getCollaboratorId(), pageable);
+        }
+
+        return projectRepository.findAll(pageable);
     }
 
     public void patch(final Project project, final PatchProjectRequest patchProjectRequest) {
