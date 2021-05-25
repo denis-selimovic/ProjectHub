@@ -39,6 +39,18 @@ zuul:
       path: "/api/v1/issues/**"
       serviceId: task-service
       stripPrefix: false
+    priorites:
+      path: "/api/v1/priorities"
+      serviceId: task-service
+      stripPrefix: false
+    types:
+      path: "/api/v1/types"
+      serviceId: task-service
+      stripPrefix: false
+    statutes:
+      path: "/api/v1/statuses"
+      serviceId: task-service
+      stripPrefix: false
     projects:
       path: "/api/v1/projects/**"
       serviceId: project-service

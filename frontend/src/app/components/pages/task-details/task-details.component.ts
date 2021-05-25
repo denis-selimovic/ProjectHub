@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Task } from 'src/app/models/Task';
-import { User } from 'src/app/services/user/user.service';
+import { TaskService } from 'src/app/services/task/task.service';
+import { User, UserService } from 'src/app/services/user/user.service';
+import { TasksComponent } from '../tasks/tasks.component';
 
 @Component({
   selector: 'app-task-details',
@@ -15,6 +17,7 @@ export class TaskDetailsComponent implements OnInit {
   comments: any;
   priorities: any;
   statuses: any;
+  types: any;
   leftForm: FormGroup;
   rightForm: FormGroup;
   errorMessage: String;
@@ -23,61 +26,14 @@ export class TaskDetailsComponent implements OnInit {
   selectedPriority: any;
   selectedStatus: any;
 
-  constructor(private formBuilder: FormBuilder) { 
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService) { 
   }
 
   ngOnInit(): void {
-    this.currentUser = {
-      id: "id",
-      firstName: "Ajsa",
-      lastName: "Hajradinovic",
-      email: "ajsa@gmail.com"
-    }
-
-    this.priorities = [
-      {
-        id: "id",
-        priority: "CRITICAL"
-      },
-      {
-        id: "id",
-        priority: "HIGH"
-      },
-      {
-        id: "id",
-        priority: "LOW"
-      },
-      {
-        id: "id",
-        priority: "MEDIUM"
-      },
-    ];
-
-    this.statuses = [
-      {
-        id: "id",
-        status: "OPEN"
-      },
-      {
-        id: "id",
-        status: "IN_PROGRESS"
-      },
-      {
-        id: "id",
-        status: "IN_REVIEW"
-      },
-      {
-        id: "id",
-        status: "IN_TESTING"
-      },
-      {
-        id: "id",
-        status: "DONE"
-      }
-    ];
-
-    this.selectedPriority = this.priorities[0];
-    this.selectedStatus = this.statuses[0];
+    this.currentUser = this.userService.getCurrentUser();
+    this.loadPriorities();
+    this.loadStatuses();
+    this.loadTypes();
 
     this.project = {
       name: "NWT-101"
@@ -108,39 +64,6 @@ export class TaskDetailsComponent implements OnInit {
         task: this.task
       },
       {
-        id: "id",
-        text: "This is some other user's comment.",
-        user: {
-          id: "neki drugi id",
-          firstName: "Lamija",
-          lastName: "Vrnjak",
-          email: "lvrnjak@gmail.com"
-        },
-        task: this.task
-      },
-       {
-        id: "id",
-        text: "This is some other user's comment.",
-        user: {
-          id: "neki drugi id",
-          firstName: "Lamija",
-          lastName: "Vrnjak",
-          email: "lvrnjak@gmail.com"
-        },
-        task: this.task
-      },
-       {
-        id: "id",
-        text: "This is some other user's comment.",
-        user: {
-          id: "neki drugi id",
-          firstName: "Lamija",
-          lastName: "Vrnjak",
-          email: "lvrnjak@gmail.com"
-        },
-        task: this.task
-      },
-       {
         id: "id",
         text: "This is some other user's comment.",
         user: {
@@ -190,9 +113,35 @@ export class TaskDetailsComponent implements OnInit {
     });   
   }
 
+  loadPriorities() {
+    this.taskService.getPriorities(
+      (data: any) => {
+        this.priorities = data.data;
+        this.selectedPriority = this.priorities[0];
+        console.log(data.data);
+      }
+    )
+  }
+
+  loadTypes() {
+    this.taskService.getTypes(
+      (data: any) => {
+        this.types = data.data     
+      } 
+    )
+  }
+
+  loadStatuses() {
+    this.taskService.getStatuses(
+      (data: any) => {
+        this.statuses = data.data;
+        this.selectedStatus = this.statuses[0];
+      }  
+    )
+  }
+
   patchDescription(description: String) {
     console.log(description);
-
   }
 
   addComment(comment: String) {

@@ -37,6 +37,9 @@ public class SystemEventFactory {
             case "CommentController" -> "COMMENT";
             case "IssueController" -> "ISSUE";
             case "TaskController" -> "TASK";
+            case "PriorityController" -> "PRIORITY";
+            case "TypeController" -> "TYPE";
+            case "StatusController" -> "STATUS";
             default -> "UNKNOWN RESOURCE";
         };
     }
