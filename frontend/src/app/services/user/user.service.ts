@@ -78,6 +78,28 @@ export class UserService {
       (error: any) => failure(error)
     );
   }
+  
+  getUserById(id: string, callback: any, error: any): any {
+    this.http.get(`${environment.api}/api/v1/users/${id}`, {
+        headers: new HttpHeaders({
+        Authorization: this.tokenService.getAccessToken()
+      })
+    }).subscribe(
+      (data: any) => callback(this.getUserFromResponseData(data.data)),
+      (err: any) => error(err)
+    );
+  }
+
+  getUserByEmail(email: string, callback: any, error: any): any {
+    this.http.get(`${environment.api}/api/v1/users/user-details/${email}`,{
+      headers: new HttpHeaders({
+        Authorization: this.tokenService.getAccessToken()
+      })
+    }).subscribe(
+      (data: any) => callback(this.getUserFromResponseData(data.data)),
+      (err: any) => error(err)
+    );
+  }
 
   private fetchUserDetails(successHandler: any): void {
     this.http.get(`${environment.api}/api/v1/users/user-details`,{

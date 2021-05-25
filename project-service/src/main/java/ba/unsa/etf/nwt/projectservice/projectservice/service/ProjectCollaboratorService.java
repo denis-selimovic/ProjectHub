@@ -7,6 +7,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.Unprocessabl
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
 import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollaboratorRepository;
+import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,10 @@ public class ProjectCollaboratorService {
     private final ProjectCollaboratorRepository projectCollaboratorRepository;
 
 
-    public ProjectCollaborator createCollaborator(UUID collaboratorId, Project project) {
+    public ProjectCollaborator createCollaborator(ResourceOwner resourceOwner, UUID collaboratorId, Project project) {
+        if (resourceOwner.getId().equals(collaboratorId)) {
+            throw new UnprocessableEntityException("You are already a collaborator on this project");
+        }
         projectCollaboratorRepository.findByCollaboratorIdAndProjectId(collaboratorId, project.getId()).ifPresent(pc -> {
             throw new UnprocessableEntityException("Collaborator already added to this project");
         });

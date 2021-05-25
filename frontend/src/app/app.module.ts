@@ -64,6 +64,7 @@ import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/
 import { CreateTaskModalComponent } from './components/modals/create-task-modal/create-task-modal.component';
 import { CreateIssueModalComponent } from './components/modals/create-issue-modal/create-issue-modal.component';
 import { MyAccountComponent } from './components/pages/my-account/my-account.component';
+import { ActionResultComponent } from './components/dialogs/action-result/action-result.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { MyAccountComponent } from './components/pages/my-account/my-account.com
     ConfirmDeletionComponent,
     CreateTaskModalComponent,
     CreateIssueModalComponent,
-    MyAccountComponent
+    MyAccountComponent,
+    ActionResultComponent
   ],
   imports: [
     BrowserModule,

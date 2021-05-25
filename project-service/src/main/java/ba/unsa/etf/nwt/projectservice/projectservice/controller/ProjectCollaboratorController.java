@@ -5,6 +5,7 @@ import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectNotificationDTO;
+import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.projectservice.projectservice.messaging.publishers.ProjectNotificationPublisher;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
@@ -50,7 +51,7 @@ public class ProjectCollaboratorController {
                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
         projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
-        ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(request.getCollaboratorId(), project);
+        ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(resourceOwner, request.getCollaboratorId(), project);
         publisher.send(new ProjectNotificationDTO(projectCollaborator));
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new ProjectCollaboratorDTO(projectCollaborator)));
     }
@@ -86,6 +87,13 @@ public class ProjectCollaboratorController {
 
         Page<ProjectCollaboratorDTO> collaboratorPage = projectCollaboratorService
                 .getCollaboratorsForProject(project, pageable);
+
+        collaboratorPage.forEach(collaborator -> {
+            UUID id = collaborator.getCollaboratorId();
+            UserDTO userDTO = userService.getUserById(resourceOwner, id);
+            collaborator.setCollaborator(userDTO);
+        });
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(collaboratorPage), collaboratorPage.getContent()));
 
