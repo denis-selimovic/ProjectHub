@@ -118,7 +118,6 @@ export class TaskDetailsComponent implements OnInit {
       (data: any) => {
         this.priorities = data.data;
         this.selectedPriority = this.priorities[0];
-        console.log(data.data);
       }
     )
   }
