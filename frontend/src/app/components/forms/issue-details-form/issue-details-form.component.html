@@ -1,0 +1,54 @@
+<div *ngIf="show">
+    <form class="issue-details-form" [formGroup]="issueDetailsForm" (ngSubmit)="onSubmit()">
+        <div class="form-content">
+            <label for="issue-name" class="input-label">Issue name*</label>
+            <input type="text" id="issue-name" formControlName="issueName" class="input-field" [value]="issue?.name">
+            <div class="error"
+            *ngIf="!issueDetailsForm?.get('issueName')?.valid && (issueDetailsForm?.get('issueName')?.dirty || issueDetailsForm?.get('issueName')?.touched)">
+            <div class="error" *ngIf="issueDetailsForm?.get('issueName')?.errors?.required">
+             Issue name is required
+            </div>
+            <div class="error" *ngIf="issueDetailsForm?.get('issueName')?.errors?.maxlength">
+             Issue name can't contain more than 50 characters
+            </div>
+           </div>
+
+           <label for="description" class="input-label">Description*</label>
+           <textarea id="description" formControlName="description" class="input-field" [value]="issue?.description"></textarea>
+           <div class="error"
+            *ngIf="!issueDetailsForm?.get('description')?.valid && (issueDetailsForm?.get('description')?.dirty || issueDetailsForm?.get('description')?.touched)">
+            <div class="error" *ngIf="issueDetailsForm?.get('description')?.errors?.required">
+             Description is required
+            </div>
+            <div class="error" *ngIf="issueDetailsForm?.get('description')?.errors?.maxlength">
+             Description can't contain more than 255 characters
+            </div>
+           </div>
+
+           <div class="justified-container">
+            <label for="priority" class="input-label">Priority*</label>
+            <label for="reporter" class="input-label">Reporter</label>
+           </div>
+        
+           <div class="justified-container">
+           <select class="select-option" name="priority" formControlName="priority">
+            <option *ngFor="let priority of priorities" [value]="priorities" [selected]="issue?.priority">
+             {{priority}}
+            </option>
+           </select>
+        
+           <select class="select-option" name="reporter" formControlName="reporter">
+            <option *ngFor="let reporter of reporters" [value]="reporters">
+             {{reporter.email}}
+            </option>
+           </select>
+           </div>
+           <div class="justified-container">
+            <button class="my-button">Edit issue</button>
+            <button class="my-button" (click)="close(true)">Cancel</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

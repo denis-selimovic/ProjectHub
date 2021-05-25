@@ -1,10 +1,17 @@
 <div class="body">
     <div class="issues-page">
         <div class="page-content">
-            <div id="create-btn">
-                <button class="form-button btn" (click)="openModal()">Create issue</button>
+            <div>
+                <div id="create-btn">
+                    <button class="form-button btn" (click)="openModal()">Create issue</button>
+                </div>
+                <app-issues-table [issues]="issues" (issueEvent)="detailsClicked($event)"></app-issues-table>
             </div>
-            <app-issues-table [issues]="issues"></app-issues-table>
+            <div *ngIf="issue !== undefined && show == true">
+                <div class="details-form">
+                    <app-issue-details-form [issue] ="issue" (closeEvent)="closeDetails($event)"></app-issue-details-form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,38 @@
+@import "/src/app/styles/forms.scss";
+@import "/src/app/styles/global.scss";
+@import "/src/app/styles/typography.scss";
+@import "/src/app/components/tables/projects-table/projects-table.component.scss";
+
+.justified-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-content {
+  background-color: $light-light-gray;
+  margin-left: 20px;
+}
+
+.my-button {
+  width: 30%;
+  cursor: pointer;
+  font-size: $fs-small;
+  padding: 0.5em 0.5em;
+  background: $blue;
+  color: $white;
+  border: transparent;
+  border-radius: $border-radius;
+  margin: 10px 0px;
+
+  &:disabled {
+    background: $light-gray;
+  }
+}
+
+.select-option {
+  width: 30%;
+}
+
+textarea {
+  resize: none;
+}

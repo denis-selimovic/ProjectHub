@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { Issue } from 'src/app/models/Issue';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIssueModalComponent } from '../../modals/create-issue-modal/create-issue-modal.component';
+import { ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 @Component({
   selector: 'app-issues',
   templateUrl: './issues.component.html',
@@ -9,11 +10,15 @@ import { CreateIssueModalComponent } from '../../modals/create-issue-modal/creat
 })
 export class IssuesComponent implements OnInit {
   issues: Array<Issue>;
+  issue: Issue;
+  show: boolean;
+  
 
   constructor(private modalService: NgbModal) {
    }
 
   ngOnInit(): void {
+    this.show = false;
     this.issues = [
       {
         id: "e7165476-b729-11eb-8529-0242ac130003", 
@@ -101,7 +106,21 @@ export class IssuesComponent implements OnInit {
       }
     ]
   }
+
   openModal() {
     const modalRef = this.modalService.open(CreateIssueModalComponent);
+  }
+
+  detailsClicked(issue: Issue): void {
+    this.issue = issue;
+    this.show = true;
+  }
+
+  closeDetails(value: boolean): void {
+    if(value) {
+      this.issue = undefined;
+      this.show = false;
+    }
+      
   }
 }
