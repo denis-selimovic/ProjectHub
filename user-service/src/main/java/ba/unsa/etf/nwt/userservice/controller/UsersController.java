@@ -136,6 +136,23 @@ public class UsersController {
         return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
     }
 
+    @GetMapping("user-details/{email}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "User found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SimpleResponse.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Response<UserDTO>> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserDetails(email);
+        return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
+    }
+
     @GetMapping("user-details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
