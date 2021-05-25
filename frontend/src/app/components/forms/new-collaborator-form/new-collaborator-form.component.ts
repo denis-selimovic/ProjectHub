@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from 'src/app/models/User';
+import { User, UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-new-collaborator-form',
@@ -12,7 +12,7 @@ export class NewCollaboratorFormComponent implements OnInit {
   errorMessage: String
   @Output() onAddCollaborator = new EventEmitter<User>()
 
-  constructor(private formBuilder: FormBuilder) { 
+  constructor(private formBuilder: FormBuilder, private userService: UserService) { 
     this.newCollaboratorForm = this.formBuilder.group( {
       email: new FormControl('', [Validators.email, Validators.required])
     })
@@ -23,12 +23,9 @@ export class NewCollaboratorFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.onAddCollaborator.emit({
-      id: "15e08bf2-b4kb2-4003-9288-507136ab459a",
-      email:this.newCollaboratorForm.value.email,
-      firstName: "New",
-      lastName: "Collab"
-    });
+    this.userService.getUserByEmail(this.newCollaboratorForm.value.email, 
+      (data: any) => this.onAddCollaborator.emit(data),
+      (err: any) => {console.log(err.error.errors.message)});
     this.newCollaboratorForm.reset();
   }
 
