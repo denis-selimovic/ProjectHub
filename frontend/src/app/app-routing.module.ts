@@ -16,6 +16,7 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
 import { TasksComponent } from './components/pages/tasks/tasks.component';
 import { TaskDetailsComponent } from './components/pages/task-details/task-details.component';
+import { MyAccountComponent } from './components/pages/my-account/my-account.component';
 
 const routes: Routes = [
   {
@@ -94,6 +95,12 @@ const routes: Routes = [
     path: 'tasks/details',
     pathMatch: 'full',
     component: TaskDetailsComponent
+  },
+  {
+    path: 'my-account',
+    pathMatch: 'full',
+    component: MyAccountComponent,
+    canActivate: [GuardService]
   },
   {
     path: '**', 

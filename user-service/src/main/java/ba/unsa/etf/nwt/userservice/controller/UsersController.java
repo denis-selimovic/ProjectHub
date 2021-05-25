@@ -5,6 +5,7 @@ import ba.unsa.etf.nwt.userservice.dto.UserDTO;
 import ba.unsa.etf.nwt.userservice.messaging.publishers.UserPublisher;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
+import ba.unsa.etf.nwt.userservice.request.user.ChangePasswordRequest;
 import ba.unsa.etf.nwt.userservice.request.user.ConfirmEmailRequest;
 import ba.unsa.etf.nwt.userservice.request.user.CreateUserRequest;
 import ba.unsa.etf.nwt.userservice.request.user.RequestPasswordResetRequest;
@@ -149,6 +150,25 @@ public class UsersController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Response<UserDTO>> getUserDetails(Principal principal) {
         User user = userService.getUserDetails(principal.getName());
+        return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
+    }
+
+    @PostMapping("change-password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Password changed",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SimpleResponse.class))}),
+            @ApiResponse(responseCode = "422",
+                    description = "New assword doesn't match the required format",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Response<UserDTO>> changePassword(@Valid @RequestBody final ChangePasswordRequest request,
+                                                            final Principal principal) {
+        User user = userService.getUserDetails(principal.getName());
+        user = userService.changeUserPassword(user, request);
         return ResponseEntity.ok().body(new Response<>(new UserDTO(user)));
     }
 }

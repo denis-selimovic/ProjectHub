@@ -5,6 +5,8 @@ nav {
   margin: 0 auto;
   background: $light-light-gray;
   padding: 10px 0;
+  display: flex;
+  align-items: center;
 }
 
 nav ul {
@@ -33,19 +35,19 @@ nav ul li a {
 nav ul li a,
 nav ul li a:after,
 nav ul li a:before {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 nav ul li a:hover {
-  color: $blue
+  color: $blue;
 }
 
 nav ul li a:active {
-  color: $blue
+  color: $blue;
 }
 
 nav ul li a:focus {
-  color: $blue
+  color: $blue;
 }
 
 nav.stroke {
@@ -75,7 +77,6 @@ nav.stroke {
   color: $blue;
 }
 
-
 nav.stroke ul li a,
 nav.fill ul li a {
   position: relative;
@@ -89,7 +90,7 @@ nav.fill ul li a:after {
   right: 0;
   margin: auto;
   width: 0%;
-  content: '.';
+  content: ".";
   color: transparent;
   background: $blue;
   height: 1px;
@@ -104,7 +105,7 @@ nav.fill ul li a {
 
 nav.fill ul li a:after {
   text-align: left;
-  content: '.';
+  content: ".";
   margin: 0;
   opacity: 0;
 }

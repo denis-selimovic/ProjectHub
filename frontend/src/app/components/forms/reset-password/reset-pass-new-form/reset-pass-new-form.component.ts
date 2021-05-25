@@ -16,6 +16,8 @@ export class ResetPassNewFormComponent implements OnInit {
 
   @Input() message = '';
   @Input() error = '';
+  @Input() title = 'Reset password';
+  @Input() links = true;
   @Output() formSubmit: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {
@@ -29,13 +31,18 @@ export class ResetPassNewFormComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.resetPassNewForm.valueChanges.subscribe(() => {
+      this.error = '';
+      this.message = '';
+    });
+  }
 
   submitForm(): any {
     this.loader = true;
     const form = this.getFormValue();
     this.resetPassNewForm.reset();
-    setTimeout(() => this.emitPasswordReset(form), 1200);
+    setTimeout(() =>{ this.emitPasswordReset(form);}, 1200);
   }
 
   private emitPasswordReset(form: any): any {
