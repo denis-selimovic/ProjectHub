@@ -4,8 +4,8 @@
 <div class="notification-item">
     <div class="top">
         <p class="notification-title">{{notification.title}}</p>
-        <i class="far fa-circle icon"></i>
-        <!-- <i class="fas fa-circle icon"></i> -->
+        <i [hidden]="!notification.read" class="far fa-circle icon"></i>
+        <i [hidden]="notification.read" class="fas fa-circle icon"></i>
     </div>
     <p class="notification-description">{{notification.description}}</p>
     <div class="date-time">{{this.getFormatedDate()}}</div>

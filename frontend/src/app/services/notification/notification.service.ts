@@ -5,6 +5,7 @@ export interface Notification {
   title: string;
   description: string;
   dateTime: Date;
+  read: boolean;
 }
 
 @Injectable({
