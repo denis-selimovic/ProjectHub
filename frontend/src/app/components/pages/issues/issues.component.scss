@@ -14,6 +14,7 @@
     margin: 0px;
     display: flex;
     justify-content: center;
+    width: 100%;
   }
 
   .form-button {
@@ -33,9 +34,9 @@
 
   #create-btn {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       width: 100%;
-      padding: 0;
+      padding: 0px;
   }
 
   .details-form {
@@ -43,7 +44,7 @@
   }
 
   .btn {
-    margin-right: 0;
+    margin-left: 0px;
   }
 
   ::ng-deep .mat-paginator-container {
@@ -75,7 +76,7 @@
 
   @media screen and (min-width: $screen-large) {
     .page-content {
-      width: 80%;
+      width: 100%;
     }
   }
 }
