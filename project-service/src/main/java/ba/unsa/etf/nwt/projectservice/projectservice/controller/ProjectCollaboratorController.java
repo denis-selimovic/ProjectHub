@@ -86,6 +86,13 @@ public class ProjectCollaboratorController {
 
         Page<ProjectCollaboratorDTO> collaboratorPage = projectCollaboratorService
                 .getCollaboratorsForProject(project, pageable);
+
+        collaboratorPage.forEach(collaborator -> {
+            UUID id = collaborator.getCollaboratorId();
+            UserDTO userDTO = userService.getUserById(resourceOwner, id);
+            collaborator.setCollaborator(userDTO);
+        });
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(collaboratorPage), collaboratorPage.getContent()));
 
