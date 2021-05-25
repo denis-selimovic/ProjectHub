@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Issue } from 'src/app/models/Issue';
 import { Observable } from 'rxjs/internal/Observable';
+import { IssueDetailsFormComponent } from 'src/app/components/forms/issue-details-form/issue-details-form.component';
 
 @Component({
   selector: 'app-issues-table',
@@ -11,6 +12,7 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class IssuesTableComponent implements AfterViewInit {
   @Input() issues: Array<Issue>;
+  @Output() issueEvent = new EventEmitter<Issue>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: MatTableDataSource<Issue>;
   obs: Observable<any>;
@@ -32,6 +34,10 @@ export class IssuesTableComponent implements AfterViewInit {
   ngOnDestroy(): void {
     if (this.dataSource) 
       this.dataSource.disconnect(); 
+  }
+
+  detailsClicked(issue: Issue): void {
+    this.issueEvent.emit(issue);
   }
   
 }
