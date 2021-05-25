@@ -117,6 +117,39 @@ export class TaskDetailsComponent implements OnInit {
           email: "lvrnjak@gmail.com"
         },
         task: this.task
+      },
+       {
+        id: "id",
+        text: "This is some other user's comment.",
+        user: {
+          id: "neki drugi id",
+          firstName: "Lamija",
+          lastName: "Vrnjak",
+          email: "lvrnjak@gmail.com"
+        },
+        task: this.task
+      },
+       {
+        id: "id",
+        text: "This is some other user's comment.",
+        user: {
+          id: "neki drugi id",
+          firstName: "Lamija",
+          lastName: "Vrnjak",
+          email: "lvrnjak@gmail.com"
+        },
+        task: this.task
+      },
+       {
+        id: "id",
+        text: "This is some other user's comment.",
+        user: {
+          id: "neki drugi id",
+          firstName: "Lamija",
+          lastName: "Vrnjak",
+          email: "lvrnjak@gmail.com"
+        },
+        task: this.task
       }
     ] 
 
