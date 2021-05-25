@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
 import { Project, ProjectService } from 'src/app/services/project/project.service';
 import { User, UserService } from 'src/app/services/user/user.service';
+import { ActionResultComponent } from '../../dialogs/action-result/action-result.component';
 
 @Component({
   selector: 'app-collaborators',
@@ -19,7 +21,7 @@ export class CollaboratorsComponent implements OnInit {
   projectId: string;
   error: string;
 
-  constructor(private userService: UserService, private projectService: ProjectService, private collaboratorService: CollaboratorService, private route: ActivatedRoute) { 
+  constructor(private userService: UserService, private projectService: ProjectService, private collaboratorService: CollaboratorService, private route: ActivatedRoute, private dialog: MatDialog) { 
   }
 
   ngOnInit(): void {
@@ -67,11 +69,15 @@ export class CollaboratorsComponent implements OnInit {
   }
 
   deleteCollaborator(id: any) {
-    this.collaborators = this.collaborators.filter(i => i.id !== id);
     this.collaboratorService.deleteCollaborator(this.projectId, 
       id,
-      (data: any) => {console.log(data)},
-      (err: any ) => {console.log(err)});
+      (data: any) => {
+        this.openActionResultDialog("Success!", "Collaborator successfuly removed.")
+        this.collaborators = this.collaborators.filter(i => i.id !== id);
+      },
+      (err: any ) => {
+        this.openActionResultDialog("Error!", err.error.errors.message)
+      });
   }
 
   addCollaborator(collaborator: User) {
@@ -79,8 +85,20 @@ export class CollaboratorsComponent implements OnInit {
       {
         collaborator_id: collaborator.id
       },    
-      (data: any) => this.loadCollaborators(),
-      (err: any) => {console.log(err.error.errors.message)});
+      (data: any) => {
+        this.openActionResultDialog("Success!", "Collaborator successfuly added.")
+        this.loadCollaborators();
+      },
+      (err: any) => {
+        this.openActionResultDialog("Error!", err.error.errors.message)
+      });
+  }
+
+  openActionResultDialog(title: string, message: string) {
+    const dialogRef = this.dialog.open(ActionResultComponent);
+    const instance = dialogRef.componentInstance;
+    instance.message = message;
+    instance.title = title;
   }
 
 }

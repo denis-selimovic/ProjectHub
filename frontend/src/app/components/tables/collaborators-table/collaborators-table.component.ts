@@ -18,7 +18,7 @@ export class CollaboratorsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
 
-  constructor(public dialog: MatDialog) {    
+  constructor(private dialog: MatDialog) {    
   }
 
   ngOnInit(): void {
