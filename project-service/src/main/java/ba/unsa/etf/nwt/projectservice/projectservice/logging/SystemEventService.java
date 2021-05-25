@@ -50,7 +50,7 @@ public class SystemEventService {
         try {
             InstanceInfo instanceInfo = eurekaClient.getNextServerFromEureka("system-events-service", false);
             ManagedChannel channel = ManagedChannelBuilder.forAddress(instanceInfo.getIPAddr(),
-                    instanceInfo.getPort()).usePlaintext().build();
+                    9090).usePlaintext().build();
             systemEventServiceStub = SystemEventServiceGrpc.newStub(channel);
             return true;
         } catch (Exception ignored) {
