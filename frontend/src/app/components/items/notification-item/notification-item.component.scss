@@ -37,4 +37,18 @@
     color: $blue;
     font-size: $fs-tiny;
   }
+
+  .action-buttons {
+    margin-top: 10px;
+    button {
+      cursor: pointer;
+      color: $black;
+      font-weight: bold;
+      border: 1px solid $blue;
+      border-radius: $border-radius;
+      background: transparent;
+      margin-right: 5px;
+      padding: 2px 10px;
+    }
+  }
 }

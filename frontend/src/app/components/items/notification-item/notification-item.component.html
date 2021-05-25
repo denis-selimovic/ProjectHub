@@ -9,4 +9,7 @@
     </div>
     <p class="notification-description">{{notification.description}}</p>
     <div class="date-time">{{this.getFormatedDate()}}</div>
+    <div class="action-buttons">
+        <button [hidden]="notification.read">Mark as read</button>
+    </div>
 </div>

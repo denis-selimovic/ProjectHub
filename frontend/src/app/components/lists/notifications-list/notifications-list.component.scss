@@ -5,6 +5,13 @@
   background: $light-light-gray;
   padding: 10px;
   width: 50%;
+  height: 100%;
+  max-height: 500px;
+  overflow-y: scroll;
+
+  .notification {
+    margin-bottom: 10px;
+  }
 
   @media screen and (min-width: $screen-medium) {
     width: 30%;

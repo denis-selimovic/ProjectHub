@@ -1,5 +1,5 @@
-<div *ngIf="notifications.length > 0" >
-    <div class="notifications-list" *ngFor="let n of notifications">
+<div class="notifications-list" *ngIf="notifications.length > 0" >
+    <div class="notification" *ngFor="let n of notifications">
         <div>
             <app-notification-item [notification]="n"></app-notification-item>
         </div>
