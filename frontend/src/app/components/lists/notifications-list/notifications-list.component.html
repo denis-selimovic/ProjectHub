@@ -1,1 +1,10 @@
-<p>notifications-list works!</p>
+<div *ngIf="notifications.length > 0" >
+    <div class="notifications-list" *ngFor="let n of notifications">
+        <div>
+            <app-notification-item [notification]="n"></app-notification-item>
+        </div>
+    </div>
+</div>
+<div class="empty-list" *ngIf="notifications.length == 0">
+     <p>You don't have any notifications.</p>
+</div>

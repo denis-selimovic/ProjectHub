@@ -3,10 +3,10 @@
 </head>
 <div class="notification-item">
     <div class="top">
-        <p class="notification-title">Notification title</p>
+        <p class="notification-title">{{notification.title}}</p>
         <i class="far fa-circle icon"></i>
         <!-- <i class="fas fa-circle icon"></i> -->
     </div>
-    <p class="notification-description">This is a notification</p>
-    <div class="date-time">17.05.2021 10:55</div>
+    <p class="notification-description">{{notification.description}}</p>
+    <div class="date-time">{{this.getFormatedDate()}}</div>
 </div>

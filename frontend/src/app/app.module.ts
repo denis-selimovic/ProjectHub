@@ -68,6 +68,7 @@ import { IssueDetailsFormComponent } from './components/forms/issue-details-form
 import { ActionResultComponent } from './components/dialogs/action-result/action-result.component';
 import { NotificationsListComponent } from './components/lists/notifications-list/notifications-list.component';
 import { NotificationItemComponent } from './components/items/notification-item/notification-item.component';
+import { NotificationService } from './services/notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import { NotificationItemComponent } from './components/items/notification-item/
     LocalStorageService,
     MatTableModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    NotificationService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
