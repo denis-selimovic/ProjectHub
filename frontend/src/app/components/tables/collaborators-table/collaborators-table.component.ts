@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, Input, EventEmitter, Output} from '@angular/core';
+import { Component, AfterViewInit, ViewChild, Input, EventEmitter, Output, SimpleChanges} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
@@ -18,7 +18,7 @@ export class CollaboratorsTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
 
-  constructor(public dialog: MatDialog) {    
+  constructor(private dialog: MatDialog) {    
   }
 
   ngOnInit(): void {
@@ -29,9 +29,9 @@ export class CollaboratorsTableComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.dataSource = changes.collaborators.currentValue;
-  // }
+  ngOnChanges(changes: SimpleChanges) {
+    this.dataSource = new MatTableDataSource<User>(changes.collaborators.currentValue);
+  }
 
   removeCollaborator(id: string): void {
     const dialogRef = this.dialog.open(ConfirmDeletionComponent);
@@ -40,7 +40,7 @@ export class CollaboratorsTableComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
+        // this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
         this.onDelete.emit(id);
       }
     });

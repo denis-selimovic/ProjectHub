@@ -1,0 +1,8 @@
+<div class="dialog-container">
+ <h1 mat-dialog-title [class.error]="title === 'Error!'" [class.success]="title === 'Success!'">{{title}}</h1>
+ <mat-dialog-content>{{message}}
+ </mat-dialog-content>
+ <mat-dialog-actions align="end">
+  <button mat-dialog-close class="dialog-button">Close</button>
+ </mat-dialog-actions>
+</div>

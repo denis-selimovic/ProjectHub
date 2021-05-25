@@ -4,6 +4,8 @@ import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Status;
 import ba.unsa.etf.nwt.taskservice.repository.StatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,5 +25,9 @@ public class StatusService {
         return statusRepository.findByStatus(type).orElseThrow(() -> {
             throw new NotFoundException("Status doesn't exist");
         });
+    }
+
+    public Page<Status> findAll() {
+        return statusRepository.findAll(Pageable.unpaged());
     }
 }

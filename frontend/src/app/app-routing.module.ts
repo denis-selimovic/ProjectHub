@@ -69,11 +69,13 @@ const routes: Routes = [
     component: NotFoundComponent
   }, 
   {
-    path: 'collaborators',
+    path: 'projects/:id/collaborators',
+    pathMatch: 'full',
     component: CollaboratorsComponent
   },
   {
     path: 'projects/:id',
+    pathMatch:'full', 
     component: ProjectDetailsComponent,
     canActivate: [GuardService]
   },

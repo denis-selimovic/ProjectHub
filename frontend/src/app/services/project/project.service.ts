@@ -36,7 +36,7 @@ export class ProjectService {
         Authorization: this.tokenService.getAccessToken()
       }
     }).subscribe(
-      (data): any => callback(data),
+      (data: any) => callback(this.getProjectFromResponseData(data.data)),
       (err: any) => error(err)
     );
   }
@@ -50,5 +50,25 @@ export class ProjectService {
       (data: any) => callback(data),
       (err: any) => error(err)
     );
+  }
+
+  getProjectById(id: string, callback: any, error: any): any {
+    this.http.get(`${environment.api}/api/v1/projects/${id}`, {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(this.getProjectFromResponseData(data.data)),
+      (err: any) => error(err)
+    );
+  }
+
+  private getProjectFromResponseData(responseData: any): Project {
+    return {id: responseData.id,
+      name: responseData.name,
+      ownerId: responseData.owner_id,
+      createdAt: responseData.created_at,
+      updatedAt: responseData.updated_at
+    };
   }
 }

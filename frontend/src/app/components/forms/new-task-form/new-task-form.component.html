@@ -31,22 +31,30 @@
    </div>
 
    <div class="justified-container">
-    <label for="priority" class="input-label">Priority*</label>
-    <label for="collaborator" class="input-label"> Assigned to</label>
+    <label for="priorities" class="input-label">Priority*</label>
+    <label for="types" class="input-label">Type*</label>
+    <label for="collaborators" class="input-label"> Assigned to</label>
    </div>
 
    <div class="justified-container">
-   <select class="select-option" name="priority" formControlName="priority">
-    <option *ngFor="let priority of priorities" [value]="priorities">
-     {{priority.priority}}
-    </option>
-   </select>
+    <select class="select-option" [(ngModel)]="selectedPriority" formControlName="priority" name="priorities" >
+     <option *ngFor="let priority of priorities" [ngValue]="priority">
+      {{priority.priority}}
+     </option>
+    </select>
 
-   <select class="select-option" name="collaborator" formControlName="collaborator">
-    <option *ngFor="let collaborator of collaborators" [value]="collaborators">
-     {{collaborator.email}}
-    </option>
-   </select>
+    <select class="select-option" formControlName="type" [(ngModel)]="selectedType" name="types">
+     <option *ngFor="let type of types" [ngValue]="type">
+      {{type.type}}
+     </option>
+    </select>
+
+    <select class="select-option" name="collaborators" [(ngModel)]="selectedCollaborator" formControlName="collaborator">
+     <option [ngValue]="null">None</option>
+     <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
+      {{collaborator.email}}
+     </option>
+    </select>
    </div>
 
    <button type="submit" [disabled]="newTaskForm.invalid" class="form-button">Add task</button>
