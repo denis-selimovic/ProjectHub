@@ -17,6 +17,7 @@ public interface NotificationUserRepository extends PagingAndSortingRepository<N
 
     @Query("select new ba.unsa.etf.nwt.notificationservice.dto.NotificationDTO(n, nu.read) " +
             "from NotificationUser nu, Notification n  " +
-            "where n = nu.notification and nu.userId = ?1")
+            "where n = nu.notification and nu.userId = ?1 " +
+            "order by nu.read")
     Page<NotificationDTO> findNotificationByUser(UUID userId, Pageable pageable);
 }
