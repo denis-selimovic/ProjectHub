@@ -22,4 +22,11 @@ export class NotificationsListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onScroll() {
+    //https://www.npmjs.com/package/ngx-infinite-scroll - dokumentacija
+    console.log('scrolled!!');
+    this.notifications.push({id: "2", title: "Notification from scroll", description: "This is a notification 2", dateTime: new Date(), read: false});
+    this.notifications.push({id: "2", title: "Notification 2 from scroll", description: "This is a notification 2", dateTime: new Date(), read: true});
+  }
+
 }

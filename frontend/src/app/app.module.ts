@@ -69,6 +69,7 @@ import { ActionResultComponent } from './components/dialogs/action-result/action
 import { NotificationsListComponent } from './components/lists/notifications-list/notifications-list.component';
 import { NotificationItemComponent } from './components/items/notification-item/notification-item.component';
 import { NotificationService } from './services/notification/notification.service';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -145,7 +146,8 @@ import { NotificationService } from './services/notification/notification.servic
     HttpClientModule,
     MatDialogModule,
     MatSelectModule,
-    NgbModule
+    NgbModule,
+    InfiniteScrollModule
   ],
   providers: [
     UserService,
