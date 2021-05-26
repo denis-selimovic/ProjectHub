@@ -31,5 +31,6 @@ export class NewIssueFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("kliknuto submit");
   }
 }
