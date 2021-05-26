@@ -12,8 +12,12 @@
         <li><a routerLink="issues">Issues</a></li>
     </ul>
     <div class="icons">
-        <i class="far fa-bell fa-lg bell"></i>
+        <button class="bell-button" (click)="showNotificationsDiv()">
+            <i class="far fa-bell fa-lg bell"></i>
+            <span class="counter" *ngIf="hasNotifications"></span>
+        </button>
+        <div class="notifications" *ngIf="showNotifications">
+            <app-notifications-list></app-notifications-list>
+        </div>
     </div>
 </nav>
-
-

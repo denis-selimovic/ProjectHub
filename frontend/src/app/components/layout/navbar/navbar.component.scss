@@ -7,6 +7,7 @@ nav {
   padding: 10px 0;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 nav ul {
@@ -56,14 +57,6 @@ nav.stroke {
   justify-content: space-between;
 }
 
-.icons {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-}
-
 .bell {
   font-size: $fs-small;
   padding-right: 10px;
@@ -71,6 +64,36 @@ nav.stroke {
 
 .bell:hover {
   color: $blue;
+}
+
+.icons {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+
+  .red-bell {
+    color: $red;
+  }
+
+  .notifications {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    z-index: 10;
+    margin-top: 40px;
+    margin-right: 5px;
+
+    @media screen and (min-width: $screen-medium) {
+      width: 300px;
+    }
+
+    @media screen and (min-width: $screen-large) {
+      width: 500px;
+    }
+  }
 }
 
 .sign-out:hover {
@@ -119,4 +142,28 @@ nav.fill ul li a:hover:after {
   -webkit-animation: fill 1s forwards;
   -moz-animation: fill 1s forwards;
   opacity: 1;
+}
+
+.bell-button {
+  display: inline-block;
+  cursor: pointer;
+  background: transparent;
+  border: transparent;
+  padding: 5px;
+  position: relative;
+  max-width: 60px;
+
+  .counter {
+    position: absolute;
+    background: $red;
+    color: $white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 4px;
+    width: 10px;
+    height: 10px;
+    font-size: 10px;
+    top: 0;
+    left: 0;
+  }
 }

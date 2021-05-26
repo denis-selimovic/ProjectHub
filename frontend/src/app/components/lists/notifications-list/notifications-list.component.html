@@ -1,0 +1,16 @@
+<div class="notifications-list" 
+    *ngIf="notifications.length > 0" 
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll()"
+    [scrollWindow]="false">
+        <div class="notification" *ngFor="let n of notifications">
+            <div>
+                <app-notification-item [notification]="n"></app-notification-item>
+            </div>
+        </div>
+</div>
+<div class="empty-list" *ngIf="notifications.length == 0">
+     <p>You don't have any notifications.</p>
+</div>
