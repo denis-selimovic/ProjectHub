@@ -8,9 +8,20 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 
 export class NavbarComponent implements OnInit {
+  showNotifications: boolean = false;
+  hasNotifications: boolean = false;
 
   constructor(public userService: UserService, public router: Router) { }
 
   ngOnInit(): void {
+    //just for testing
+    setTimeout(() => {
+      this.hasNotifications = true;
+    }, 5000);
+  }
+
+  showNotificationsDiv() {
+    this.showNotifications = !this.showNotifications;
+    if(this.hasNotifications) this.hasNotifications = false;
   }
 }
