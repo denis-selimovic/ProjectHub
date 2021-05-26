@@ -45,8 +45,12 @@ public class NotificationService {
         return notificationUserRepository.save(notificationUser);
     }
 
-    public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Pageable pageable) {
-        return notificationUserRepository.findNotificationByUser(userId, pageable);
+    public Page<NotificationDTO> getNotificationsForUser(final UUID userId, final Boolean read, final Pageable pageable) {
+        if(read == null) {
+            return notificationUserRepository.findNotificationByUser(userId, pageable);
+        }else {
+            return notificationUserRepository.findNotificationByUserAndRead(userId, read, pageable);
+        }
     }
 
     public Notification findById(UUID notificationId) {
