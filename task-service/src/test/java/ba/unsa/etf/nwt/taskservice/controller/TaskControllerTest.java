@@ -118,6 +118,7 @@ public class TaskControllerTest {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(projectId);
+        projectDTO.setName("Project 1");
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
         mockMvc.perform(post("/api/v1/tasks")
                 .header(HttpHeaders.AUTHORIZATION, token)
@@ -135,7 +136,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.name").hasJsonPath())
                 .andExpect(jsonPath("$.data.description").hasJsonPath())
                 .andExpect(jsonPath("$.data.user_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.user_first_name").hasJsonPath())
+                .andExpect(jsonPath("$.data.user_last_name").hasJsonPath())
                 .andExpect(jsonPath("$.data.project_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.project_name").hasJsonPath())
                 .andExpect(jsonPath("$.data.status").hasJsonPath())
                 .andExpect(jsonPath("$.data.type").hasJsonPath())
                 .andExpect(jsonPath("$.data.priority").hasJsonPath())
@@ -228,7 +232,7 @@ public class TaskControllerTest {
         JSONArray data = response.getJSONArray("data");
         assertEquals(data.length(), 20);
         for(int i = 0; i < data.length(); ++i) {
-            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "CRITICAL");
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority"), "CRITICAL");
             assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
         }
     }
@@ -247,7 +251,7 @@ public class TaskControllerTest {
         JSONArray data = response.getJSONArray("data");
         assertEquals(data.length(), 10);
         for(int i = 0; i < data.length(); ++i) {
-            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "CRITICAL");
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority"), "CRITICAL");
             assertEquals(data.getJSONObject(i).getJSONObject("status").get("status"), "IN_PROGRESS");
             assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
         }
@@ -267,7 +271,7 @@ public class TaskControllerTest {
         JSONArray data = response.getJSONArray("data");
         assertEquals(data.length(), 10);
         for(int i = 0; i < data.length(); ++i) {
-            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority_type"), "HIGH");
+            assertEquals(data.getJSONObject(i).getJSONObject("priority").get("priority"), "HIGH");
             assertEquals(data.getJSONObject(i).getJSONObject("type").get("type"), "SPIKE");
             assertEquals(data.getJSONObject(i).get("project_id"), projectId.toString());
         }
@@ -344,7 +348,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.status.id", is(task.getStatus().getId().toString())))
                 .andExpect(jsonPath("$.data.type.id", is(task.getType().getId().toString())))
                 .andExpect(jsonPath("$.data.user_id", is(task.getUserId().toString())))
-                .andExpect(jsonPath("$.data.project_id", is(task.getProjectId().toString())));
+                .andExpect(jsonPath("$.data.project_id", is(task.getProjectId().toString())))
+                .andExpect(jsonPath("$.data.project_name", is(task.getProjectName())))
+                .andExpect(jsonPath("$.data.user_first_name", is(task.getUserFirstName())))
+                .andExpect(jsonPath("$.data.user_last_name", is(task.getUserLastName())));
     }
 
 
@@ -366,7 +373,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.status.id", is(task.getStatus().getId().toString())))
                 .andExpect(jsonPath("$.data.type.id", is(task.getType().getId().toString())))
                 .andExpect(jsonPath("$.data.user_id", is(task.getUserId().toString())))
-                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())));
+                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())))
+                .andExpect(jsonPath("$.data.project_name", is(task.getProjectName())))
+                .andExpect(jsonPath("$.data.user_first_name", is(task.getUserFirstName())))
+                .andExpect(jsonPath("$.data.user_last_name", is(task.getUserLastName())));
     }
 
     @Test
@@ -388,7 +398,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.status.id", is(inProgress.getId().toString())))
                 .andExpect(jsonPath("$.data.type.id", is(spike.getId().toString())))
                 .andExpect(jsonPath("$.data.user_id", is(task.getUserId().toString())))
-                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())));
+                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())))
+                .andExpect(jsonPath("$.data.project_name", is(task.getProjectName())))
+                .andExpect(jsonPath("$.data.user_first_name", is(task.getUserFirstName())))
+                .andExpect(jsonPath("$.data.user_last_name", is(task.getUserLastName())));
     }
 
     @Test
@@ -409,7 +422,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.status.id", is(task.getStatus().getId().toString())))
                 .andExpect(jsonPath("$.data.type.id", is(task.getType().getId().toString())))
                 .andExpect(jsonPath("$.data.user_id", is(userId.toString())))
-                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())));
+                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())))
+                .andExpect(jsonPath("$.data.project_name", is(task.getProjectName())))
+                .andExpect(jsonPath("$.data.user_first_name", is(task.getUserFirstName())))
+                .andExpect(jsonPath("$.data.user_last_name", is(task.getUserLastName())));
     }
 
     @Test
@@ -430,7 +446,10 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.data.status.id", is(task.getStatus().getId().toString())))
                 .andExpect(jsonPath("$.data.type.id", is(task.getType().getId().toString())))
                 .andExpect(jsonPath("$.data.user_id", nullValue()))
-                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())));
+                .andExpect(jsonPath("$.data.project_id").value(is(task.getProjectId().toString())))
+                .andExpect(jsonPath("$.data.project_name", is(task.getProjectName())))
+                .andExpect(jsonPath("$.data.user_first_name", nullValue()))
+                .andExpect(jsonPath("$.data.user_last_name", nullValue()));
     }
 
     @Test
@@ -640,7 +659,10 @@ public class TaskControllerTest {
         task.setPriority(priority);
         task.setStatus(status);
         task.setProjectId(projectId);
+        task.setProjectName("Project name");
         task.setUserId(userId);
+        task.setUserFirstName("First");
+        task.setUserLastName("Last");
         task.setUpdatedBy(UUID.randomUUID());
         return taskRepository.save(task);
     }

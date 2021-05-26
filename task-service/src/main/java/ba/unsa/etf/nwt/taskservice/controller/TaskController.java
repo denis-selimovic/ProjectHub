@@ -105,10 +105,10 @@ public class TaskController {
                                                    @RequestBody @Valid PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
         projectService.findProjectById(resourceOwner, task.getProjectId());
-        if(patchTaskRequest.getUserId().isPresent()){
+        if(patchTaskRequest.getUserId().isPresent() && patchTaskRequest.getUserId().get() != null){
             projectService.findCollaboratorById(resourceOwner, patchTaskRequest.getUserId().get(), task.getProjectId());
         }
-        taskService.patch(task, patchTaskRequest, resourceOwner.getId());
+        taskService.patch(task, patchTaskRequest, resourceOwner.getId(), resourceOwner);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
 

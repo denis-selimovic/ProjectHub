@@ -15,6 +15,7 @@ import ba.unsa.etf.nwt.taskservice.model.Type;
 import ba.unsa.etf.nwt.taskservice.repository.TaskRepository;
 import ba.unsa.etf.nwt.taskservice.request.create.CreateTaskRequest;
 import ba.unsa.etf.nwt.taskservice.request.patch.PatchTaskRequest;
+import ba.unsa.etf.nwt.taskservice.response.interfaces.Resource;
 import ba.unsa.etf.nwt.taskservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.taskservice.utility.JsonNullableUtils;
 import lombok.RequiredArgsConstructor;
@@ -95,10 +96,23 @@ public class TaskService {
         return new PageImpl<>(taskDTOList);
     }
 
-    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest, UUID updatedBy) {
+    public Task patch(final Task task, final PatchTaskRequest patchTaskRequest, UUID updatedBy, ResourceOwner resourceOwner) {
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getName(), task::setName);
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getDescription(), task::setDescription);
-        JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
+//        JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
+
+        if(patchTaskRequest.getUserId().isPresent()) {
+            task.setUserId(patchTaskRequest.getUserId().get());
+            if (patchTaskRequest.getUserId().get() == null) {
+                task.setUserFirstName(null);
+                task.setUserLastName(null);
+            } else {
+                UserDTO userDTO = userService.getUserById(resourceOwner, patchTaskRequest.getUserId().get());
+                task.setUserFirstName(userDTO.getFirstName());
+                task.setUserLastName(userDTO.getLastName());
+            }
+        }
+
         if(patchTaskRequest.getPriorityId().isPresent()){
             task.setPriority(priorityService.findById(patchTaskRequest.getPriorityId().get()));
         }
