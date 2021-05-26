@@ -1,4 +1,4 @@
 <div class="list table" *ngFor="let issue of issues">
-    <app-issue-item [issue]="issue" (itemEvent)="detailsClicked($event)"></app-issue-item>
+    <app-issue-item [issue]="issue" (itemEvent)="detailsClicked($event)" (deleteIssueEvent)="deleteIssue($event)"></app-issue-item>
 </div>
 

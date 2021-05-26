@@ -11,8 +11,9 @@ import { EventEmitter } from '@angular/core';
 })
 export class IssueItemComponent implements OnInit {
   @Input() issue: Issue;
-  imageSrc: String;
+  imageSrc: string;
   @Output() itemEvent = new EventEmitter<Issue>();
+  @Output() deleteIssueEvent = new EventEmitter<string>();
 
   constructor(private modalService: NgbModal) {
    }
@@ -45,6 +46,7 @@ export class IssueItemComponent implements OnInit {
     this.itemEvent.emit(issue);
   }
 
-
-
+  removeIssue(id: string) {
+    this.deleteIssueEvent.emit(id);
+  }
 }
