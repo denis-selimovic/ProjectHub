@@ -7,10 +7,10 @@
         <li><a routerLink="my-account">My account</a></li>
     </ul>
     <ul *ngIf="router.url.includes('/issues') || router.url.includes('/tasks') || router.url.includes('/collaborators')">
-        <li><a routerLink="dashboard">Home</a></li>
-        <li><a routerLink="projects/:id/collaborators">Collaborators</a></li>
-        <li><a routerLink="projects/:id/tasks">Tasks</a></li>
-        <li><a routerLink="projects/:id/issues">Issues</a></li>
+        <li><a routerLink="dashboard">Dashboard</a></li>
+        <li><a routerLink="collaborators" >Collaborators</a></li>
+        <li><a routerLink="tasks">Tasks</a></li>
+        <li><a routerLink="issues">Issues</a></li>
     </ul>
     <div class="icons">
         <i class="far fa-bell fa-lg bell"></i>

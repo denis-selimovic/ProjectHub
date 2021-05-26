@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { Issue } from 'src/app/models/Issue';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateIssueModalComponent } from '../../modals/create-issue-modal/create-issue-modal.component';
-import { ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-issues',
   templateUrl: './issues.component.html',
@@ -12,13 +12,17 @@ export class IssuesComponent implements OnInit {
   issues: Array<Issue>;
   issue: Issue;
   show: boolean;
+  projectId: String;
   
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, private route: ActivatedRoute) {
    }
 
   ngOnInit(): void {
     this.show = false;
+    this.route.params.subscribe(params => {
+      this.projectId = params.id;
+    });
     this.issues = [
       {
         id: "e7165476-b729-11eb-8529-0242ac130003", 
