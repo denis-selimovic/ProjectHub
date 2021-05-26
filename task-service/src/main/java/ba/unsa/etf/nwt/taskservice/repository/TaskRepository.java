@@ -17,7 +17,7 @@ import java.util.UUID;
 @Repository
 public interface TaskRepository extends PagingAndSortingRepository<Task, UUID> {
     Optional<Task> findByNameAndProjectId(String name, UUID projectId);
-    Page<TaskDTO> findAll(Specification<Task> specification, Pageable pageable);
+    Page<Task> findAll(Specification<Task> specification, Pageable pageable);
 
     @Query(value = "DELETE FROM issues i WHERE i.project_id = :projectId", nativeQuery = true)
     @Modifying
