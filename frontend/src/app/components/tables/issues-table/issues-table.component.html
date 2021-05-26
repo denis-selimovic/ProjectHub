@@ -1,5 +1,4 @@
-<div class="list table" *ngFor="let row of obs | async">
-    <app-issue-item [issue]="row" (itemEvent)="detailsClicked($event)"></app-issue-item>
+<div class="list table" *ngFor="let issue of issues">
+    <app-issue-item [issue]="issue" (itemEvent)="detailsClicked($event)"></app-issue-item>
 </div>
-<mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons></mat-paginator>
 

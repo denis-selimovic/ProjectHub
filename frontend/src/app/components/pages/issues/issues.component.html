@@ -2,10 +2,18 @@
     <div class="issues-page">
         <div class="page-content">
             <div>
+                <div class="title">
+                    <h3>{{title}}</h3>
+                </div>
                 <div id="create-btn">
                     <button class="form-button btn" (click)="openModal()">Create issue</button>
                 </div>
-                <app-issues-table [issues]="issues" (issueEvent)="detailsClicked($event)"></app-issues-table>
+                <app-issues-table [issues]="issues" (issueEvent)="detailsClicked($event)" [title]="title"></app-issues-table>
+                <div class="controls">
+                    <div class="right">
+                        <mat-paginator [pageSizeOptions]="pageOptions" (page)="paginate($event)" [length]="issueNum"></mat-paginator>
+                    </div>
+                </div>
             </div>
             <div *ngIf="issue !== undefined && show == true">
                 <div class="details-form">

@@ -45,4 +45,6 @@ export class IssueItemComponent implements OnInit {
     this.itemEvent.emit(issue);
   }
 
+
+
 }
