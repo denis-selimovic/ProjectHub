@@ -156,6 +156,7 @@ public class CommentControllerTest {
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);
+        task.setProjectName("Project name");
         task.setUpdatedBy(UUID.randomUUID());
         task = taskRepository.save(task);
 
@@ -283,9 +284,11 @@ public class CommentControllerTest {
         UUID projectId = UUID.randomUUID();
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(projectId);
+        projectDTO.setName("Project name");
         Mockito.when(projectService.findProjectById(Mockito.any(), eq(projectId))).thenReturn(projectDTO);
 
         task.setProjectId(projectId);
+        task.setProjectName(projectDTO.getName());
         task.setUpdatedBy(UUID.randomUUID());
         return taskRepository.save(task);
     }
