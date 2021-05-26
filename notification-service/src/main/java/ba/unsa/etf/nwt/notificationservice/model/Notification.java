@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -49,7 +50,7 @@ public class Notification {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "notification", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<NotificationUser> users = new HashSet<>();
 }
