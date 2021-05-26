@@ -3,7 +3,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MatInputModule} from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { LoginComponent } from './components/pages/login/login.component';
@@ -57,7 +57,7 @@ import { TasksItemComponent } from './components/lists/tasks-item/tasks-item.com
 import { NewTaskModalComponent } from './components/dialogs/new-task-modal/new-task-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './components/pages/task-details/task-details.component';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { CommentsListComponent } from './components/lists/comments-list/comments-list.component';
 import { CommentsItemComponent } from './components/lists/comments-item/comments-item.component';
 import { ConfirmDeletionComponent } from './components/dialogs/confirm-deletion/confirm-deletion.component';
