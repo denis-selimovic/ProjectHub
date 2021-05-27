@@ -99,7 +99,6 @@ public class TaskService {
     public Task patch(final Task task, final PatchTaskRequest patchTaskRequest, UUID updatedBy, ResourceOwner resourceOwner) {
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getName(), task::setName);
         JsonNullableUtils.changeIfPresent(patchTaskRequest.getDescription(), task::setDescription);
-//        JsonNullableUtils.changeIfPresent(patchTaskRequest.getUserId(), task::setUserId);
 
         if(patchTaskRequest.getUserId().isPresent()) {
             task.setUserId(patchTaskRequest.getUserId().get());

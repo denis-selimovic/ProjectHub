@@ -104,6 +104,21 @@ export class TaskService {
     );
   }
 
+  patchTaskDescription(taskId: string, description: string, callback: any, error: any): any {
+    this.http.patch(`${environment.api}/api/v1/tasks/${taskId}`, 
+      {
+        description: description
+      }, 
+      {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(this.getTaskFromResponseData(data.data)),
+      (err: any) => error(err)
+    );
+  }
+
   private getTasksFromResponseData(responseData: any): Array<Task> {
     let tasks = new Array<Task>();
     for (let i = 0; i < responseData.length; i++) {

@@ -3,7 +3,7 @@
   <form class="left-form" [formGroup]="leftForm">
    <textarea rows="4" id="description" formControlName="description"></textarea>
    <div class="error"
-    *ngIf="!leftForm?.get('description')?.valid && (leftForm?.get('description')?.dirty ||leftForm?.get('description')?.touched)">
+    *ngIf="!leftForm?.get('description')?.valid && (leftForm?.get('description')?.dirty || leftForm?.get('description')?.touched)">
     <div class="error" *ngIf="leftForm?.get('description')?.errors?.required">
      Description is required
     </div>
@@ -11,6 +11,12 @@
      Description can't contain more than 255 characters
     </div>
    </div>
+  <div class="error">
+    {{descriptionErrorMessage}}
+  </div>
+  <div class="success">
+    {{descriptionSuccessMessage}}
+  </div>
 
    <div class="buttons-container">
     <button class="red-button" (click)="leftForm?.get('description').setValue(task.description)">Clear changes</button>

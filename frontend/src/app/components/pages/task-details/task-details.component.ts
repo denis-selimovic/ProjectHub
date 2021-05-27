@@ -28,11 +28,17 @@ export class TaskDetailsComponent implements OnInit {
   selectedPriority: any;
   selectedStatus: any;
 
+  descriptionSuccessMessage: string;
+  descriptionErrorMessage: string;
+
   constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private route: ActivatedRoute) { 
+    this.descriptionErrorMessage = '';
+    this.descriptionSuccessMessage = '';
   }
 
   ngOnInit(): void {
     this.currentUser = this.userService.getCurrentUser();
+
     this.route.params.subscribe(params => {
       this.projectId = params.projectId;
       this.taskId = params.taskId;
@@ -101,6 +107,7 @@ export class TaskDetailsComponent implements OnInit {
       description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
       comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });   
+
     this.rightForm = this.formBuilder.group({
       collaborator: new FormControl(),
       priority: new FormControl(),
@@ -134,8 +141,17 @@ export class TaskDetailsComponent implements OnInit {
     )
   }
 
-  patchDescription(description: String) {
-    console.log(description);
+  patchDescription(description: string) {
+    this.taskService.patchTaskDescription(this.taskId, 
+      description, 
+      (data: any) => {
+        this.descriptionSuccessMessage = "Description successfully changed";
+        setTimeout(() => this.descriptionSuccessMessage = '', 1800);
+      },
+      (err: any) => { 
+        this.descriptionErrorMessage = err.error.errors.message;
+        setTimeout(() => this.descriptionErrorMessage = '', 1800);
+      })
   }
 
   addComment(comment: String) {
