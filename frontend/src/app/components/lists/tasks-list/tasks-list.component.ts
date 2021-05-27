@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Task } from 'src/app/models/Task';
+import { Task } from 'src/app/services/task/task.service';
 
 @Component({
   selector: 'app-tasks-list',
@@ -16,8 +16,9 @@ export class TasksListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getTaskDetails() {
-    this.router.navigate(["/tasks/details"]);
+  getTaskDetails(projectId: string, taskId: string) {
+    const path = "/projects/" + projectId + "/tasks/" + taskId;
+    this.router.navigate([path]);
   }
 
 }

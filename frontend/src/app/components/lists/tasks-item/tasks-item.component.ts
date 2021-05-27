@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Task } from 'src/app/models/Task';
+import { Task } from 'src/app/services/task/task.service';
 
 @Component({
   selector: 'app-tasks-item',
@@ -8,17 +8,14 @@ import { Task } from 'src/app/models/Task';
 })
 export class TasksItemComponent implements OnInit {
 
-  @Input() task: any;
-  initials: String;
+  @Input() task: Task;
   imageSrc: String;
 
   constructor() {
   }
 
   ngOnInit(): void {
-    const firstLastName = this.task.userName.split(' ');
-    this.initials = this.task === undefined ? '' :firstLastName[0][0] + firstLastName[1][0];
-    switch (this.task.type.type) {
+    switch (this.task.priority.priority) {
       case "HIGH":
         this.imageSrc = "assets/priority_high.png";        
         break;

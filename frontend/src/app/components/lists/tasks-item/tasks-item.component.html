@@ -5,8 +5,8 @@
  </p>
  <div class="item-footer">
   <img [src]="imageSrc"/>
-  <div class="initials-container">
-   {{initials}}
+  <div *ngIf="task.userId !== null" class="initials-container">
+   {{task.userFirstName[0]}}{{task.userLastName[0]}}
   </div>
  </div>
 </div>

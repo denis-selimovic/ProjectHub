@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Task } from 'src/app/models/Task';
 import { TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
@@ -11,8 +12,9 @@ import { TasksComponent } from '../tasks/tasks.component';
   styleUrls: ['./task-details.component.scss']
 })
 export class TaskDetailsComponent implements OnInit {
+  taskId: string;
   task: Task;
-  project: any;
+  projectId: string;
   collaborators: Array<User>;
   comments: any;
   priorities: any;
@@ -26,35 +28,20 @@ export class TaskDetailsComponent implements OnInit {
   selectedPriority: any;
   selectedStatus: any;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService) { 
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private route: ActivatedRoute) { 
   }
 
   ngOnInit(): void {
     this.currentUser = this.userService.getCurrentUser();
+    this.route.params.subscribe(params => {
+      this.projectId = params.projectId;
+      this.taskId = params.taskId;
+    });
+    
+    this.loadTask();
     this.loadPriorities();
     this.loadStatuses();
     this.loadTypes();
-
-    this.project = {
-      name: "NWT-101"
-    }
-
-    this.task = 
-    {
-      id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-      name: "Create design",
-      description: "This task includes creating UI design for each functionality of the application. Design should follow best practices.",
-      userName: "Lamija Vrnjak",
-      projectName: "NWT-101",
-      status: {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        status: "IN PROGRESS",
-      },
-      type: {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        type: "CRITICAL"
-      }
-    }
 
     this.comments = [
       {
@@ -100,12 +87,20 @@ export class TaskDetailsComponent implements OnInit {
     this.selectedCollaborator = this.collaborators[0];
 
     this.errorMessage = "";
+  }
 
+  loadTask() {
+    this.taskService.getTaskById(this.taskId,
+      (data: any) => this.onTaskLoad(data),
+      (err: any) => console.log(err));
+  }
+
+  onTaskLoad(data) {
+    this.task = data;
     this.leftForm = this.formBuilder.group({
       description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
       comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });   
-
     this.rightForm = this.formBuilder.group({
       collaborator: new FormControl(),
       priority: new FormControl(),
