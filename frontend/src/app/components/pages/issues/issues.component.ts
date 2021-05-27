@@ -60,6 +60,7 @@ export class IssuesComponent implements OnInit {
 
   openModal() {
     const modalRef = this.modalService.open(CreateIssueModalComponent);
+    modalRef.componentInstance.projectId = this.projectId;
   }
 
   detailsClicked(issue: Issue): void {

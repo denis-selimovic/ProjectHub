@@ -27,7 +27,18 @@ export class IssueService {
         );
     }
 
-    deleteProject(id: string, callback: any, error: any): any {
+    createIssue(form: any, callback: any, error: any): any {
+        this.http.post(`${environment.api}/api/v1/issues`, form, {
+          headers: {
+            Authorization: this.tokenService.getAccessToken()
+          }
+        }).subscribe(
+          (data: any) => callback(data),
+          (err: any) => error(err)
+        );
+      }
+
+    deleteIssue(id: string, callback: any, error: any): any {
         this.http.delete(`${environment.api}/api/v1/issues/${id}`, {
           headers: {
             Authorization: this.tokenService.getAccessToken()
@@ -37,5 +48,4 @@ export class IssueService {
           (err: any) => error(err)
         );
     }
-
 }

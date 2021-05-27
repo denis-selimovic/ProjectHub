@@ -30,7 +30,7 @@ export class IssuesTableComponent implements OnInit {
     deleteModal.componentInstance.successMessage = '';
     deleteModal.componentInstance.errorMessage = '';
     deleteModal.componentInstance.action = () => {
-      this.issueService.deleteProject(issueId, (data: any) => {
+      this.issueService.deleteIssue(issueId, (data: any) => {
         deleteModal.componentInstance.successMessage = 'Issue successfully deleted.';
       }, (err: any) => {
         deleteModal.componentInstance.errorMessage = 'Something went wrong when deleting issue. Please try again.';

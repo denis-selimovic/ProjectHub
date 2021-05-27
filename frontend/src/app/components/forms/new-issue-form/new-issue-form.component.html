@@ -1,19 +1,19 @@
-<form class="new-issue" [formGroup]="newIssueForm" (ngSubmit)="onSubmit()">
+<form class="new-issue" [formGroup]="newIssueForm" *ngIf="newIssueForm" (ngSubmit)="onSubmit()">
  <div class="form-content">
   <div class="input-container">
    <h2>
     <span>New issue for: </span>
-    <span id="projectNameSpan">{{project.name}}</span>
+    <span id="projectNameSpan">{{projectName}}</span>
    </h2>
 
    <label for="issue-name" class="input-label">Issue name*</label>
-   <input id="issue-name" formControlName="issueName" class="input-field">
+   <input id="issue-name" formControlName="name" class="input-field">
    <div class="error"
-    *ngIf="!newIssueForm?.get('issueName')?.valid && (newIssueForm?.get('issueName')?.dirty ||newIssueForm?.get('issueName')?.touched)">
-    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.required">
+    *ngIf="!newIssueForm?.get('name')?.valid && (newIssueForm?.get('name')?.dirty ||newIssueForm?.get('name')?.touched)">
+    <div class="error" *ngIf="newIssueForm?.get('name')?.errors?.required">
      Issue name is required
     </div>
-    <div class="error" *ngIf="newIssueForm?.get('issueName')?.errors?.maxlength">
+    <div class="error" *ngIf="newIssueForm?.get('name')?.errors?.maxlength">
      Issue name can't contain more than 50 characters
     </div>
    </div>
@@ -32,14 +32,16 @@
 
    <label for="priority" class="input-label">Priority*</label>
    <br/>
-   <select class="select-option" name="priority" formControlName="priority">
-    <option *ngFor="let priority of priorities" [value]="priorities">
-     {{priority.priority}}
-    </option>
-   </select>
+    <select class="select-option" formControlName="priority_id">
+     <option *ngFor="let priority of priorities" [value]="priority.id">
+      {{priority.priority}}
+     </option>
+    </select>
  
    <button type="submit" [disabled]="newIssueForm.invalid" class="form-button">Add issue</button>
-
+   <div class="succes" *ngIf="successMessage">
+       <h5>{{successMessage}}</h5>
+   </div>
   </div>
  </div>
 </form>
