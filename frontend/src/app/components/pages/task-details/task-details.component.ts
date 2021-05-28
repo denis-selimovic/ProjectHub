@@ -86,7 +86,8 @@ export class TaskDetailsComponent implements OnInit {
     this.rightForm = this.formBuilder.group({
       collaborator: new FormControl(),
       priority: new FormControl(),
-      status: new FormControl()
+      status: new FormControl(),
+      type: new FormControl()
     });   
 
     this.loadCollaborators(); 
@@ -108,6 +109,7 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.getTypes(
       (data: any) => {
         this.types = data.data;
+        this.rightForm.patchValue({type: this.types.find(t => t.id === this.task.type.id)});
       } 
     )
   }
@@ -121,11 +123,10 @@ export class TaskDetailsComponent implements OnInit {
     )
   }
 
-  // todo srediti ovo oko kolaboratora kada su null
   loadCollaborators() {
     this.collaboratorService.getCollaborators(this.projectId,
       (data: any) => this.onCollaboratorsLoad(data), 
-      () => this.errorMessage = 'Error while loading data. Please try again later.');
+      () => this.userPriorityStatusErrorMessage = 'Error while loading data. Please try again later.');
   }
 
   onCollaboratorsLoad(data: any): any {
@@ -172,7 +173,7 @@ export class TaskDetailsComponent implements OnInit {
         status_id: form.status.id
       }, 
       (data: any) => {
-        this.userPriorityStatusSuccessMessage = "Task detailes successfully changed";
+        this.userPriorityStatusSuccessMessage = "Task details successfully changed";
         setTimeout(() => this.userPriorityStatusSuccessMessage = '', 1800);
       },
       (err: any) => { 
