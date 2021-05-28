@@ -39,9 +39,15 @@
     </select>
  
    <button type="submit" [disabled]="newIssueForm.invalid" class="form-button">Add issue</button>
-   <div class="succes" *ngIf="successMessage">
+
+   <div class="succes">
        <h5>{{successMessage}}</h5>
    </div>
+
+   <div class="error">
+       {{errorMessage}}
+   </div>
+
   </div>
  </div>
 </form>

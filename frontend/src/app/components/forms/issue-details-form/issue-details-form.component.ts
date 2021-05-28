@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Issue } from 'src/app/models/Issue';
+import { IssueService } from 'src/app/services/issue/issue.service';
+import { TaskService } from 'src/app/services/task/task.service';
 
 
 @Component({
@@ -9,41 +11,59 @@ import { Issue } from 'src/app/models/Issue';
   styleUrls: ['./issue-details-form.component.scss']
 })
 export class IssueDetailsFormComponent implements OnChanges {
-  issueDetailsForm: FormGroup;
+
   @Input() issue: Issue;
-  show: boolean;
-  priorities: Array<String>;
-  reporters: any;
   @Output() closeEvent = new EventEmitter<boolean>();
 
-  constructor(private formBuilder: FormBuilder) { 
+  issueDetailsForm: FormGroup;
+  errorMessage: string;
+  successMessage: string;
+  priorities: any;
+  show: boolean;
+  
+  constructor(private formBuilder: FormBuilder, private issueService: IssueService, private taskService: TaskService) { 
+    this.taskService.getPriorities((data: any) => { this.priorities = data.data; })
     this.show = false;
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //if(changes.hasOwnProperty('input'))
     if(this.issue !== undefined) {
       this.issueDetailsForm = this.formBuilder.group({
-        issueName: new FormControl(this.issue.name, [Validators.required, Validators.maxLength(50)]),      
+        name: new FormControl(this.issue.name, [Validators.required, Validators.maxLength(50)]),      
         description: new FormControl(this.issue.description, [Validators.required, Validators.maxLength(255)]),
-        priority: new FormControl(this.issue.priority.toString, Validators.required),
-        reporter: new FormControl('')
+        priority_id: new FormControl(this.issue.priority.id, Validators.required),
       });
-      this.priorities = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
-      this.reporters = [{email: "azigo1@etf.unsa.ba"}]
       this.show = true;
     }
   }
 
   onSubmit(): void {
+    const form = this.issueDetailsForm.getRawValue();
+    this.editIssue(form);
+  }
+
+  private editIssue(form: any): any {
+    this.issueService.editIssue(this.issue.id, form,
+      () => this.close(true),
+      (data: any) => this.error(data)
+    );
   }
 
   close(value: boolean): void {
-    this.issue = undefined;
-    this.closeEvent.emit(value);
+    this.successMessage = 'Issue successfully updated.';
+    setTimeout(() => { 
+      this.closeEvent.emit(value); 
+      this.issue = undefined;
+    }, 2000);
+  }
+
+  error(data: any) {
+    this.errorMessage = data.data;
   }
 
 }

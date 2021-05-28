@@ -78,4 +78,8 @@ export class IssuesComponent implements OnInit {
   deleteIssue(): any {
     this.loadIssues();
   }
+
+  issueUpdated(data: any): any {
+    this.loadIssues();
+  }
 }

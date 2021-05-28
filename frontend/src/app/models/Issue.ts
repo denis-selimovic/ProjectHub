@@ -3,5 +3,5 @@ export interface Issue {
     name: string,
     description: string,
     projectId: string,
-    priority: string
+    priority: any
 }
