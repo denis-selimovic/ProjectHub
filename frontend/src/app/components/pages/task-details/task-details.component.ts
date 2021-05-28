@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Task } from 'src/app/models/Task';
-import { TaskService } from 'src/app/services/task/task.service';
+import { CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
 import { TasksComponent } from '../tasks/tasks.component';
 
@@ -24,16 +24,17 @@ export class TaskDetailsComponent implements OnInit {
   rightForm: FormGroup;
   errorMessage: String;
   currentUser: User;
-  selectedCollaborator: User;
-  selectedPriority: any;
-  selectedStatus: any;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
+  userPriorityStatusSuccessMessage: string;
+  userPriorityStatusErrorMessage: string;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private route: ActivatedRoute) { 
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private collaboratorService: CollaboratorService, private route: ActivatedRoute) { 
     this.descriptionErrorMessage = '';
     this.descriptionSuccessMessage = '';
+    this.userPriorityStatusErrorMessage = '';
+    this.userPriorityStatusSuccessMessage = '';
   }
 
   ngOnInit(): void {
@@ -45,10 +46,7 @@ export class TaskDetailsComponent implements OnInit {
     });
     
     this.loadTask();
-    this.loadPriorities();
-    this.loadStatuses();
-    this.loadTypes();
-
+ 
     this.comments = [
       {
         id: "id",
@@ -68,29 +66,6 @@ export class TaskDetailsComponent implements OnInit {
         task: this.task
       }
     ] 
-
-    this.collaborators = [
-      {
-        id: "13e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "lamijavrnjak@gmail.com",
-        firstName: "Lamija",
-        lastName: "Vrnjak"
-      },
-      {
-        id: "14e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "amilazigo@gmail.com",
-        firstName: "Amila",
-        lastName: "Zigo"
-      },
-      {
-        id: "15e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "denisselimovic@gmail.com",
-        firstName: "Denis",
-        lastName: "Selimovic"
-      }
-    ]
-
-    this.selectedCollaborator = this.collaborators[0];
 
     this.errorMessage = "";
   }
@@ -113,13 +88,18 @@ export class TaskDetailsComponent implements OnInit {
       priority: new FormControl(),
       status: new FormControl()
     });   
+
+    this.loadCollaborators(); 
+    this.loadPriorities();
+    this.loadStatuses();
+    this.loadTypes();
   }
 
   loadPriorities() {
     this.taskService.getPriorities(
       (data: any) => {
         this.priorities = data.data;
-        this.selectedPriority = this.priorities[0];
+        this.rightForm.patchValue({priority: this.priorities.find(p => p.id === this.task.priority.id)});
       }
     )
   }
@@ -127,7 +107,7 @@ export class TaskDetailsComponent implements OnInit {
   loadTypes() {
     this.taskService.getTypes(
       (data: any) => {
-        this.types = data.data     
+        this.types = data.data;
       } 
     )
   }
@@ -136,14 +116,31 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.getStatuses(
       (data: any) => {
         this.statuses = data.data;
-        this.selectedStatus = this.statuses[0];
+        this.rightForm.patchValue({status: this.statuses.find(s => s.id === this.task.status.id)});
       }  
     )
   }
 
+  // todo srediti ovo oko kolaboratora kada su null
+  loadCollaborators() {
+    this.collaboratorService.getCollaborators(this.projectId,
+      (data: any) => this.onCollaboratorsLoad(data), 
+      () => this.errorMessage = 'Error while loading data. Please try again later.');
+  }
+
+  onCollaboratorsLoad(data: any): any {
+    this.collaborators = data;
+    if (this.task.userId === null) 
+      this.rightForm.patchValue({collaborator: null});
+    else 
+      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.id === this.task.userId)});
+  }
+
   patchDescription(description: string) {
-    this.taskService.patchTaskDescription(this.taskId, 
-      description, 
+    this.taskService.patchTask(this.taskId, 
+      {
+        description: description
+      }, 
       (data: any) => {
         this.descriptionSuccessMessage = "Description successfully changed";
         setTimeout(() => this.descriptionSuccessMessage = '', 1800);
@@ -151,7 +148,8 @@ export class TaskDetailsComponent implements OnInit {
       (err: any) => { 
         this.descriptionErrorMessage = err.error.errors.message;
         setTimeout(() => this.descriptionErrorMessage = '', 1800);
-      })
+      }
+    );
   }
 
   addComment(comment: String) {
@@ -165,8 +163,23 @@ export class TaskDetailsComponent implements OnInit {
     console.log(comment);
   }
 
-  patch2() {
-    console.log("desno");
+  patchUserPriorityStatus() {
+    const form  = this.rightForm.getRawValue();
+    this.taskService.patchTask(this.taskId, 
+      {
+        user_id: form.collaborator === null ? null : form.collaborator.id,
+        priority_id: form.priority.id,
+        status_id: form.status.id
+      }, 
+      (data: any) => {
+        this.userPriorityStatusSuccessMessage = "Task detailes successfully changed";
+        setTimeout(() => this.userPriorityStatusSuccessMessage = '', 1800);
+      },
+      (err: any) => { 
+        this.userPriorityStatusErrorMessage = err.error.errors.message;
+        setTimeout(() => this.userPriorityStatusErrorMessage = '', 1800);
+      }
+    );
   }
 
   subscribe() {

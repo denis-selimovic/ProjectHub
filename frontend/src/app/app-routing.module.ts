@@ -94,7 +94,7 @@ const routes: Routes = [
     component: TasksComponent
   },
   {
-    path: 'projects/:id/tasks/:taskId',
+    path: 'projects/:projectId/tasks/:taskId',
     pathMatch: 'full',
     component: TaskDetailsComponent
   },

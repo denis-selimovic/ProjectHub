@@ -45,7 +45,7 @@
   </form>
 
   <div>
-    <form class="right-form" [formGroup]="rightForm" (ngSubmit)="patch2()">
+    <form class="right-form" [formGroup]="rightForm" (ngSubmit)="patchUserPriorityStatus()">
       
       <div class="flex-container">
       <div>
@@ -59,21 +59,20 @@
       <div class="flex-container">
       <div>
         Assignee:&nbsp;
-        <select formControlName="collaborator" [(ngModel)]="selectedCollaborator" name="collaborators">
+        <select formControlName="collaborator" name="collaborators">
           <option [ngValue]="null">None</option>
           <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
             {{collaborator.firstName}} {{collaborator.lastName}}
           </option>
         </select>
       </div>
-      <div *ngIf="selectedCollaborator!=null" class="initials-container">
-        {{selectedCollaborator.firstName[0]}}{{selectedCollaborator.lastName[0]}}
+      <div *ngIf="rightForm?.get('collaborator').value !== null" class="initials-container">
+        {{rightForm?.get('collaborator').value.firstName[0]}}{{rightForm?.get('collaborator').value.lastName[0]}}
       </div>
       </div>
 
       <div style="margin-bottom: 20px;">
-        <select formControlName="priority" [(ngModel)]="selectedPriority" name="priorities">
-        <option [ngValue]="null" disabled>None</option>
+        <select formControlName="priority" name="priorities">
         <option *ngFor="let priority of priorities" [ngValue]="priority">
           {{priority.priority}}
         </option>
@@ -81,12 +80,18 @@
       </div>
 
       <div style="margin-bottom: 20px;">
-        <select formControlName="status" [(ngModel)]="selectedStatus" name="statuses">
-          <option [ngValue]="null" disabled>None</option>
+        <select formControlName="status" name="statuses">
           <option *ngFor="let status of statuses" [ngValue]="status">
-            {{status.status}}
+            {{status.status.replace("_", " ")}}
           </option>
         </select>
+      </div>
+
+      <div class="error">
+        {{userPriorityStatusErrorMessage}}
+      </div>
+      <div class="success">
+        {{userPriorityStatusSuccessMessage}}
       </div>
 
       <div class="buttons-container">
@@ -94,11 +99,11 @@
       </div>
     </form>
 
-      <div class="buttons-container">
-        <button class="grey-button" (click)="subscribe()">Subscribe</button>
-      </div>
-      <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
-        <p>*By subscribing you agree to receiving notifications for given task</p>
-      </div>
+    <div class="buttons-container">
+      <button class="grey-button" (click)="subscribe()">Subscribe</button>
+    </div>
+    <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
+      <p>*By subscribing you agree to receiving notifications for given task</p>
+    </div>
   </div>
 </div>

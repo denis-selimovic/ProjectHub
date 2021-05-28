@@ -104,11 +104,9 @@ export class TaskService {
     );
   }
 
-  patchTaskDescription(taskId: string, description: string, callback: any, error: any): any {
+  patchTask(taskId: string, form: any, callback: any, error: any): any {
     this.http.patch(`${environment.api}/api/v1/tasks/${taskId}`, 
-      {
-        description: description
-      }, 
+      form, 
       {
       headers: {
         Authorization: this.tokenService.getAccessToken()
