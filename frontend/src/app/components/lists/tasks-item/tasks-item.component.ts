@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Task } from 'src/app/services/task/task.service';
 
 @Component({
@@ -10,8 +11,9 @@ export class TasksItemComponent implements OnInit {
 
   @Input() task: Task;
   imageSrc: String;
+  @Output() taskDelete: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,4 +33,12 @@ export class TasksItemComponent implements OnInit {
     }
   }
 
+  getTaskDetails(projectId: string, taskId: string) {
+    const path = "/projects/" + projectId + "/tasks/" + taskId;
+    this.router.navigate([path]);
+  }
+
+  deleteTask() {
+    this.taskDelete.emit(this.task.id);
+  }
 }

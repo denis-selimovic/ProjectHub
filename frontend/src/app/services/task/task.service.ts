@@ -117,6 +117,18 @@ export class TaskService {
     );
   }
 
+  deleteTask(taskId: string, callback: any, error: any) : any {
+    this.http.delete(`${environment.api}/api/v1/tasks/${taskId}`, 
+      {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(this.getTaskFromResponseData(data.data)),
+      (err: any) => error(err)
+    );
+  }
+
   private getTasksFromResponseData(responseData: any): Array<Task> {
     let tasks = new Array<Task>();
     for (let i = 0; i < responseData.length; i++) {

@@ -161,7 +161,6 @@ export class TaskDetailsComponent implements OnInit {
         task: this.task
     });
     this.leftForm.patchValue({comment: ''});
-    console.log(comment);
   }
 
   patchUserPriorityStatus() {

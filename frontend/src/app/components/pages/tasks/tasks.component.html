@@ -7,31 +7,31 @@
    <div class="title">
     <h2>Open</h2>
    </div>
-   <app-tasks-list [tasks]="openTasks"></app-tasks-list>
+   <app-tasks-list (onTaskDelete)="deleteTask()" [tasks]="openTasks"></app-tasks-list>
   </div>
   <div class="list-container">
    <div class="title">
     <h2>In progress</h2>
    </div>
-   <app-tasks-list [tasks]="inProgressTasks"></app-tasks-list>
+   <app-tasks-list (onTaskDelete)="deleteTask()" [tasks]="inProgressTasks"></app-tasks-list>
   </div>
   <div class="list-container">
    <div class="title">
     <h2>In review</h2>
    </div>
-   <app-tasks-list [tasks]="inReviewTasks"></app-tasks-list>
+   <app-tasks-list (onTaskDelete)="deleteTask()" [tasks]="inReviewTasks"></app-tasks-list>
   </div>
   <div class="list-container">
    <div class="title">
     <h2>In testing</h2>
    </div>
-   <app-tasks-list [tasks]="inTestingTasks"></app-tasks-list>
+   <app-tasks-list (onTaskDelete)="deleteTask()" [tasks]="inTestingTasks"></app-tasks-list>
   </div>
   <div class="list-container">
    <div class="title">
     <h2>Done</h2>
    </div>
-   <app-tasks-list [tasks]="doneTasks"></app-tasks-list>
+   <app-tasks-list (onTaskDelete)="deleteTask()" [tasks]="doneTasks"></app-tasks-list>
   </div>
  </div>
 </div>

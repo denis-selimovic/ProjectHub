@@ -54,4 +54,10 @@ export class TasksComponent implements OnInit {
     this.inTestingTasks = this.tasks.filter(task => task.status.status === "IN_TESTING");
     this.doneTasks = this.tasks.filter(task => task.status.status === "DONE");
   }
+
+  deleteTask() {
+    console.log("u tasks");
+    this.loadTasks();
+    this.changeDetection.detectChanges();
+  }
 }
