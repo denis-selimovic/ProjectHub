@@ -7,7 +7,9 @@
   margin-bottom: 20px;
   border-radius: $border-radius;
 
-  cursor: pointer;
+  p {
+    cursor: pointer;
+  }
 
   .item-footer {
     display: flex;
@@ -21,6 +23,14 @@
       background-color: #bbb;
       border-radius: 50%;
       text-align: center;
+    }
+
+    .delete-task:hover {
+      cursor: pointer;
+    }
+
+    .delete-task {
+      margin-right: 10px;
     }
   }
 }

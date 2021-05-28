@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Task } from 'src/app/models/Task';
-import { TaskService } from 'src/app/services/task/task.service';
+import { ActivatedRoute } from '@angular/router';
+import { CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
 import { TasksComponent } from '../tasks/tasks.component';
 
@@ -11,8 +12,9 @@ import { TasksComponent } from '../tasks/tasks.component';
   styleUrls: ['./task-details.component.scss']
 })
 export class TaskDetailsComponent implements OnInit {
+  taskId: string;
   task: Task;
-  project: any;
+  projectId: string;
   collaborators: Array<User>;
   comments: any;
   priorities: any;
@@ -22,40 +24,29 @@ export class TaskDetailsComponent implements OnInit {
   rightForm: FormGroup;
   errorMessage: String;
   currentUser: User;
-  selectedCollaborator: User;
-  selectedPriority: any;
-  selectedStatus: any;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService) { 
+  descriptionSuccessMessage: string;
+  descriptionErrorMessage: string;
+  userPriorityStatusSuccessMessage: string;
+  userPriorityStatusErrorMessage: string;
+
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private collaboratorService: CollaboratorService, private route: ActivatedRoute) { 
+    this.descriptionErrorMessage = '';
+    this.descriptionSuccessMessage = '';
+    this.userPriorityStatusErrorMessage = '';
+    this.userPriorityStatusSuccessMessage = '';
   }
 
   ngOnInit(): void {
     this.currentUser = this.userService.getCurrentUser();
-    this.loadPriorities();
-    this.loadStatuses();
-    this.loadTypes();
 
-    this.project = {
-      name: "NWT-101"
-    }
-
-    this.task = 
-    {
-      id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-      name: "Create design",
-      description: "This task includes creating UI design for each functionality of the application. Design should follow best practices.",
-      userName: "Lamija Vrnjak",
-      projectName: "NWT-101",
-      status: {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        status: "IN PROGRESS",
-      },
-      type: {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        type: "CRITICAL"
-      }
-    }
-
+    this.route.params.subscribe(params => {
+      this.projectId = params.projectId;
+      this.taskId = params.taskId;
+    });
+    
+    this.loadTask();
+ 
     this.comments = [
       {
         id: "id",
@@ -76,31 +67,17 @@ export class TaskDetailsComponent implements OnInit {
       }
     ] 
 
-    this.collaborators = [
-      {
-        id: "13e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "lamijavrnjak@gmail.com",
-        firstName: "Lamija",
-        lastName: "Vrnjak"
-      },
-      {
-        id: "14e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "amilazigo@gmail.com",
-        firstName: "Amila",
-        lastName: "Zigo"
-      },
-      {
-        id: "15e08bf2-b4b2-4003-9288-507136ab459a",
-        email: "denisselimovic@gmail.com",
-        firstName: "Denis",
-        lastName: "Selimovic"
-      }
-    ]
-
-    this.selectedCollaborator = this.collaborators[0];
-
     this.errorMessage = "";
+  }
 
+  loadTask() {
+    this.taskService.getTaskById(this.taskId,
+      (data: any) => this.onTaskLoad(data),
+      (err: any) => console.log(err));
+  }
+
+  onTaskLoad(data) {
+    this.task = data;
     this.leftForm = this.formBuilder.group({
       description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
       comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
@@ -109,15 +86,21 @@ export class TaskDetailsComponent implements OnInit {
     this.rightForm = this.formBuilder.group({
       collaborator: new FormControl(),
       priority: new FormControl(),
-      status: new FormControl()
+      status: new FormControl(),
+      type: new FormControl()
     });   
+
+    this.loadCollaborators(); 
+    this.loadPriorities();
+    this.loadStatuses();
+    this.loadTypes();
   }
 
   loadPriorities() {
     this.taskService.getPriorities(
       (data: any) => {
         this.priorities = data.data;
-        this.selectedPriority = this.priorities[0];
+        this.rightForm.patchValue({priority: this.priorities.find(p => p.id === this.task.priority.id)});
       }
     )
   }
@@ -125,7 +108,8 @@ export class TaskDetailsComponent implements OnInit {
   loadTypes() {
     this.taskService.getTypes(
       (data: any) => {
-        this.types = data.data     
+        this.types = data.data;
+        this.rightForm.patchValue({type: this.types.find(t => t.id === this.task.type.id)});
       } 
     )
   }
@@ -134,13 +118,39 @@ export class TaskDetailsComponent implements OnInit {
     this.taskService.getStatuses(
       (data: any) => {
         this.statuses = data.data;
-        this.selectedStatus = this.statuses[0];
+        this.rightForm.patchValue({status: this.statuses.find(s => s.id === this.task.status.id)});
       }  
     )
   }
 
-  patchDescription(description: String) {
-    console.log(description);
+  loadCollaborators() {
+    this.collaboratorService.getCollaborators(this.projectId,
+      (data: any) => this.onCollaboratorsLoad(data), 
+      () => this.userPriorityStatusErrorMessage = 'Error while loading data. Please try again later.');
+  }
+
+  onCollaboratorsLoad(data: any): any {
+    this.collaborators = data;
+    if (this.task.userId === null) 
+      this.rightForm.patchValue({collaborator: null});
+    else 
+      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.id === this.task.userId)});
+  }
+
+  patchDescription(description: string) {
+    this.taskService.patchTask(this.taskId, 
+      {
+        description: description
+      }, 
+      (data: any) => {
+        this.descriptionSuccessMessage = "Description successfully changed";
+        setTimeout(() => this.descriptionSuccessMessage = '', 1800);
+      },
+      (err: any) => { 
+        this.descriptionErrorMessage = err.error.errors.message;
+        setTimeout(() => this.descriptionErrorMessage = '', 1800);
+      }
+    );
   }
 
   addComment(comment: String) {
@@ -151,11 +161,25 @@ export class TaskDetailsComponent implements OnInit {
         task: this.task
     });
     this.leftForm.patchValue({comment: ''});
-    console.log(comment);
   }
 
-  patch2() {
-    console.log("desno");
+  patchUserPriorityStatus() {
+    const form  = this.rightForm.getRawValue();
+    this.taskService.patchTask(this.taskId, 
+      {
+        user_id: form.collaborator === null ? null : form.collaborator.id,
+        priority_id: form.priority.id,
+        status_id: form.status.id
+      }, 
+      (data: any) => {
+        this.userPriorityStatusSuccessMessage = "Task details successfully changed";
+        setTimeout(() => this.userPriorityStatusSuccessMessage = '', 1800);
+      },
+      (err: any) => { 
+        this.userPriorityStatusErrorMessage = err.error.errors.message;
+        setTimeout(() => this.userPriorityStatusErrorMessage = '', 1800);
+      }
+    );
   }
 
   subscribe() {

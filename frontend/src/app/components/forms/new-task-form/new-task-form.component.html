@@ -37,20 +37,20 @@
    </div>
 
    <div class="justified-container">
-    <select class="select-option" [(ngModel)]="selectedPriority" formControlName="priority" name="priorities" >
+    <select class="select-option" formControlName="priority" name="priorities" >
      <option *ngFor="let priority of priorities" [ngValue]="priority">
       {{priority.priority}}
      </option>
     </select>
 
-    <select class="select-option" formControlName="type" [(ngModel)]="selectedType" name="types">
+    <select class="select-option" formControlName="type" name="types">
      <option *ngFor="let type of types" [ngValue]="type">
       {{type.type}}
      </option>
     </select>
 
-    <select class="select-option" name="collaborators" [(ngModel)]="selectedCollaborator" formControlName="collaborator">
-     <option [ngValue]="null">None</option>
+    <select class="select-option" name="collaborators" formControlName="collaborator">
+     <option [ngValue]="{id: null}">None</option>
      <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
       {{collaborator.email}}
      </option>
@@ -58,6 +58,9 @@
    </div>
 
    <button type="submit" [disabled]="newTaskForm.invalid" class="form-button">Add task</button>
+
+   <p class="form-info-text error">{{errorMessage}}</p>
+   <p class="form-info-text">{{successMessage}}</p>
 
   </div>
  </div>

@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Task } from 'src/app/models/Task';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { NewTaskModalComponent } from '../../dialogs/new-task-modal/new-task-modal.component';
+import { ChangeDetectorRef, Component, OnInit, SimpleChanges } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-task-modal.component';
+import { Task, TaskService } from 'src/app/services/task/task.service';
+import { ActivatedRoute } from '@angular/router';
+import { NewTaskFormComponent } from '../../forms/new-task-form/new-task-form.component';
 
 @Component({
   selector: 'app-tasks',
@@ -11,104 +10,54 @@ import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-
   styleUrls: ['./tasks.component.scss']
 })
 export class TasksComponent implements OnInit {
-  tasks: Array<Task>
-  openTasks: Array<Task>
-  inProgressTasks: Array<Task>
-  inReviewTasks: Array<Task>
-  inTestingTasks: Array<Task>
-  doneTasks: Array<Task>
+  tasks: Array<Task>;
+  openTasks: Array<Task>;
+  inProgressTasks: Array<Task>;
+  inReviewTasks: Array<Task>;
+  inTestingTasks: Array<Task>;
+  doneTasks: Array<Task>;
+  projectId: string;
 
-  constructor(public matDialog: MatDialog, private modalService: NgbModal) {}
+  constructor(private modal: NgbModal, private taskService: TaskService, private route: ActivatedRoute, private changeDetection: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.tasks = [
-      {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        name: "Install Ruby nstall Ruby ",
-        description: "Description",
-        userName: "Lamija Vrnjak",
-        projectName: "NWT-101",
-        status: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          status: "IN PROGRESS",
-        },
-        type: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          type: "CRITICAL"
-        }
-      },
-      {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        name: "Install Ruby",
-        description: "Description",
-        userName: "Lamija Vrnjak",
-        projectName: "NWT-101",
-        status: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          status: "OPEN",
-        },
-        type: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          type: "CRITICAL"
-        }
-      },
-      {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        name: "Install Ruby",
-        description: "Description",
-        userName: "Lamija Vrnjak",
-        projectName: "NWT-101",
-        status: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          status: "IN PROGRESS",
-        },
-        type: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          type: "CRITICAL"
-        }
-      },
-      {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        name: "Install Ruby",
-        description: "Description",
-        userName: "Lamija Vrnjak",
-        projectName: "NWT-101",
-        status: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          status: "IN REVIEW",
-        },
-        type: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          type: "LOW"
-        }
-      },
-      {
-        id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-        name: "Install Ruby",
-        description: "Description",
-        userName: "Lamija Vrnjak",
-        projectName: "NWT-101",
-        status: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          status: "DONE",
-        },
-        type: {
-          id: "12e08bf2-b4b2-4003-9288-507136ab459a",
-          type: "MEDIUM"
-        }
-      },
-    ]
+    this.route.params.subscribe(params => {
+      this.projectId = params.id;
+    });
+    this.loadTasks();
+  }
+
+  createTask() {
+    const modal = this.modal.open(NewTaskFormComponent, { size: 'l' });
+    modal.componentInstance.projectId = this.projectId;
+    modal.result.then(result => {
+      console.log("Rezultat ", result);
+      if (result == 'success') {
+        console.log("uspjesno dodan task");
+        this.loadTasks();
+        this.changeDetection.detectChanges();
+      }
+    }, err => {});
+  }
+
+  loadTasks() {
+    this.taskService.getTasksByProjectId(this.projectId, 
+      (data: any) => this.onTasksLoad(data),
+      (err: any) => console.log(err));
+  }
+
+  onTasksLoad(data: any): void {
+    this.tasks = data;
     this.openTasks = this.tasks.filter(task => task.status.status === "OPEN");
-    this.inProgressTasks = this.tasks.filter(task => task.status.status === "IN PROGRESS");
-    this.inReviewTasks = this.tasks.filter(task => task.status.status === "IN REVIEW");
-    this.inTestingTasks = this.tasks.filter(task => task.status.status === "IN TESTING");
+    this.inProgressTasks = this.tasks.filter(task => task.status.status === "IN_PROGRESS");
+    this.inReviewTasks = this.tasks.filter(task => task.status.status === "IN_REVIEW");
+    this.inTestingTasks = this.tasks.filter(task => task.status.status === "IN_TESTING");
     this.doneTasks = this.tasks.filter(task => task.status.status === "DONE");
   }
 
-  openModal() {
-    const modalRef = this.modalService.open(CreateTaskModalComponent);
-    // const dialogConfig = new MatDialogConfig();
-    // dialogConfig.disableClose = true;
-    // this.matDialog.open(NewTaskModalComponent, dialogConfig);
+  deleteTask() {
+    console.log("u tasks");
+    this.loadTasks();
+    this.changeDetection.detectChanges();
   }
 }

@@ -1,12 +1,15 @@
 <div class="task">
- <p>
+ <p (click)="getTaskDetails(task.projectId, task.id)">
   <span>{{task.projectName}}: </span>
   <span>{{task.name}}</span>
  </p>
  <div class="item-footer">
-  <img [src]="imageSrc"/>
-  <div class="initials-container">
-   {{initials}}
+  <div>
+   <span><i class='far fa-trash-alt fa-lg delete-task' (click)="deleteTask()"></i></span>
+   <img [src]="imageSrc" />
+  </div>
+  <div *ngIf="task.userId !== null" class="initials-container">
+   {{task.userFirstName[0]}}{{task.userLastName[0]}}
   </div>
  </div>
 </div>
