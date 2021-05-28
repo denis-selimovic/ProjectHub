@@ -76,6 +76,7 @@ export class IssuesComponent implements OnInit {
     if(value) {
       this.issue = undefined;
       this.show = false;
+      this.loadIssues();
     }  
   }
 

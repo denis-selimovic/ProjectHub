@@ -49,15 +49,19 @@ export class IssueDetailsFormComponent implements OnChanges {
 
   private editIssue(form: any): any {
     this.issueService.editIssue(this.issue.id, form,
-      () => this.close(true),
+      () => this.success(),
       (data: any) => this.error(data)
     );
   }
 
   close(value: boolean): void {
+    this.closeEvent.emit(value);
+  }
+
+  success(): void {
     this.successMessage = 'Issue successfully updated.';
     setTimeout(() => { 
-      this.closeEvent.emit(value); 
+      this.closeEvent.emit(true); 
       this.issue = undefined;
     }, 2000);
   }
