@@ -16,6 +16,7 @@ import ba.unsa.etf.nwt.notificationservice.service.NotificationUserService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,8 +70,10 @@ public class NotificationController {
     @ApiResponse(code = 200, message = "Success")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<PaginatedResponse<NotificationDTO, MetadataDTO>> getNotifications(ResourceOwner resourceOwner,
-                                                                                            Pageable pageable) {
-        var notifications = notificationService.getNotificationsForUser(resourceOwner.getId(), pageable);
+                                                                                            Pageable pageable,
+                                                                                            @RequestParam(required = false) Boolean read) {
+        Page<NotificationDTO> notifications = notificationService
+                .getNotificationsForUser(resourceOwner.getId(), read, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(new PaginatedResponse<>(new MetadataDTO(notifications), notifications.getContent()));
     }
 

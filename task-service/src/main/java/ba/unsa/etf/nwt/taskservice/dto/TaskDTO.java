@@ -17,7 +17,10 @@ public class TaskDTO implements Resource {
     private String name;
     private String description;
     private UUID userId;
+    private String userFirstName;
+    private String userLastName;
     private UUID projectId;
+    private String projectName;
     private PriorityDTO priority;
     private StatusDTO status;
     private TypeDTO type;
@@ -29,7 +32,10 @@ public class TaskDTO implements Resource {
         this.name = task.getName();
         this.description = task.getDescription();
         this.userId = task.getUserId();
+        this.userFirstName = task.getUserFirstName();
+        this.userLastName = task.getUserLastName();
         this.projectId = task.getProjectId();
+        this.projectName = task.getProjectName();
         this.priority = new PriorityDTO(task.getPriority());
         this.status = new StatusDTO(task.getStatus());
         this.type = new TypeDTO(task.getType());

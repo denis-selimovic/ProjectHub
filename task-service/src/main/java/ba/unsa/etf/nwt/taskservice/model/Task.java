@@ -41,9 +41,18 @@ public class Task {
     @Column(name = "user_id")
     private UUID userId;
 
+    @Column(name = "user_first_name")
+    private String userFirstName;
+
+    @Column(name = "user_last_name")
+    private String userLastName;
+
     @NotNull(message = "Project id can't be null")
     @Column(name = "project_id", nullable = false)
     private UUID projectId;
+
+    @Column(name = "project_name", nullable = false)
+    private String projectName;
 
     @NotNull(message = "Priority id can't be null")
     @OneToOne

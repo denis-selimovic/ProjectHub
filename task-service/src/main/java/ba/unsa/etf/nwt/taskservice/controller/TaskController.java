@@ -1,6 +1,9 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
+import ba.unsa.etf.nwt.taskservice.client.service.UserService;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.dto.TaskDTO;
 import ba.unsa.etf.nwt.taskservice.model.Task;
@@ -39,6 +42,7 @@ import java.util.UUID;
 public class TaskController {
     private final TaskService taskService;
     private final ProjectService projectService;
+    private final UserService userService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -48,11 +52,13 @@ public class TaskController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Response<TaskDTO>> create(ResourceOwner resourceOwner, @RequestBody @Valid CreateTaskRequest request) {
-        projectService.findProjectById(resourceOwner, request.getProjectId());
+        ProjectDTO projectDTO = projectService.findProjectById(resourceOwner, request.getProjectId());
+        UserDTO userDTO = null;
         if (request.getUserId() != null) {
             projectService.findCollaboratorById(resourceOwner, request.getUserId(), request.getProjectId());
+            userDTO = userService.getUserById(resourceOwner, request.getUserId());
         }
-        Task task = taskService.create(request, resourceOwner.getId());
+        Task task = taskService.create(request, resourceOwner.getId(), projectDTO, userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new TaskDTO(task)));
     }
 
@@ -83,7 +89,7 @@ public class TaskController {
                                                                             @RequestParam(required = false, name = "status_id") String statusId,
                                                                             @RequestParam(required = false, name = "type_id") String typeId) {
         projectService.findProjectById(resourceOwner, projectId);
-        Page<TaskDTO> taskPage = taskService.filter(pageable, projectId, priorityId, statusId, typeId);
+        Page<TaskDTO> taskPage = taskService.filter(resourceOwner, pageable, projectId, priorityId, statusId, typeId);
         return ResponseEntity.ok(new PaginatedResponse<>(new MetadataDTO(taskPage), taskPage.getContent()));
     }
 
@@ -99,10 +105,10 @@ public class TaskController {
                                                    @RequestBody @Valid PatchTaskRequest patchTaskRequest) {
         Task task = taskService.findById(taskId);
         projectService.findProjectById(resourceOwner, task.getProjectId());
-        if(patchTaskRequest.getUserId().isPresent()){
+        if(patchTaskRequest.getUserId().isPresent() && patchTaskRequest.getUserId().get() != null){
             projectService.findCollaboratorById(resourceOwner, patchTaskRequest.getUserId().get(), task.getProjectId());
         }
-        taskService.patch(task, patchTaskRequest, resourceOwner.getId());
+        taskService.patch(task, patchTaskRequest, resourceOwner.getId(), resourceOwner);
         return ResponseEntity.ok().body(new Response<>(new TaskDTO(task)));
     }
 

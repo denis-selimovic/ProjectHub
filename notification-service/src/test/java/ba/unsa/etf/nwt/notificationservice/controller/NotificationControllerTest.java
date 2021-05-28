@@ -8,6 +8,7 @@ import ba.unsa.etf.nwt.notificationservice.model.NotificationUser;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationRepository;
 import ba.unsa.etf.nwt.notificationservice.repository.NotificationUserRepository;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +20,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -373,6 +379,118 @@ public class NotificationControllerTest {
                         }"""))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errors.read", hasItem("Notification Read attribute can't be null")));
+    }
+
+    @Test
+    public void getNotificationsCheckSort() throws Exception {
+        for(int i = 0; i < 5; i++)
+            createNotificationInDb("title", "description", false);
+        for(int i = 0; i < 3; i++)
+            createNotificationInDb("title", "description", true);
+        for(int i = 0; i < 7; i++)
+            createNotificationInDb("title", "description", false);
+
+        var result = mockMvc.perform(get("/api/v1/notifications")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 15);
+
+        List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+        for (int i = 0; i < data.length(); i++) {
+            jsonValues.add(data.getJSONObject(i));
+        }
+
+        List<JSONObject> sorted = jsonValues.stream().sorted((n1, n2) -> {
+                try {
+                    if (n1.get("read").equals(n2.get("read"))) {
+                        return -Instant.parse(n1.get("created_at").toString())
+                                .compareTo(Instant.parse(n2.get("created_at").toString()));
+                    }else {
+                        return Boolean.compare(Boolean.parseBoolean(n1.get("read").toString()),
+                                Boolean.parseBoolean(n2.get("read").toString()));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return 1;
+            }).collect(Collectors.toList());
+        assertEquals(sorted, jsonValues);
+    }
+
+    @Test
+    public void getReadNotifications() throws Exception {
+        for(int i = 0; i < 5; i++)
+            createNotificationInDb("title", "description", false);
+        for(int i = 0; i < 3; i++)
+            createNotificationInDb("title", "description", true);
+        for(int i = 0; i < 7; i++)
+            createNotificationInDb("title", "description", false);
+
+        var result = mockMvc.perform(get("/api/v1/notifications?read=true")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 3);
+
+        List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+        for (int i = 0; i < data.length(); i++) {
+            jsonValues.add(data.getJSONObject(i));
+            assertTrue((Boolean) data.getJSONObject(i).get("read"));
+        }
+
+        List<JSONObject> sorted = jsonValues.stream().sorted((n1, n2) -> {
+            try {
+                return -Instant.parse(n1.get("created_at").toString())
+                        .compareTo(Instant.parse(n2.get("created_at").toString()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return 1;
+        }).collect(Collectors.toList());
+        assertEquals(sorted, jsonValues);
+    }
+
+    @Test
+    public void getUnreadNotifications() throws Exception {
+        for(int i = 0; i < 5; i++)
+            createNotificationInDb("title", "description", false);
+        for(int i = 0; i < 3; i++)
+            createNotificationInDb("title", "description", true);
+        for(int i = 0; i < 7; i++)
+            createNotificationInDb("title", "description", false);
+
+        var result = mockMvc.perform(get("/api/v1/notifications?read=false&size=20")
+                .header(HttpHeaders.AUTHORIZATION, token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JSONObject response = new JSONObject(result.getResponse().getContentAsString());
+        JSONArray data = response.getJSONArray("data");
+        assertEquals(data.length(), 12);
+
+        List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+        for (int i = 0; i < data.length(); i++) {
+            jsonValues.add(data.getJSONObject(i));
+            assertFalse((Boolean) data.getJSONObject(i).get("read"));
+        }
+
+        List<JSONObject> sorted = jsonValues.stream().sorted((n1, n2) -> {
+            try {
+                return -Instant.parse(n1.get("created_at").toString())
+                        .compareTo(Instant.parse(n2.get("created_at").toString()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return 1;
+        }).collect(Collectors.toList());
+        assertEquals(sorted, jsonValues);
     }
 
     private Notification createNotificationInDb(String title, String description, boolean read) {

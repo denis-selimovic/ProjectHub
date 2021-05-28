@@ -66,6 +66,10 @@ import { CreateIssueModalComponent } from './components/modals/create-issue-moda
 import { MyAccountComponent } from './components/pages/my-account/my-account.component';
 import { IssueDetailsFormComponent } from './components/forms/issue-details-form/issue-details-form.component';
 import { ActionResultComponent } from './components/dialogs/action-result/action-result.component';
+import { NotificationsListComponent } from './components/lists/notifications-list/notifications-list.component';
+import { NotificationItemComponent } from './components/items/notification-item/notification-item.component';
+import { NotificationService } from './services/notification/notification.service';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -120,7 +124,9 @@ import { ActionResultComponent } from './components/dialogs/action-result/action
     CreateIssueModalComponent,
     MyAccountComponent,
     IssueDetailsFormComponent,
-    ActionResultComponent
+    ActionResultComponent,
+    NotificationsListComponent,
+    NotificationItemComponent
   ],
   imports: [
     BrowserModule,
@@ -140,7 +146,8 @@ import { ActionResultComponent } from './components/dialogs/action-result/action
     HttpClientModule,
     MatDialogModule,
     MatSelectModule,
-    NgbModule
+    NgbModule,
+    InfiniteScrollModule
   ],
   providers: [
     UserService,
@@ -151,7 +158,8 @@ import { ActionResultComponent } from './components/dialogs/action-result/action
     LocalStorageService,
     MatTableModule,
     MatPaginatorModule,
-    MatDialogModule
+    MatDialogModule,
+    NotificationService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
