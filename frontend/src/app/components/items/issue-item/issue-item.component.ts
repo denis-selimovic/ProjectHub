@@ -11,16 +11,17 @@ import { IssueService } from 'src/app/services/issue/issue.service';
   styleUrls: ['./issue-item.component.scss']
 })
 export class IssueItemComponent implements OnInit {
+
   @Input() issue: Issue;
-  imageSrc: string;
   @Output() itemEvent = new EventEmitter<Issue>();
   @Output() deleteIssueEvent = new EventEmitter<string>();
+
+  imageSrc: string;
 
   constructor(private modalService: NgbModal) {
    }
 
   ngOnInit(): void {
-    console.log("prioritet ovog issue-a je: ", this.issue.priority);
     switch (this.issue.priority.priority_type) {
       case "CRITICAL":
         this.imageSrc = "assets/critical.png";

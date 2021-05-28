@@ -50,7 +50,6 @@ export class IssueService {
     }
 
     editIssue(id: string, form: any, callback: any, error): any {
-      console.log("pozvala se issues");
       this.http.patch(`${environment.api}/api/v1/issues/${id}`, form, {
         headers: {
           Authorization: this.tokenService.getAccessToken()
