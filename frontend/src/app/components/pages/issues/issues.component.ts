@@ -46,9 +46,8 @@ export class IssuesComponent implements OnInit {
   onIssuesLoad(data: any): any {
     this.issues = data.data;
     this.issueNum = data.metadata.total_elements;
-    if (this.issueNum === 0) {
-      this.title = 'Ovaj projekat nema niti jedan issue';
-    }
+    if (this.issueNum === 0)
+      this.title = 'This project doesn\'t have any issues.';
   }
 
   loadIssues(): any {
@@ -61,6 +60,11 @@ export class IssuesComponent implements OnInit {
   openModal() {
     const modalRef = this.modalService.open(CreateIssueModalComponent);
     modalRef.componentInstance.projectId = this.projectId;
+    modalRef.result.then((data) => {
+        this.loadIssues();
+      },
+      (error) => {
+      });
   }
 
   detailsClicked(issue: Issue): void {

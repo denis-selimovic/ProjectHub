@@ -37,7 +37,7 @@ export class NewIssueFormComponent implements OnInit {
   onSubmit(): void {
     const form = this.newIssueForm.getRawValue();
     this.updateForm();
-    setTimeout(() => this.createIssue(form), 1200);
+    this.createIssue(form);
   }
 
   private createIssue(form: any): any {
