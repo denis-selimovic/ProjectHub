@@ -20,7 +20,8 @@ export class IssueItemComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    switch (this.issue.priority) {
+    console.log("prioritet ovog issue-a je: ", this.issue.priority);
+    switch (this.issue.priority.priority_type) {
       case "CRITICAL":
         this.imageSrc = "assets/critical.png";
         break;
