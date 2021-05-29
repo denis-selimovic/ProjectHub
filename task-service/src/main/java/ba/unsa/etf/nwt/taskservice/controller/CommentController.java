@@ -1,6 +1,8 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
+import ba.unsa.etf.nwt.taskservice.client.service.UserService;
 import ba.unsa.etf.nwt.taskservice.dto.CommentDTO;
 import ba.unsa.etf.nwt.taskservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.taskservice.exception.base.ForbiddenException;
@@ -40,6 +42,7 @@ public class CommentController {
     private final CommentService commentService;
     private final TaskService taskService;
     private final ProjectService projectService;
+    private final UserService userService;
 
     @PostMapping
     @ApiResponses(value = {
@@ -54,7 +57,11 @@ public class CommentController {
         Task task = taskService.findById(taskId);
         projectService.findProjectById(resourceOwner, task.getProjectId());
         Comment comment = commentService.create(request, task, resourceOwner.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment)));
+
+        projectService.findCollaboratorById(resourceOwner, resourceOwner.getId(), task.getProjectId());
+        UserDTO userDTO = userService.getUserById(resourceOwner, resourceOwner.getId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment, userDTO)));
     }
 
     @GetMapping
