@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -11,7 +12,9 @@ export class NavbarComponent implements OnInit {
   showNotifications: boolean = false;
   hasNotifications: boolean = false;
 
-  constructor(public userService: UserService, public router: Router) { }
+  constructor(public userService: UserService, public router: Router) {
+    
+   }
 
   ngOnInit(): void {
     //just for testing

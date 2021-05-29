@@ -1,4 +1,5 @@
 @import "/src/app/styles/forms.scss";
+@import "/src/app/styles/variables.scss";
 
 #projectNameSpan {
   color: $black;
@@ -6,4 +7,8 @@
 
 textarea {
   resize: none;
+}
+
+h5 {
+  color: $blue;
 }

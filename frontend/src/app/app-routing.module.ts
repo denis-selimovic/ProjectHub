@@ -85,7 +85,8 @@ const routes: Routes = [
     component: ConfirmEmailComponent
   },
   {
-    path: 'issues',
+    path: 'projects/:id/issues',
+    pathMatch: 'full',
     component: IssuesComponent
   },
   {

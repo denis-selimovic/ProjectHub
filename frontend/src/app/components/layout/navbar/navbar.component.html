@@ -6,8 +6,9 @@
         <li><a routerLink="dashboard">Projects</a></li>
         <li><a routerLink="my-account">My account</a></li>
     </ul>
-    <ul *ngIf="router.url === '/issues' || router.url === '/tasks' || router.url === '/collaborators'">
-        <li><a routerLink="collaborators">Collaborators</a></li>
+    <ul *ngIf="router.url.includes('/issues') || router.url.includes('/tasks') || router.url.includes('/collaborators')">
+        <li><a routerLink="dashboard">Dashboard</a></li>
+        <li><a routerLink="collaborators" >Collaborators</a></li>
         <li><a routerLink="tasks">Tasks</a></li>
         <li><a routerLink="issues">Issues</a></li>
     </ul>

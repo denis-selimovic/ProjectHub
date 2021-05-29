@@ -3,6 +3,7 @@ import { Issue } from 'src/app/models/Issue';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-task-modal.component';
 import { EventEmitter } from '@angular/core'; 
+import { IssueService } from 'src/app/services/issue/issue.service';
 
 @Component({
   selector: 'app-issue-item',
@@ -10,15 +11,18 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./issue-item.component.scss']
 })
 export class IssueItemComponent implements OnInit {
+
   @Input() issue: Issue;
-  imageSrc: String;
   @Output() itemEvent = new EventEmitter<Issue>();
+  @Output() deleteIssueEvent = new EventEmitter<string>();
+
+  imageSrc: string;
 
   constructor(private modalService: NgbModal) {
    }
 
   ngOnInit(): void {
-    switch (this.issue.priority) {
+    switch (this.issue.priority.priority_type) {
       case "CRITICAL":
         this.imageSrc = "assets/critical.png";
         break;
@@ -45,4 +49,7 @@ export class IssueItemComponent implements OnInit {
     this.itemEvent.emit(issue);
   }
 
+  removeIssue(id: string) {
+    this.deleteIssueEvent.emit(id);
+  }
 }

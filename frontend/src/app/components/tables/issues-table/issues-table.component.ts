@@ -1,43 +1,45 @@
-import { AfterViewInit, Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalComponent } from '../../modal/modal/modal.component';
 import { Issue } from 'src/app/models/Issue';
-import { Observable } from 'rxjs/internal/Observable';
-import { IssueDetailsFormComponent } from 'src/app/components/forms/issue-details-form/issue-details-form.component';
+import { IssueService } from 'src/app/services/issue/issue.service';
 
 @Component({
   selector: 'app-issues-table',
   templateUrl: './issues-table.component.html',
   styleUrls: ['./issues-table.component.scss']
 })
-export class IssuesTableComponent implements AfterViewInit {
-  @Input() issues: Array<Issue>;
+export class IssuesTableComponent implements OnInit {
+  
+  @Input() issues: any = [];
   @Output() issueEvent = new EventEmitter<Issue>();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  dataSource: MatTableDataSource<Issue>;
-  obs: Observable<any>;
+  @Output() issueDeleteEvent = new EventEmitter<any>();
 
-  constructor() {
+  constructor(private modal: NgbModal, private issueService: IssueService) {
    }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-    });
-  }
-
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Issue>(this.issues);
-    this.obs = this.dataSource.connect();
-  }
-
-  ngOnDestroy(): void {
-    if (this.dataSource) 
-      this.dataSource.disconnect(); 
-  }
+  ngOnInit(): void { }
 
   detailsClicked(issue: Issue): void {
     this.issueEvent.emit(issue);
   }
-  
+
+  deleteIssue(issueId: string) {
+    const deleteModal = this.modal.open(ModalComponent);
+    deleteModal.componentInstance.message = 'Are you sure you want to delete this issue?';
+    deleteModal.componentInstance.successMessage = '';
+    deleteModal.componentInstance.errorMessage = '';
+    deleteModal.componentInstance.action = () => {
+      this.issueService.deleteIssue(issueId, (data: any) => {
+        deleteModal.componentInstance.successMessage = 'Issue successfully deleted.';
+      }, (err: any) => {
+        deleteModal.componentInstance.errorMessage = 'Something went wrong when deleting issue. Please try again.';
+      });
+    };
+    deleteModal.result.then(result => {
+      if (result === 'success') {
+        this.issueDeleteEvent.emit();
+      }
+    }).catch(err => {});
+  }
 }
