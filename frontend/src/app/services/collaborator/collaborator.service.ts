@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Project } from '../project/project.service';
+import { Project, ProjectService } from '../project/project.service';
 import { TokenService } from '../token/token.service';
 import { User } from '../user/user.service';
 
@@ -9,6 +9,7 @@ export interface Collaborator {
   id: string;
   project: Project;
   collaboratorId: string;
+  collaborator: User;
 }
 
 @Injectable({
@@ -16,7 +17,7 @@ export interface Collaborator {
 })
 export class CollaboratorService {
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService, private projectService: ProjectService) { }
 
   getCollaborators(projectId: string, callback: any, error: any): any {
     this.http.get(`${environment.api}/api/v1/projects/${projectId}/collaborators`, {
@@ -62,19 +63,24 @@ export class CollaboratorService {
     );
   }
 
-  private getCollaboratorsFromResponseData(responseData: any): Array<User> {
-    let response = new Array<User>();
+  private getCollaboratorsFromResponseData(responseData: any): Array<Collaborator> {
+    let response = new Array<Collaborator>();
     for (let i = 0; i < responseData.length; i++) {
-      response.push(this.getUserFromResponseData(responseData[i].collaborator));
+      response.push(this.getCollaboratorFromResponseData(responseData[i]));
     }
     return response;
   }
 
-    private getUserFromResponseData(responseData: any): User {
+  private getCollaboratorFromResponseData(responseData: any): Collaborator {
     return {id: responseData.id,
-      firstName: responseData.first_name, 
-      lastName: responseData.last_name,
-      email: responseData.email
+      project: this.projectService.getProjectFromResponseData(responseData.project),
+      collaboratorId: responseData.collaborator_id,
+      collaborator: {
+        id: responseData.collaborator.id,
+        firstName: responseData.collaborator.first_name, 
+        lastName: responseData.collaborator.last_name,
+        email: responseData.collaborator.email
+      }
     };
   }
 }

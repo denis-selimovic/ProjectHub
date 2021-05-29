@@ -1,28 +1,31 @@
 <div *ngIf="dataSource.data.length > 0" class="mat-elevation-z8">
 <table mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="id">
-   <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+   <td mat-cell *matCellDef="let element"> {{element.collaborator.id}} </td>
   </ng-container>
  
  <ng-container matColumnDef="name">
-   <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}} </td>
+   <td mat-cell *matCellDef="let element"> {{element.collaborator.firstName}} {{element.collaborator.lastName}} </td>
   </ng-container>
 
    <ng-container matColumnDef="collaboratorTag">
     <td mat-cell *matCellDef="let element"> 
-      <div class="tag">
+      <div *ngIf="element.collaboratorId !== element.project.ownerId" class="tag">
        collaborator
+      </div>
+      <div *ngIf="element.collaboratorId === element.project.ownerId" class="tag">
+       owner
       </div>
     </td>
    </ng-container>
 
    <ng-container matColumnDef="email">
-   <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+   <td mat-cell *matCellDef="let element"> {{element.collaborator.email}} </td>
    </ng-container>
 
    <ng-container matColumnDef="deleteCollaborator">
     <td mat-cell *matCellDef="let element"> 
-     <div class="tag" (click)="removeCollaborator(element.id);">
+     <div class="tag" *ngIf="element.collaboratorId !== element.project.ownerId" (click)="removeCollaborator(element.collaborator.id, element.project.id);">
       &nbsp; x &nbsp;
      </div>
     </td>

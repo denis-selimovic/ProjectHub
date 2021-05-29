@@ -51,7 +51,7 @@ export class NewTaskFormComponent implements OnInit {
     this.taskService.getPriorities(
       (data: any) => {
         this.priorities = data.data;
-        this.priority = this.priorities[0];
+        this.newTaskForm.patchValue({priority: this.priorities[0]});
       }
     )
   }
@@ -60,7 +60,7 @@ export class NewTaskFormComponent implements OnInit {
     this.taskService.getTypes(
       (data: any) => {
         this.types = data.data;
-        this.type = this.types[0];
+        this.newTaskForm.patchValue({type: this.types[0]});
       } 
     )
   }
@@ -83,7 +83,10 @@ export class NewTaskFormComponent implements OnInit {
 
   onCollaboratorsLoad(data: any): any {
     this.collaborators = data;
-    this.collaborator = null;
+    if (data.length === 0) 
+      this.newTaskForm.patchValue({collaborator: null});
+    else 
+      this.newTaskForm.patchValue({collaborator: data[0].collaborator});
   }
 
   onSubmit(): void {

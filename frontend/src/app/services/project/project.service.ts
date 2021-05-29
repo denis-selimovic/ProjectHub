@@ -63,7 +63,7 @@ export class ProjectService {
     );
   }
 
-  private getProjectFromResponseData(responseData: any): Project {
+  public getProjectFromResponseData(responseData: any): Project {
     return {id: responseData.id,
       name: responseData.name,
       ownerId: responseData.owner_id,

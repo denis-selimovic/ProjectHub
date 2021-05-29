@@ -10,6 +10,17 @@
     }
   }
 
+  .info-text {
+    color: $blue;
+    text-decoration: none;
+    font-size: $fs-small;
+    text-align: center;
+  }
+
+  .error {
+    color: $red;
+  }
+
   @media screen and (min-width: $screen-medium) {
     .page-content {
       width: 70%;

@@ -44,6 +44,7 @@ public class ProjectController {
     public ResponseEntity<Response<ProjectDTO>> create(@RequestBody @Valid CreateProjectRequest request,
                                                        ResourceOwner resourceOwner) {
         Project project = projectService.create(request, resourceOwner);
+//        projectCollaboratorService.createCollaborator(resourceOwner.getId(), project);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new ProjectDTO(project)));
     }
 
