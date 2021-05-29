@@ -13,7 +13,8 @@ export class CommentsItemComponent implements OnInit {
   @Input() comment: Comment;
   @Input() currentUser: any;
   @Input() deleteCommentLoader: boolean = false;
-  @Output() patch: EventEmitter<any> = new EventEmitter<any>();
+  @Input() editCommentLoader: boolean = false;
+  @Output() onPatch: EventEmitter<any> = new EventEmitter<any>();
   @Output() public onDelete: EventEmitter<any> = new EventEmitter();
   
   commentForm: FormGroup;
@@ -26,8 +27,9 @@ export class CommentsItemComponent implements OnInit {
     });  
   }
 
-  patchComment(text: String) {
-    this.patch.emit(this.commentForm);
+  patchComment() {
+    const patch = {comment: this.comment, newCommentText: this.commentForm.get("text").value}
+    this.onPatch.emit(patch);
   }
 
   deleteComment() {

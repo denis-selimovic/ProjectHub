@@ -53,15 +53,15 @@ export class CommentService {
     );
   }
 
-  editComment(commentId: string, newCommentText: string): void {
+  editComment(taskId:String, commentId: String, newCommentText: String, successCallback: any, errorCallback: any): void {
     const body = {text: newCommentText};
-    this.http.patch(`${environment.api}/api/v1/comments/${commentId}`, body, {
+    this.http.patch(`${environment.api}/api/v1/tasks/${taskId}/comments/${commentId}`, body, {
       headers: {
         Authorization: this.tokenService.getAccessToken()
       }
     }).subscribe(
-      (data: any) => console.log(data),
-      (err: any) => console.log(err)
+      (data: any) => successCallback(data),
+      (err: any) => errorCallback(err)
     );
   }
 }

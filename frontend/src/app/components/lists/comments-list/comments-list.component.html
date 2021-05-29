@@ -4,7 +4,8 @@
   [comment]="comment" 
   [currentUser]="currentUser"
   [deleteCommentLoader]="deleteCommentLoader"
-  (onDelete)="deleteComment($event)"></app-comments-item>
+  (onDelete)="deleteComment($event)"
+  (onPatch)="editComment($event)"></app-comments-item>
  </div>
 </div>
 

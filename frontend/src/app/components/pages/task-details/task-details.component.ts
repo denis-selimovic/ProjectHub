@@ -28,6 +28,7 @@ export class TaskDetailsComponent implements OnInit {
   commentsMetadata: any = []
   commentLoader = false;
   deleteCommentLoader = false;
+  editCommentLoader = false;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
@@ -163,6 +164,16 @@ export class TaskDetailsComponent implements OnInit {
       (response) => {
         this.loadComments();
         this.deleteCommentLoader = false;
+      },
+      (error) => {console.log(error)})
+  }
+
+  editComment(patch: any) {
+    this.editCommentLoader = true;
+    this.commentService.editComment(this.taskId, patch.comment.id, patch.newCommentText,
+      (response) => {
+        this.loadComments();
+        this.editCommentLoader = false;
       },
       (error) => {console.log(error)})
   }

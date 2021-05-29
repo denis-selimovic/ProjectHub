@@ -25,7 +25,10 @@
    </button>
    <button class="red-button" (click)="commentForm?.get('text').setValue(comment.text)">Clear changes</button>
     <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid"
-     (click)="patchComment(commentForm?.get('text').value)">Save changes</button>
+     (click)="patchComment()">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="editCommentLoader"></span>
+      <span *ngIf="!editCommentLoader">Save changes</span>
+    </button>
   </div>
  </div>
  </div>
