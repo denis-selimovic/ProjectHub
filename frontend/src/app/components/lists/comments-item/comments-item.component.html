@@ -18,17 +18,12 @@
      </div>
     </div>
   </form>
-  <!-- <div *ngIf="comment.userId === currentUser.id" class="buttons-container">
+  <div *ngIf="comment.userId === currentUser.id" class="buttons-container">
    <button class="red-button" (click)="deleteComment()">Delete</button>
-   <button class="red-button" (click)="commentForm?.get('text').setValue(text)">Clear changes</button>
+   <button class="red-button" (click)="commentForm?.get('text').setValue(comment.text)">Clear changes</button>
     <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid"
      (click)="patchComment(commentForm?.get('text').value)">Save changes</button>
-  </div> -->
-  <!-- <div class="buttons-container">
-   <button class="red-button">Cancel</button>
-   <button type="submit" class="blue-button" [disabled]="!commentForm?.get('comment')?.valid"
-    (click)="patchComment(commentForm?.get('comment').value)">Save</button>
-  </div> -->
+  </div>
  </div>
  </div>
 
