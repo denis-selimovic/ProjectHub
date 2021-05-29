@@ -53,4 +53,9 @@ public class CommentService {
             throw new NotFoundException("Comment not found");
         });
     }
+
+    public Comment patch(final Comment comment, final String text) {
+        comment.setText(text);
+        return commentRepository.save(comment);
+    }
 }

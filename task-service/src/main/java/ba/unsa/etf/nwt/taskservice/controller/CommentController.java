@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -96,4 +97,25 @@ public class CommentController {
         commentService.delete(comment);
         return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new SimpleResponse("Comment successfully deleted")));
     }
+
+    @PatchMapping("/{commentId}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment edited"),
+            @ApiResponse(code = 403, message = "Forbidden: Only the author can edit the comment", response = ErrorResponse.class),
+            @ApiResponse(code = 404, message = "Not found: Comment not found", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<Response<CommentDTO>> patch(ResourceOwner resourceOwner,
+                                                          @PathVariable UUID taskId,
+                                                          @PathVariable UUID commentId,
+                                                          @RequestBody @Valid CreateCommentRequest request) {
+        Comment comment = commentService.findByIdAndTaskId(commentId, taskId);
+        if(!comment.getUserId().equals(resourceOwner.getId())) {
+            throw new ForbiddenException("You don't have permission for this action");
+        }
+        comment = commentService.patch(comment, request.getText());
+        return ResponseEntity.status(HttpStatus.OK).body(new Response<>(new CommentDTO(comment)));
+    }
+
+
 }
