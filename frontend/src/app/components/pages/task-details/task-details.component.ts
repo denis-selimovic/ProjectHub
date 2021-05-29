@@ -159,16 +159,8 @@ export class TaskDetailsComponent implements OnInit {
       (error) => {console.log(error)})
   }
 
-  deleteComment(comment: Comment) {
-    this.deleteCommentLoader = true;
-    this.commentService.deteteComment(this.taskId, comment.id, 
-      (response) => {
-        this.loadComments();
-        this.deleteCommentLoader = false;
-      },
-      (error) => {
-        console.log(error); 
-      })
+  deleteComment() {
+    this.loadComments();
   }
 
   editComment(patch: any) {
@@ -178,9 +170,7 @@ export class TaskDetailsComponent implements OnInit {
         this.loadComments();
         this.editCommentLoader = false;
       },
-      (error) => {
-        console.log(error);
-      })
+      (error) => {})
   }
 
   patchUserPriorityStatus() {
@@ -225,7 +215,6 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   paginate() {
-    console.log("pagination");
     if(this.commentsMetadata.has_next) {
       const paginationOptions = {page: this.commentsMetadata.page_number+1, size: this.commentsMetadata.page_size}
       this.commentService.getComments(this.taskId, paginationOptions, 

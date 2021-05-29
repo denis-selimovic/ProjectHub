@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Comment } from 'src/app/services/comment/comment.service';
 import { ConfirmDeletionComponent } from '../../dialogs/confirm-deletion/confirm-deletion.component';
+import { ModalComponent } from '../../modal/modal/modal.component';
 
 @Component({
   selector: 'app-comments-item',
@@ -14,12 +16,14 @@ export class CommentsItemComponent implements OnInit {
   @Input() currentUser: any;
   @Input() deleteCommentLoader: boolean = false;
   @Input() editCommentLoader: boolean = false;
+  @Input() successMessage: String = "";
+  @Input() errorMessage: String = "";
   @Output() onPatch: EventEmitter<any> = new EventEmitter<any>();
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
   
   commentForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) { }
+  constructor(private formBuilder: FormBuilder, private modal: NgbModal) { }
 
   ngOnInit(): void {
     this.commentForm = this.formBuilder.group({
@@ -33,14 +37,7 @@ export class CommentsItemComponent implements OnInit {
   }
 
   deleteComment() {
-    let dialogRef = this.dialog.open(ConfirmDeletionComponent, {});
-    let instance = dialogRef.componentInstance;
-    instance.message = "Are you sure you want to delete this comment?";
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.onDelete.emit(this.comment);
-      }
-    });
+    this.onDelete.emit(this.comment);
   }
 
   getFormatedDate():string {
