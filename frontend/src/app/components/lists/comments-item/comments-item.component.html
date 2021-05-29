@@ -24,12 +24,14 @@
     <span *ngIf="!deleteCommentLoader">Delete</span>
    </button>
    <button class="red-button" (click)="commentForm?.get('text').setValue(comment.text)">Clear changes</button>
-    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid"
+    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid || !changed"
      (click)="patchComment()">
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="editCommentLoader"></span>
       <span *ngIf="!editCommentLoader">Save changes</span>
     </button>
   </div>
+  <p class="success">{{successMessage}}</p>
+  <p class="error">{{errorMessage}}</p>
  </div>
  </div>
 </div>

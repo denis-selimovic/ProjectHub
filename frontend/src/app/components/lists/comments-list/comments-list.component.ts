@@ -20,6 +20,10 @@ export class CommentsListComponent implements OnInit {
   @Output() public onPatch: EventEmitter<any> = new EventEmitter();
   @Output() public onPaginate: EventEmitter<any> = new EventEmitter();
 
+  successMessage = "";
+  errorMessage = "";
+  editedId = null;
+
   constructor(private commentService: CommentService, private modal: NgbModal) { }
 
   ngOnInit(): void {
@@ -45,7 +49,20 @@ export class CommentsListComponent implements OnInit {
   }
 
   editComment(patch: any) {
-    this.onPatch.emit(patch);
+    this.editCommentLoader = true;
+    this.editedId = patch.comment.id;
+    this.commentService.editComment(this.taskId, patch.comment.id, patch.newCommentText,
+      (response) => {
+        this.onPatch.emit();
+        this.successMessage = "Comment sucessfully edited."
+        this.editCommentLoader = false;
+        setTimeout(() => {this.successMessage = ""; this.editedId = null}, 3000);
+      },
+      (error) => {
+        this.errorMessage = "Something went wrong while trying to edit the comment. Please try again";
+        this.editCommentLoader = false;
+        setTimeout(() => {this.errorMessage = ""; this.editedId = null}, 3000);
+      })
   }
 
   paginate() {

@@ -163,14 +163,8 @@ export class TaskDetailsComponent implements OnInit {
     this.loadComments();
   }
 
-  editComment(patch: any) {
-    this.editCommentLoader = true;
-    this.commentService.editComment(this.taskId, patch.comment.id, patch.newCommentText,
-      (response) => {
-        this.loadComments();
-        this.editCommentLoader = false;
-      },
-      (error) => {})
+  editComment() {
+    this.loadComments();
   }
 
   patchUserPriorityStatus() {

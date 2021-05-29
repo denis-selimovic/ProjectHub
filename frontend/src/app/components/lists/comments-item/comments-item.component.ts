@@ -22,6 +22,7 @@ export class CommentsItemComponent implements OnInit {
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
   
   commentForm: FormGroup;
+  changed = false;
 
   constructor(private formBuilder: FormBuilder, private modal: NgbModal) { }
 
@@ -29,11 +30,19 @@ export class CommentsItemComponent implements OnInit {
     this.commentForm = this.formBuilder.group({
       text: new FormControl(this.comment.text, [Validators.required, Validators.maxLength(255)])
     });  
+    this.commentForm.valueChanges.subscribe(() => {
+      this.changed = true;
+    });
   }
 
   patchComment() {
-    const patch = {comment: this.comment, newCommentText: this.commentForm.get("text").value}
-    this.onPatch.emit(patch);
+    if(this.comment.text === this.commentForm.get("text").value) {
+      this.changed = false;
+    }
+    if(this.changed) {
+      const patch = {comment: this.comment, newCommentText: this.commentForm.get("text").value}
+      this.onPatch.emit(patch);
+    }
   }
 
   deleteComment() {

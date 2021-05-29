@@ -5,6 +5,8 @@
   [currentUser]="currentUser"
   [deleteCommentLoader]="deleteCommentLoader"
   [editCommentLoader]="editCommentLoader"
+  [successMessage]="editedId !== null && editedId === comment.id ? successMessage: ''"
+  [errorMessage]="editedId !== null && editedId === comment.id ? errorMessage: ''"
   (onDelete)="deleteComment($event)"
   (onPatch)="editComment($event)"></app-comments-item>
  </div>
