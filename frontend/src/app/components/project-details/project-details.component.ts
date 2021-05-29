@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/User';
+import { Collaborator } from 'src/app/services/collaborator/collaborator.service';
 
 @Component({
   selector: 'app-project-details',
@@ -9,7 +10,7 @@ import { User } from 'src/app/models/User';
 export class ProjectDetailsComponent implements OnInit {
   @Input() project: any;
   @Input() owner: User;
-  @Input() collaborators: Array<User>;
+  @Input() collaborators: Array<Collaborator>;
   @Input() isOwner: boolean;
 
   constructor() { 

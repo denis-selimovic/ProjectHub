@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Collaborator, CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
 import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
-import { TasksComponent } from '../tasks/tasks.component';
 
 @Component({
   selector: 'app-task-details',
@@ -15,7 +14,7 @@ export class TaskDetailsComponent implements OnInit {
   taskId: string;
   task: Task;
   projectId: string;
-  collaborators: Array<User>;
+  collaborators: Array<Collaborator>;
   comments: any;
   priorities: any;
   statuses: any;
@@ -134,7 +133,7 @@ export class TaskDetailsComponent implements OnInit {
     if (this.task.userId === null) 
       this.rightForm.patchValue({collaborator: null});
     else 
-      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.id === this.task.userId)});
+      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.collaboratorId === this.task.userId).collaborator});
   }
 
   patchDescription(description: string) {

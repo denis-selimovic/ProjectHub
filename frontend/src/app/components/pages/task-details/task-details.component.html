@@ -61,8 +61,8 @@
         Assignee:&nbsp;
         <select formControlName="collaborator" name="collaborators">
           <option [ngValue]="null">None</option>
-          <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
-            {{collaborator.firstName}} {{collaborator.lastName}}
+          <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator.collaborator">
+            {{collaborator.collaborator.firstName}} {{collaborator.collaborator.lastName}}
           </option>
         </select>
       </div>

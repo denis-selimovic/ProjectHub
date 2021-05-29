@@ -11,14 +11,12 @@ import { ActionResultComponent } from '../../dialogs/action-result/action-result
 })
 export class NewCollaboratorFormComponent implements OnInit {
   newCollaboratorForm: FormGroup;
-  errorMessage: String
   @Output() onAddCollaborator = new EventEmitter<User>()
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private dialog: MatDialog) { 
     this.newCollaboratorForm = this.formBuilder.group( {
       email: new FormControl('', [Validators.email, Validators.required])
     })
-    this.errorMessage = "";
   }
 
   ngOnInit(): void {

@@ -5,7 +5,6 @@ import ba.unsa.etf.nwt.projectservice.projectservice.client.service.UserService;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.MetadataDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectNotificationDTO;
-import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.UnprocessableEntityException;
 import ba.unsa.etf.nwt.projectservice.projectservice.messaging.publishers.ProjectNotificationPublisher;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.Project;
 import ba.unsa.etf.nwt.projectservice.projectservice.model.ProjectCollaborator;
@@ -21,12 +20,15 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -51,9 +53,14 @@ public class ProjectCollaboratorController {
                                            ResourceOwner resourceOwner) {
         Project project = projectService.findById(projectId);
         projectService.checkIfOwner(project.getOwnerId(), resourceOwner.getId());
+
         ProjectCollaborator projectCollaborator = projectCollaboratorService.createCollaborator(resourceOwner, request.getCollaboratorId(), project);
+        UserDTO userDTO = userService.getUserById(resourceOwner, request.getCollaboratorId());
+        ProjectCollaboratorDTO projectCollaboratorDTO = new ProjectCollaboratorDTO(projectCollaborator);
+        projectCollaboratorDTO.setCollaborator(userDTO);
+
         publisher.send(new ProjectNotificationDTO(projectCollaborator));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new ProjectCollaboratorDTO(projectCollaborator)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(projectCollaboratorDTO));
     }
 
     @DeleteMapping("/{collaboratorId}")
@@ -93,6 +100,9 @@ public class ProjectCollaboratorController {
             UserDTO userDTO = userService.getUserById(resourceOwner, id);
             collaborator.setCollaborator(userDTO);
         });
+
+        UserDTO owner = userService.getUserById(resourceOwner, project.getOwnerId());
+        collaboratorPage = projectCollaboratorService.addElementToPage(collaboratorPage, project, owner);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PaginatedResponse<>(new MetadataDTO(collaboratorPage), collaboratorPage.getContent()));

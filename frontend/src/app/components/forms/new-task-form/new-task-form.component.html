@@ -51,8 +51,8 @@
 
     <select class="select-option" name="collaborators" formControlName="collaborator">
      <option [ngValue]="{id: null}">None</option>
-     <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
-      {{collaborator.email}}
+     <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator.collaborator">
+      {{collaborator.collaborator.email}}
      </option>
     </select>
    </div>
