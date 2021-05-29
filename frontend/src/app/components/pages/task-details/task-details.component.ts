@@ -27,6 +27,7 @@ export class TaskDetailsComponent implements OnInit {
   comments: Array<Comment> = []
   commentsMetadata: any = []
   commentLoader = false;
+  deleteCommentLoader = false;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
@@ -157,7 +158,13 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   deleteComment(comment: Comment) {
-    console.log(comment);
+    this.deleteCommentLoader = true;
+    this.commentService.deteteComment(this.taskId, comment.id, 
+      (response) => {
+        this.loadComments();
+        this.deleteCommentLoader = false;
+      },
+      (error) => {console.log(error)})
   }
 
   patchUserPriorityStatus() {

@@ -12,6 +12,7 @@ import { ConfirmDeletionComponent } from '../../dialogs/confirm-deletion/confirm
 export class CommentsItemComponent implements OnInit {
   @Input() comment: Comment;
   @Input() currentUser: any;
+  @Input() deleteCommentLoader: boolean = false;
   @Output() patch: EventEmitter<any> = new EventEmitter<any>();
   @Output() public onDelete: EventEmitter<any> = new EventEmitter();
   

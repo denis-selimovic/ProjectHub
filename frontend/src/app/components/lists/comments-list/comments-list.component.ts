@@ -10,6 +10,7 @@ import { User } from 'src/app/services/user/user.service';
 export class CommentsListComponent implements OnInit {
   @Input() comments: Array<Comment> = [];
   @Input() currentUser: User;
+  @Input() deleteCommentLoader: boolean = false;
   @Output() public onDelete: EventEmitter<any> = new EventEmitter();
 
   constructor() { }

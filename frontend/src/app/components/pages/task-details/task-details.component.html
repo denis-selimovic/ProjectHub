@@ -45,6 +45,7 @@
    <div>
      <app-comments-list [comments]="comments" 
      [currentUser]="currentUser"
+     [deleteCommentLoader]="deleteCommentLoader"
      (onDelete)="deleteComment($event)"></app-comments-list>
    </div>
   </form>

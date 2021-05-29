@@ -42,14 +42,14 @@ export class CommentService {
     );
   }
 
-  deteteComment(commentId: String): void {
-    this.http.delete(`${environment.api}/api/v1/comments/${commentId}`, {
+  deteteComment(taskId:String, commentId: String, successCallback: any, errorCallback: any): void {
+    this.http.delete(`${environment.api}/api/v1/tasks/${taskId}/comments/${commentId}`, {
       headers: {
         Authorization: this.tokenService.getAccessToken()
       }
     }).subscribe(
-      (data: any) => console.log(data),
-      (err: any) => console.log(err)
+      (data: any) => successCallback(data),
+      (err: any) => errorCallback(err)
     );
   }
 

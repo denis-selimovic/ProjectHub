@@ -19,7 +19,10 @@
   </form>
   <div class="date-time">{{this.getFormatedDate()}}</div>
   <div *ngIf="comment.userId === currentUser.id" class="buttons-container">
-   <button class="red-button" (click)="deleteComment()">Delete</button>
+   <button class="red-button" (click)="deleteComment()">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="deleteCommentLoader"></span>
+    <span *ngIf="!deleteCommentLoader">Delete</span>
+   </button>
    <button class="red-button" (click)="commentForm?.get('text').setValue(comment.text)">Clear changes</button>
     <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid"
      (click)="patchComment(commentForm?.get('text').value)">Save changes</button>
