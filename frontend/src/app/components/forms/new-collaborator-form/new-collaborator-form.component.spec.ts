@@ -19,4 +19,25 @@ describe('NewCollaboratorFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should test for form validity when email has invalid form', () => {
+    const form = component.newCollaboratorForm;
+    const emailInput = form.controls.email;
+    emailInput.setValue('invalidmail');
+    expect(form.valid).toBeFalsy();
+  })
+
+  it('should test for form validity when email is empty', () => {
+    const form = component.newCollaboratorForm;
+    const emailInput = form.controls.email;
+    emailInput.setValue('');
+    expect(form.valid).toBeFalsy();
+  })
+
+  it('should test for form validity when email is valid', () => {
+    const form = component.newCollaboratorForm;
+    const emailInput = form.controls.email;
+    emailInput.setValue('validmail@projecthub.com');
+    expect(form.valid).toBeTruthy();
+  })
 });
