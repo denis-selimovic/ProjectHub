@@ -92,12 +92,14 @@ const routes: Routes = [
   {
     path: 'projects/:id/tasks',
     pathMatch: 'full',
-    component: TasksComponent
+    component: TasksComponent,
+    canActivate: [GuardService]
   },
   {
     path: 'projects/:projectId/tasks/:taskId',
     pathMatch: 'full',
-    component: TaskDetailsComponent
+    component: TaskDetailsComponent,
+    canActivate: [GuardService]
   },
   {
     path: 'my-account',
