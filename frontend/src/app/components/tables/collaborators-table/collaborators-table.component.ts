@@ -1,10 +1,10 @@
 import { Component, AfterViewInit, ViewChild, Input, EventEmitter, Output, SimpleChanges} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatDialog} from '@angular/material/dialog';
 import { Collaborator, CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../../modal/modal/modal.component';
+import { User, UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-collaborators-table',
@@ -14,15 +14,18 @@ import { ModalComponent } from '../../modal/modal/modal.component';
 
 export class CollaboratorsTableComponent implements AfterViewInit {
   displayedColumns: string[] = ['name', 'collaboratorTag', 'email', 'deleteCollaborator'];
+  currentUser: User;
   @Input() collaborators: Array<Collaborator>;
   dataSource: MatTableDataSource<Collaborator>
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Output() onDelete: EventEmitter<any> = new EventEmitter();
 
-  constructor(private dialog: MatDialog, private modal: NgbModal, private collaboratorService: CollaboratorService) {    
+  constructor(private modal: NgbModal, private collaboratorService: CollaboratorService, private userService: UserService) {    
   }
 
   ngOnInit(): void {
+    this.currentUser = this.userService.getCurrentUser();
+
     this.dataSource = new MatTableDataSource<Collaborator>(this.collaborators);
   }
   

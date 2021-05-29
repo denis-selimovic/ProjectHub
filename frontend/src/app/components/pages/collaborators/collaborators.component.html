@@ -6,5 +6,5 @@
  <app-collaborators-table (onDelete)="deleteCollaborator()"  [collaborators]="collaborators"></app-collaborators-table>
  <p class="info-text error">{{errorMessage}}</p>
  <p class="info-text">{{successMessage}}</p>
- <app-new-collaborator-form (onAddCollaborator)="addCollaborator($event)"></app-new-collaborator-form>
+ <app-new-collaborator-form *ngIf="isOwner" (onAddCollaborator)="addCollaborator($event)"></app-new-collaborator-form>
 </div>
