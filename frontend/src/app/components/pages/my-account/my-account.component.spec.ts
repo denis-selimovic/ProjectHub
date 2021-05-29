@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { MyAccountComponent } from './my-account.component';
 
 describe('MyAccountComponent', () => {
   let component: MyAccountComponent;
   let fixture: ComponentFixture<MyAccountComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ MyAccountComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(MyAccountComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MyAccountComponent);

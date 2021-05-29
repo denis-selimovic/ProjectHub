@@ -1,4 +1,8 @@
-import { NgModule } from '@angular/core';
+import { ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed } from '@angular/core/testing';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -45,7 +49,7 @@ import { IssuesTableComponent } from './components/tables/issues-table/issues-ta
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { ProjectItemComponent } from './components/items/project-item/project-item.component';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from './components/modal/modal/modal.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 import { CollaboratorsComponent } from './components/pages/collaborators/collaborators.component';
@@ -72,98 +76,53 @@ import { NotificationService } from './services/notification/notification.servic
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HeaderComponent,
-    FooterComponent,
-    LoginFormComponent,
-    ResetPasswordEmailComponent,
-    ResetPassEmailFormComponent,
-    ResetPasswordCodeComponent,
-    ResetPassCodeFormComponent,
-    ResetPasswordNewComponent,
-    ResetPassNewFormComponent,
-    RegisterComponent,
-    RegisterFormComponent,
-    NavbarComponent,
-    NewTaskFormComponent,
-    NewTaskComponent,
-    NewProjectFormComponent,
-    NewProjectComponent,
-    NewIssueFormComponent,
-    NewIssueComponent,
-    NotFoundComponent,
-    ProjectsComponent,
-    ProjectsTableComponent,
-    RegisterComponent,
-    RegisterFormComponent,
-    NotFoundComponent,
-    DashboardComponent,
-    ConfirmEmailComponent,
-    IssuesComponent,
-    IssueItemComponent,
-    IssuesTableComponent,
-    ProjectItemComponent,
-    ProjectDetailsComponent,
-    ModalComponent,
-    ProjectDetailsComponent,
-    CollaboratorsComponent,
-    CollaboratorsTableComponent,
-    NewCollaboratorFormComponent,
-    ConfirmDeletionComponent,
-    TasksComponent,
-    TasksListComponent,
-    TasksItemComponent,
-    NewTaskModalComponent,
-    TaskDetailsComponent,
-    CommentsListComponent,
-    CommentsItemComponent,
-    ConfirmDeletionComponent,
-    CreateTaskModalComponent,
-    CreateIssueModalComponent,
-    MyAccountComponent,
-    IssueDetailsFormComponent,
-    ActionResultComponent,
-    NotificationsListComponent,
-    NotificationItemComponent
-  ],
-  imports: [
-    BrowserModule,
-    CommonModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    BrowserAnimationsModule,
-    NoopAnimationsModule,
-    MatPaginatorModule,
-    HttpClientModule,
-    MatTableModule,
-    MatDialogModule,
-    MDBBootstrapModule.forRoot(),
-    NgbModule,
-    MatDialogModule,
-    MatSelectModule,
-    NgbModule,
-    InfiniteScrollModule
-  ],
-  providers: [
-    UserService,
-    GuardService,
-    CookieService,
-    TokenService,
-    EmailService,
-    LocalStorageService,
-    MatTableModule,
-    MatPaginatorModule,
-    MatDialogModule,
-    NotificationService
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    ConfirmDeletionComponent,
-    NewTaskModalComponent
-  ]
-})
-export class AppModule { }
+    declarations: []
+  })
+  export class CommonTestingModule {
+  
+    public static setUpTestBed = (TestingComponent: any) => {
+      beforeEach(() => {
+        TestBed.configureTestingModule({
+          imports: [
+            ReactiveFormsModule,
+            FormsModule,
+            HttpClientTestingModule,
+            RouterTestingModule,
+            BrowserModule,
+            CommonModule,
+            AppRoutingModule,
+            FormsModule,
+            ReactiveFormsModule,
+            MatInputModule,
+            BrowserAnimationsModule,
+            NoopAnimationsModule,
+            MatPaginatorModule,
+            HttpClientModule,
+            MatTableModule,
+            MatDialogModule,
+            MDBBootstrapModule.forRoot(),
+            NgbModule,
+            MatDialogModule,
+            MatSelectModule,
+            InfiniteScrollModule,
+          ],
+          providers: [
+            DatePipe,
+            UserService,
+            GuardService,
+            CookieService,
+            TokenService,
+            EmailService,
+            LocalStorageService,
+            MatTableModule,
+            MatPaginatorModule,
+            MatDialogModule,
+            NotificationService,
+            HttpClientModule
+          ],
+          declarations: [TestingComponent],
+          schemas: [CUSTOM_ELEMENTS_SCHEMA]
+        });
+      });
+    }
+  }

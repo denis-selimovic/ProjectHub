@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { CollaboratorsTableComponent } from './collaborators-table.component';
 
 describe('CollaboratorsTableComponent', () => {
   let component: CollaboratorsTableComponent;
   let fixture: ComponentFixture<CollaboratorsTableComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ CollaboratorsTableComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(CollaboratorsTableComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CollaboratorsTableComponent);

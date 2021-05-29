@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { CreateIssueModalComponent } from './create-issue-modal.component';
 
 describe('CreateIssueModalComponent', () => {
   let component: CreateIssueModalComponent;
   let fixture: ComponentFixture<CreateIssueModalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ CreateIssueModalComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(CreateIssueModalComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateIssueModalComponent);

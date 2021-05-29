@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { ProjectDetailsComponent } from './project-details.component';
 
 describe('ProjectDetailsComponent', () => {
   let component: ProjectDetailsComponent;
   let fixture: ComponentFixture<ProjectDetailsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ProjectDetailsComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(ProjectDetailsComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProjectDetailsComponent);

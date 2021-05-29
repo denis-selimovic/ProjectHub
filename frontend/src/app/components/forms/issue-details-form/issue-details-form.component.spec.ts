@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { IssueDetailsFormComponent } from './issue-details-form.component';
 
 describe('IssueDetailsFormComponent', () => {
   let component: IssueDetailsFormComponent;
   let fixture: ComponentFixture<IssueDetailsFormComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ IssueDetailsFormComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(IssueDetailsFormComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IssueDetailsFormComponent);

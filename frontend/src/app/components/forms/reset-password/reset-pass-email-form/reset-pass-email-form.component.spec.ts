@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { ResetPassEmailFormComponent } from './reset-pass-email-form.component';
 
 describe('ResetPassEmailFormComponent', () => {
   let component: ResetPassEmailFormComponent;
   let fixture: ComponentFixture<ResetPassEmailFormComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ResetPassEmailFormComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(ResetPassEmailFormComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ResetPassEmailFormComponent);
