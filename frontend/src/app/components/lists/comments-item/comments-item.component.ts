@@ -35,9 +35,15 @@ export class CommentsItemComponent implements OnInit {
     instance.message = "Are you sure you want to delete this comment?";
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.onDelete.emit();
+        this.onDelete.emit(this.comment);
       }
     });
+  }
+
+  getFormatedDate():string {
+    const date = new Date(this.comment.createdAt);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleTimeString("en-US", options);
   }
 
 }

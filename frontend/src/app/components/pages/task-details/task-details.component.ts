@@ -156,6 +156,10 @@ export class TaskDetailsComponent implements OnInit {
       (error) => {console.log(error)})
   }
 
+  deleteComment(comment: Comment) {
+    console.log(comment);
+  }
+
   patchUserPriorityStatus() {
     const form  = this.rightForm.getRawValue();
     this.taskService.patchTask(this.taskId, 

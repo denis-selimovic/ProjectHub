@@ -1,4 +1,3 @@
-<!-- comment: id, text, user {id, firstName, lastName, email}, task {id, ...} -->
 <div class="comment">
  <div class="grid-container">
  <div class="initials-container">
@@ -18,6 +17,7 @@
      </div>
     </div>
   </form>
+  <div class="date-time">{{this.getFormatedDate()}}</div>
   <div *ngIf="comment.userId === currentUser.id" class="buttons-container">
    <button class="red-button" (click)="deleteComment()">Delete</button>
    <button class="red-button" (click)="commentForm?.get('text').setValue(comment.text)">Clear changes</button>

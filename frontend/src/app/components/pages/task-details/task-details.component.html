@@ -43,7 +43,9 @@
    </div>
 
    <div>
-     <app-comments-list [comments]="comments" [currentUser]="currentUser"></app-comments-list>
+     <app-comments-list [comments]="comments" 
+     [currentUser]="currentUser"
+     (onDelete)="deleteComment($event)"></app-comments-list>
    </div>
   </form>
 

@@ -1,6 +1,9 @@
 <div class="list-container" *ngIf="comments.length > 0">
  <div class="list" *ngFor="let comment of comments">
-  <app-comments-item (onDelete)="deleteComment(comment)"  [comment]="comment" [currentUser]="currentUser"></app-comments-item>
+  <app-comments-item 
+  [comment]="comment" 
+  [currentUser]="currentUser"
+  (onDelete)="deleteComment($event)"></app-comments-item>
  </div>
 </div>
 

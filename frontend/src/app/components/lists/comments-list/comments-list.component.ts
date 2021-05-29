@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Comment } from 'src/app/services/comment/comment.service';
 import { User } from 'src/app/services/user/user.service';
 
@@ -10,6 +10,7 @@ import { User } from 'src/app/services/user/user.service';
 export class CommentsListComponent implements OnInit {
   @Input() comments: Array<Comment> = [];
   @Input() currentUser: User;
+  @Output() public onDelete: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -17,7 +18,7 @@ export class CommentsListComponent implements OnInit {
   }
 
   deleteComment(comment: any) {
-    
+    this.onDelete.emit(comment);
   }
 
 }

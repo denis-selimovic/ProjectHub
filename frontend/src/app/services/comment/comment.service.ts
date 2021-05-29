@@ -42,7 +42,7 @@ export class CommentService {
     );
   }
 
-  deteteComment(commentId: string): void {
+  deteteComment(commentId: String): void {
     this.http.delete(`${environment.api}/api/v1/comments/${commentId}`, {
       headers: {
         Authorization: this.tokenService.getAccessToken()
