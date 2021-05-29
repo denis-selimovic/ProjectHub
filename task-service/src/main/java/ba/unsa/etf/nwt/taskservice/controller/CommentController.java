@@ -56,12 +56,11 @@ public class CommentController {
                                            @RequestBody @Valid CreateCommentRequest request) {
         Task task = taskService.findById(taskId);
         projectService.findProjectById(resourceOwner, task.getProjectId());
-        Comment comment = commentService.create(request, task, resourceOwner.getId());
-
         projectService.findCollaboratorById(resourceOwner, resourceOwner.getId(), task.getProjectId());
         UserDTO userDTO = userService.getUserById(resourceOwner, resourceOwner.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment, userDTO)));
+        Comment comment = commentService.create(request, task, userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new CommentDTO(comment)));
     }
 
     @GetMapping
