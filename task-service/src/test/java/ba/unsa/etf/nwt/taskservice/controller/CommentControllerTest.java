@@ -1,7 +1,9 @@
 package ba.unsa.etf.nwt.taskservice.controller;
 
 import ba.unsa.etf.nwt.taskservice.client.dto.ProjectDTO;
+import ba.unsa.etf.nwt.taskservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.taskservice.client.service.ProjectService;
+import ba.unsa.etf.nwt.taskservice.client.service.UserService;
 import ba.unsa.etf.nwt.taskservice.config.token.ResourceOwnerInjector;
 import ba.unsa.etf.nwt.taskservice.config.token.TokenGenerator;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
@@ -26,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -58,6 +61,8 @@ public class CommentControllerTest {
     private TypeRepository typeRepository;
     @MockBean
     private ProjectService projectService;
+    @MockBean
+    private UserService userService;
 
     private Priority critical;
     private Type bug;
@@ -160,6 +165,15 @@ public class CommentControllerTest {
         task.setUpdatedBy(UUID.randomUUID());
         task = taskRepository.save(task);
 
+        UserDTO userDTO = new UserDTO(
+                ResourceOwnerInjector.id,
+                ResourceOwnerInjector.email,
+                "Lamija", "Vrnjak",
+                Instant.now(),
+                Instant.now()
+        );
+        Mockito.when(userService.getUserById(Mockito.any(), Mockito.any())).thenReturn(userDTO);
+
         mockMvc.perform(post(String.format("/api/v1/tasks/%s/comments", task.getId()))
                 .header(HttpHeaders.AUTHORIZATION, token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -171,9 +185,13 @@ public class CommentControllerTest {
                 .andExpect(jsonPath("$.data.id").hasJsonPath())
                 .andExpect(jsonPath("$.data.text").hasJsonPath())
                 .andExpect(jsonPath("$.data.user_id").hasJsonPath())
+                .andExpect(jsonPath("$.data.user_first_name").hasJsonPath())
+                .andExpect(jsonPath("$.data.user_last_name").hasJsonPath())
                 .andExpect(jsonPath("$.data.created_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.updated_at").hasJsonPath())
                 .andExpect(jsonPath("$.data.user_id", is(ResourceOwnerInjector.id.toString())))
+                .andExpect(jsonPath("$.data.user_first_name", is(userDTO.getFirstName())))
+                .andExpect(jsonPath("$.data.user_last_name", is(userDTO.getLastName())))
                 .andExpect(jsonPath("$.data.text", is("This is a comment")));
     }
 

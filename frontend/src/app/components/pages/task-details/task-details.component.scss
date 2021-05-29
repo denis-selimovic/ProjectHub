@@ -1,5 +1,9 @@
 @import "../../../styles/variables.scss";
 
+h2 {
+  margin-top: 15px;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -32,7 +36,7 @@
 
   .left-form,
   .right-form {
-    background: $light-gray;
+    background: $light-light-gray;
     padding: 10px 10px;
     margin: 20px;
   }
@@ -44,21 +48,23 @@
     .blue-button,
     .red-button,
     .grey-button {
-      width: fit-content;
+      display: block;
       cursor: pointer;
       font-size: $fs-small;
       color: $white;
       border: transparent;
       border-radius: $border-radius;
       margin: 10px 5px 10px 0px;
-      padding: 5px;
+      padding: 10px 5px;
+      min-width: 15%;
     }
 
     .blue-button {
       background: $blue;
 
       &:disabled {
-        background: $dark-gray;
+        color: $black;
+        background: $light-gray;
       }
     }
 
@@ -121,11 +127,3 @@
     row-gap: 20px;
   }
 }
-
-// @media screen and (max-width: $screen-medium) {
-//   .grid-container {
-//     display: flex;
-//     flex-direction: column;
-//     row-gap: 20px;
-//   }
-// }

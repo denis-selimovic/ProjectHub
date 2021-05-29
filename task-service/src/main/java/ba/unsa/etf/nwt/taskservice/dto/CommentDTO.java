@@ -16,6 +16,8 @@ public class CommentDTO implements Resource {
     private UUID id;
     private String text;
     private UUID userId;
+    private String userFirstName;
+    private String userLastName;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -23,6 +25,8 @@ public class CommentDTO implements Resource {
         this.id = comment.getId();
         this.text = comment.getText();
         this.userId = comment.getUserId();
+        this.userFirstName = comment.getUserFirstName();
+        this.userLastName = comment.getUserLastName();
         this.createdAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
     }

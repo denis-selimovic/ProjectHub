@@ -13,6 +13,6 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends PagingAndSortingRepository<Comment, UUID> {
-    Page<CommentDTO> findAllByTask(Task task, Pageable pageable);
+    Page<CommentDTO> findAllByTaskOrderByCreatedAtDesc(Task task, Pageable pageable);
     Optional<Comment> findByIdAndTask_Id(UUID commentId, UUID taskId);
 }
