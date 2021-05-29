@@ -151,7 +151,7 @@ export class TaskDetailsComponent implements OnInit {
       (response) => {
         this.loadComments();
         this.commentLoader = false;
-        this.leftForm.get("comment").setValue("");
+        this.leftForm.reset();
       },
       (error) => {console.log(error)})
   }

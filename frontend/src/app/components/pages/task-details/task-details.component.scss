@@ -44,6 +44,7 @@
     .blue-button,
     .red-button,
     .grey-button {
+      display: block;
       cursor: pointer;
       font-size: $fs-small;
       color: $white;
@@ -57,7 +58,8 @@
       background: $blue;
 
       &:disabled {
-        background: $dark-gray;
+        color: $black;
+        background: $light-gray;
       }
     }
 
@@ -120,11 +122,3 @@
     row-gap: 20px;
   }
 }
-
-// @media screen and (max-width: $screen-medium) {
-//   .grid-container {
-//     display: flex;
-//     flex-direction: column;
-//     row-gap: 20px;
-//   }
-// }
