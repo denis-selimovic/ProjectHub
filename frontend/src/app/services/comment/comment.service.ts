@@ -9,6 +9,7 @@ export interface Comment {
   userId: String;
   userFirstName: String;
   userLastName: String;
+  createdAt: Date;
 }
 
 @Injectable({
@@ -18,15 +19,15 @@ export class CommentService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  addComment(taskId: string, commentText: string): void {
+  addComment(taskId: string, commentText: string, successCallback: any, errorCallback: any): void {
     const body = {text: commentText};
-    this.http.post(`${environment.api}/api/v1/tasks/${taskId}/comment`, body, {
+    this.http.post(`${environment.api}/api/v1/tasks/${taskId}/comments`, body, {
       headers: {
         Authorization: this.tokenService.getAccessToken()
       }
     }).subscribe(
-      (data: any) => console.log(data),
-      (err: any) => console.log(err)
+      (data: any) => successCallback(data),
+      (err: any) => errorCallback(err)
     );
   }
 

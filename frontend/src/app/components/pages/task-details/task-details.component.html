@@ -36,7 +36,10 @@
 
    <div class="buttons-container">
     <button type="submit" class="blue-button" [disabled]="!leftForm?.get('comment')?.valid"
-     (click)="addComment(leftForm?.get('comment').value)">Comment</button>
+     (click)="addComment(leftForm?.get('comment').value)">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="commentLoader"></span>
+          <span *ngIf="!commentLoader">Comment</span>
+    </button>
    </div>
 
    <div>

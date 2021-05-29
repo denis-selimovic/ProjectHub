@@ -26,6 +26,7 @@ export class TaskDetailsComponent implements OnInit {
 
   comments: Array<Comment> = []
   commentsMetadata: any = []
+  commentLoader = false;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
@@ -49,30 +50,7 @@ export class TaskDetailsComponent implements OnInit {
     });
     
     this.loadTask();
-    this.commentService.getComments(this.taskId, 
-        (response) => this.onLoadComments(response), 
-        (error) => console.log(error)
-    );
- 
-    // this.comments = [
-    //   {
-    //     id: "id",
-    //     text: "This is current user's comment.",
-    //     user: this.currentUser,
-    //     task: this.task
-    //   },
-    //   {
-    //     id: "id",
-    //     text: "This is some other user's comment.",
-    //     user: {
-    //       id: "neki drugi id",
-    //       firstName: "Lamija",
-    //       lastName: "Vrnjak",
-    //       email: "lvrnjak@gmail.com"
-    //     },
-    //     task: this.task
-    //   }
-    // ] 
+    this.loadComments();
 
     this.errorMessage = "";
   }
@@ -101,6 +79,13 @@ export class TaskDetailsComponent implements OnInit {
     this.loadPriorities();
     this.loadStatuses();
     this.loadTypes();
+  }
+
+  loadComments() {
+    this.commentService.getComments(this.taskId, 
+      (response) => this.onLoadComments(response), 
+      (error) => console.log(error)
+    );
   }
 
   loadPriorities() {
@@ -160,14 +145,15 @@ export class TaskDetailsComponent implements OnInit {
     );
   }
 
-  addComment(comment: String) {
-    // this.comments.push({
-    //     id: "id",
-    //     text: comment,
-    //     user: this.currentUser,
-    //     task: this.task
-    // });
-    // this.leftForm.patchValue({comment: ''});
+  addComment(commentText: string) {
+    this.commentLoader = true;
+    this.commentService.addComment(this.taskId, commentText, 
+      (response) => {
+        this.loadComments();
+        this.commentLoader = false;
+        this.leftForm.get("comment").setValue("");
+      },
+      (error) => {console.log(error)})
   }
 
   patchUserPriorityStatus() {
@@ -194,13 +180,15 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   onLoadComments(response: any) {
+    this.comments = [];
     response.data.forEach(comment => {
       this.comments.push({
         id: comment.id,
         text: comment.text,
         userId: comment.user_id,
         userFirstName: comment.user_first_name,
-        userLastName: comment.user_last_name
+        userLastName: comment.user_last_name,
+        createdAt: comment.created_at
       });
     });
 
