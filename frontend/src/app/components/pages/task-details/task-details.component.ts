@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Collaborator, CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
@@ -29,6 +29,7 @@ export class TaskDetailsComponent implements OnInit {
   commentLoader = false;
   deleteCommentLoader = false;
   editCommentLoader = false;
+  commentLoadMoreAvailable: boolean = true;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
@@ -84,7 +85,7 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   loadComments() {
-    this.commentService.getComments(this.taskId, 
+    this.commentService.getComments(this.taskId, {}, 
       (response) => this.onLoadComments(response), 
       (error) => console.log(error)
     );
@@ -149,11 +150,11 @@ export class TaskDetailsComponent implements OnInit {
 
   addComment(commentText: string) {
     this.commentLoader = true;
-    this.commentService.addComment(this.taskId, commentText, 
+    this.commentService.addComment(this.taskId, commentText,  
       (response) => {
         this.loadComments();
         this.commentLoader = false;
-        this.leftForm.reset();
+        this.leftForm.get("comment").reset();
       },
       (error) => {console.log(error)})
   }
@@ -165,7 +166,9 @@ export class TaskDetailsComponent implements OnInit {
         this.loadComments();
         this.deleteCommentLoader = false;
       },
-      (error) => {console.log(error)})
+      (error) => {
+        console.log(error); 
+      })
   }
 
   editComment(patch: any) {
@@ -175,7 +178,9 @@ export class TaskDetailsComponent implements OnInit {
         this.loadComments();
         this.editCommentLoader = false;
       },
-      (error) => {console.log(error)})
+      (error) => {
+        console.log(error);
+      })
   }
 
   patchUserPriorityStatus() {
@@ -201,8 +206,8 @@ export class TaskDetailsComponent implements OnInit {
     console.log("subscribe");
   }
 
-  onLoadComments(response: any) {
-    this.comments = [];
+  onLoadComments(response: any, reset: boolean = true) {
+    if(reset) this.comments = [];
     response.data.forEach(comment => {
       this.comments.push({
         id: comment.id,
@@ -215,5 +220,20 @@ export class TaskDetailsComponent implements OnInit {
     });
 
     this.commentsMetadata = response.metadata;
+    if(!response.metadata.has_next) this.commentLoadMoreAvailable = false;
+    else this.commentLoadMoreAvailable = true;
+  }
+
+  paginate() {
+    console.log("pagination");
+    if(this.commentsMetadata.has_next) {
+      const paginationOptions = {page: this.commentsMetadata.page_number+1, size: this.commentsMetadata.page_size}
+      this.commentService.getComments(this.taskId, paginationOptions, 
+        (response) => this.onLoadComments(response, false), 
+        (error) => console.log(error)
+      );
+    }else {
+      this.commentLoadMoreAvailable = false;
+    }
   }
 }

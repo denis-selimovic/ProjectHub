@@ -46,8 +46,11 @@
      <app-comments-list [comments]="comments" 
      [currentUser]="currentUser"
      [deleteCommentLoader]="deleteCommentLoader"
+     [editCommentLoader]="editCommentLoader"
+     [loadMoreAvailable]="commentLoadMoreAvailable"
      (onDelete)="deleteComment($event)"
-     (onPatch)="editComment($event)"></app-comments-list>
+     (onPatch)="editComment($event)"
+     (onPaginate)="paginate()"></app-comments-list>
    </div>
   </form>
 

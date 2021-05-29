@@ -4,9 +4,11 @@
   [comment]="comment" 
   [currentUser]="currentUser"
   [deleteCommentLoader]="deleteCommentLoader"
+  [editCommentLoader]="editCommentLoader"
   (onDelete)="deleteComment($event)"
   (onPatch)="editComment($event)"></app-comments-item>
  </div>
+ <button (click)="paginate()" class="load-more-button" [disabled]="!loadMoreAvailable">Load more</button>
 </div>
 
 <div class="empty-list" *ngIf="comments.length == 0">

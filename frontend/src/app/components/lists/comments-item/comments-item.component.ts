@@ -15,7 +15,7 @@ export class CommentsItemComponent implements OnInit {
   @Input() deleteCommentLoader: boolean = false;
   @Input() editCommentLoader: boolean = false;
   @Output() onPatch: EventEmitter<any> = new EventEmitter<any>();
-  @Output() public onDelete: EventEmitter<any> = new EventEmitter();
+  @Output() onDelete: EventEmitter<any> = new EventEmitter();
   
   commentForm: FormGroup;
 

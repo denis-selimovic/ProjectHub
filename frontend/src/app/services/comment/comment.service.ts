@@ -31,8 +31,12 @@ export class CommentService {
     );
   }
 
-  getComments(taskId: string, successCallback: any, errorCallback: any): void {
-    this.http.get(`${environment.api}/api/v1/tasks/${taskId}/comments`, {
+  getComments(taskId: string, pagination: any, successCallback: any, errorCallback: any): void {
+    let page = 0;
+    let size = 5;
+    if(pagination.page) page = pagination.page;
+    if(pagination.size) size = pagination.size;
+    this.http.get(`${environment.api}/api/v1/tasks/${taskId}/comments?page=${page}&size=${size}`, {
       headers: {
         Authorization: this.tokenService.getAccessToken()
       }

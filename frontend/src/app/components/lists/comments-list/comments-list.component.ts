@@ -12,8 +12,10 @@ export class CommentsListComponent implements OnInit {
   @Input() currentUser: User;
   @Input() deleteCommentLoader: boolean = false;
   @Input() editCommentLoader: boolean = false;
+  @Input() loadMoreAvailable: boolean = true;
   @Output() public onDelete: EventEmitter<any> = new EventEmitter();
   @Output() public onPatch: EventEmitter<any> = new EventEmitter();
+  @Output() public onPaginate: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -26,6 +28,10 @@ export class CommentsListComponent implements OnInit {
 
   editComment(patch: any) {
     this.onPatch.emit(patch);
+  }
+
+  paginate() {
+    this.onPaginate.emit();
   }
 
 }
