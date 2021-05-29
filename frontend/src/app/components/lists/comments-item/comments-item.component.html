@@ -2,28 +2,28 @@
 <div class="comment">
  <div class="grid-container">
  <div class="initials-container">
-  {{comment.user.firstName[0]}}{{comment.user.lastName[0]}}
+  {{comment.userFirstName[0]}}{{comment.userLastName[0]}}
  </div>
 
  <div class="comment-edit">
   <form class="comment-form" [formGroup]="commentForm">
-   <textarea id="comment" formControlName="comment" rows="4" [readonly]="comment.user.id !== currentUser.id"></textarea>
+   <textarea id="text" formControlName="text" rows="4" [readonly]="comment.userId !== currentUser.id"></textarea>
     <div class="error"
-     *ngIf="!commentForm?.get('comment')?.valid && (commentForm?.get('comment')?.dirty ||commentForm?.get('comment')?.touched)">
-     <div class="error" *ngIf="commentForm?.get('comment')?.errors?.required">
+     *ngIf="!commentForm?.get('text')?.valid && (commentForm?.get('text')?.dirty ||commentForm?.get('text')?.touched)">
+     <div class="error" *ngIf="commentForm?.get('text')?.errors?.required">
       Comment is required
      </div>
-     <div class="error" *ngIf="commentForm?.get('comment')?.errors?.maxlength">
+     <div class="error" *ngIf="commentForm?.get('text')?.errors?.maxlength">
       Comment can't contain more than 255 characters
      </div>
     </div>
   </form>
-  <div *ngIf="comment.user.id === currentUser.id" class="buttons-container">
+  <!-- <div *ngIf="comment.userId === currentUser.id" class="buttons-container">
    <button class="red-button" (click)="deleteComment()">Delete</button>
-   <button class="red-button" (click)="commentForm?.get('comment').setValue(comment.text)">Clear changes</button>
-    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('comment')?.valid"
-     (click)="patchComment(commentForm?.get('comment').value)">Save changes</button>
-  </div>
+   <button class="red-button" (click)="commentForm?.get('text').setValue(text)">Clear changes</button>
+    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('text')?.valid"
+     (click)="patchComment(commentForm?.get('text').value)">Save changes</button>
+  </div> -->
   <!-- <div class="buttons-container">
    <button class="red-button">Cancel</button>
    <button type="submit" class="blue-button" [disabled]="!commentForm?.get('comment')?.valid"

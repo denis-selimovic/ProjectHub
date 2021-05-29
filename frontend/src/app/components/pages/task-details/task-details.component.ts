@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Collaborator, CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Comment, CommentService } from 'src/app/services/comment/comment.service';
 import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
 
@@ -15,7 +16,6 @@ export class TaskDetailsComponent implements OnInit {
   task: Task;
   projectId: string;
   collaborators: Array<Collaborator>;
-  comments: any;
   priorities: any;
   statuses: any;
   types: any;
@@ -24,12 +24,16 @@ export class TaskDetailsComponent implements OnInit {
   errorMessage: String;
   currentUser: User;
 
+  comments: Array<Comment> = []
+  commentsMetadata: any = []
+
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
   userPriorityStatusSuccessMessage: string;
   userPriorityStatusErrorMessage: string;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private collaboratorService: CollaboratorService, private route: ActivatedRoute) { 
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, 
+    private collaboratorService: CollaboratorService, private route: ActivatedRoute, private commentService: CommentService) { 
     this.descriptionErrorMessage = '';
     this.descriptionSuccessMessage = '';
     this.userPriorityStatusErrorMessage = '';
@@ -45,26 +49,30 @@ export class TaskDetailsComponent implements OnInit {
     });
     
     this.loadTask();
+    this.commentService.getComments(this.taskId, 
+        (response) => this.onLoadComments(response), 
+        (error) => console.log(error)
+    );
  
-    this.comments = [
-      {
-        id: "id",
-        text: "This is current user's comment.",
-        user: this.currentUser,
-        task: this.task
-      },
-      {
-        id: "id",
-        text: "This is some other user's comment.",
-        user: {
-          id: "neki drugi id",
-          firstName: "Lamija",
-          lastName: "Vrnjak",
-          email: "lvrnjak@gmail.com"
-        },
-        task: this.task
-      }
-    ] 
+    // this.comments = [
+    //   {
+    //     id: "id",
+    //     text: "This is current user's comment.",
+    //     user: this.currentUser,
+    //     task: this.task
+    //   },
+    //   {
+    //     id: "id",
+    //     text: "This is some other user's comment.",
+    //     user: {
+    //       id: "neki drugi id",
+    //       firstName: "Lamija",
+    //       lastName: "Vrnjak",
+    //       email: "lvrnjak@gmail.com"
+    //     },
+    //     task: this.task
+    //   }
+    // ] 
 
     this.errorMessage = "";
   }
@@ -153,13 +161,13 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   addComment(comment: String) {
-    this.comments.push({
-        id: "id",
-        text: comment,
-        user: this.currentUser,
-        task: this.task
-    });
-    this.leftForm.patchValue({comment: ''});
+    // this.comments.push({
+    //     id: "id",
+    //     text: comment,
+    //     user: this.currentUser,
+    //     task: this.task
+    // });
+    // this.leftForm.patchValue({comment: ''});
   }
 
   patchUserPriorityStatus() {
@@ -183,5 +191,19 @@ export class TaskDetailsComponent implements OnInit {
 
   subscribe() {
     console.log("subscribe");
+  }
+
+  onLoadComments(response: any) {
+    response.data.forEach(comment => {
+      this.comments.push({
+        id: comment.id,
+        text: comment.text,
+        userId: comment.user_id,
+        userFirstName: comment.user_first_name,
+        userLastName: comment.user_last_name
+      });
+    });
+
+    this.commentsMetadata = response.metadata;
   }
 }
