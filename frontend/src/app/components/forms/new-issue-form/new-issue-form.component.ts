@@ -20,8 +20,8 @@ export class NewIssueFormComponent implements OnInit {
   successMessage: string;
   projectName: string;
   priorities: any;
+  loader = false;
   
-
   constructor(private formBuilder: FormBuilder, private issueService: IssueService, private projectService: ProjectService, private taskService: TaskService) {
     this.loadPriorities();
     this.successMessage = '';
@@ -36,6 +36,7 @@ export class NewIssueFormComponent implements OnInit {
 
   onSubmit(): void {
     const form = this.newIssueForm.getRawValue();
+    this.loader = true;
     this.updateForm();
     this.createIssue(form);
   }
@@ -66,11 +67,13 @@ export class NewIssueFormComponent implements OnInit {
   }
 
   private success(): void {
+    this.loader = false;
     this.successMessage = 'Successfully created an issue.';
     setTimeout(() => { this.successMessage = ''; }, 1800);
   }
 
   private error(): any {
+    this.loader = false;
     this.errorMessage = 'Something went wrong. Please try again.';
     setTimeout(() => { this.errorMessage = ''; }, 1800);
   }
