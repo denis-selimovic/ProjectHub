@@ -122,7 +122,9 @@
       <button class="grey-button" (click)="subscribe()">Subscribe</button>
     </div>
     <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
-      <p>*By subscribing you agree to receiving notifications for given task</p>
+      <p *ngIf="onTaskSubscribedFlag">Successfully subscribed to task</p>
+      <p *ngIf="onTaskSubscribedErrFlag">Error occurred. Please try again later</p>
+      <p *ngIf="taskSubscriptionMessage">*By subscribing you agree to receiving notifications for given task</p>
     </div>
   </div>
 </div>
