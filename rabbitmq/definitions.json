@@ -36,6 +36,15 @@
       "arguments": {}
     },
     {
+      "name": "create-user-notif-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
       "name": "task-notification-exchange",
       "vhost": "/",
       "type": "direct",
@@ -88,6 +97,13 @@
       "arguments": {}
     },
     {
+      "name": "create-user-notif-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
       "name": "task-notification-queue",
       "vhost": "/",
       "durable": true,
@@ -131,6 +147,14 @@
       "destination": "create-user-queue",
       "destination_type": "queue",
       "routing_key": "create-user-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "create-user-notif-exchange",
+      "vhost": "/",
+      "destination": "create-user-notif-queue",
+      "destination_type": "queue",
+      "routing_key": "create-user-notif-routing-key",
       "arguments": {}
     },
     {
