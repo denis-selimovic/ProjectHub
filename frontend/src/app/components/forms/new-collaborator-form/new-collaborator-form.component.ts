@@ -11,6 +11,7 @@ import { ActionResultComponent } from '../../dialogs/action-result/action-result
 })
 export class NewCollaboratorFormComponent implements OnInit {
   newCollaboratorForm: FormGroup;
+  loader = false;
   @Output() onAddCollaborator = new EventEmitter<User>()
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private dialog: MatDialog) { 
@@ -23,9 +24,14 @@ export class NewCollaboratorFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.loader = true;
     this.userService.getUserByEmail(this.newCollaboratorForm.value.email, 
-      (data: any) => this.onAddCollaborator.emit(data),
+      (data: any) => {
+        this.loader = false;
+        this.onAddCollaborator.emit(data)
+      },
       (err: any) => {
+        this.loader = false;
         const dialogRef = this.dialog.open(ActionResultComponent);
         const instance = dialogRef.componentInstance;
         instance.message = err.error.errors.message;

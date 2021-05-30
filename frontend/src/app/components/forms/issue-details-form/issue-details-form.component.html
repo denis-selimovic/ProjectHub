@@ -34,7 +34,10 @@
             </select>
            
            <div class="justified-container">
-            <button type="submit" [disabled]="issueDetailsForm?.invalid || !issueDetailsForm?.dirty" class="my-button">Edit issue</button>
+            <button type="submit" [disabled]="issueDetailsForm?.invalid || !issueDetailsForm?.dirty" class="my-button">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+                <span *ngIf="!loader">Edit issue</span>
+            </button>
             <button class="my-button" (click)="close(true)">Close</button>
             </div>
 
