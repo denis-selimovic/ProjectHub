@@ -1,10 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Project, ProjectService } from '../../../services/project/project.service';
-import { Issue } from 'src/app/models/Issue';
+import { ProjectService } from '../../../services/project/project.service';
 import { IssueService } from 'src/app/services/issue/issue.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TaskService } from 'src/app/services/task/task.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-new-issue-form',
@@ -22,7 +21,7 @@ export class NewIssueFormComponent implements OnInit {
   priorities: any;
   loader = false;
   
-  constructor(private formBuilder: FormBuilder, private issueService: IssueService, private projectService: ProjectService, private taskService: TaskService) {
+  constructor(private formBuilder: FormBuilder, private issueService: IssueService, private projectService: ProjectService, private taskService: TaskService, public activeModal: NgbActiveModal) {
     this.loadPriorities();
     this.successMessage = '';
     this.errorMessage = '';
@@ -69,12 +68,14 @@ export class NewIssueFormComponent implements OnInit {
   private success(): void {
     this.loader = false;
     this.successMessage = 'Successfully created an issue.';
-    setTimeout(() => { this.successMessage = ''; }, 1800);
+    setTimeout(() => { this.successMessage = '';
+    this.activeModal.close(); }, 1800);
   }
 
   private error(): any {
     this.loader = false;
     this.errorMessage = 'Something went wrong. Please try again.';
-    setTimeout(() => { this.errorMessage = ''; }, 1800);
+    setTimeout(() => { this.errorMessage = ''; 
+    this.activeModal.close();}, 1800);
   }
 }
