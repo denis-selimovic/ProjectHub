@@ -18,9 +18,13 @@
         </div>
     
         <a routerLink="/reset-password-email" class="redirect-link link-center">Forgot your password?</a>
-        <button type="submit" [disabled]="loginForm.invalid" class="form-button">Log in</button>
+
+        <button type="submit" [disabled]="loginForm.invalid" class="form-button">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+            <span *ngIf="!loader">Log in</span>
+        </button>
+
         <p class="form-info-text">Don't have an account? <span><a routerLink="/register" class="redirect-link">Register</a></span></p>
-        <br/>
         <p class="form-info-text error">{{errorMessage}}</p>
     </div>
 </form>
