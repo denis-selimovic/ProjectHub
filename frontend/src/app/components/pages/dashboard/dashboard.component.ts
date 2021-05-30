@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
   currentUser: any = null;
   token: any = null;
   channel: any = null;
+  hasNotifications: boolean;
 
   constructor(private tokenService: TokenService, private userService: UserService,
               private pusher: PusherService) {
@@ -25,7 +26,7 @@ export class DashboardComponent implements OnInit {
     if (this.channel) { return; }
     this.channel = this.pusher.subscribe(this.token, `private-${this.currentUser.id}`);
     this.channel.bind('notification', (data: any) => {
-      console.log(data);
+      this.hasNotifications = true;
     });
   }
 }

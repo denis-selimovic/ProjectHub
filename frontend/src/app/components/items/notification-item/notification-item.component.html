@@ -3,12 +3,12 @@
 </head>
 <div class="notification-item">
     <div class="top">
-        <p class="notification-title">{{notification.title}}</p>
+        <p class="notification-title">{{notification?.title}}</p>
         <i [hidden]="!notification.read" class="far fa-circle icon"></i>
         <i [hidden]="notification.read" class="fas fa-circle icon"></i>
     </div>
-    <p class="notification-description">{{notification.description}}</p>
-    <div class="date-time">{{this.getFormatedDate()}}</div>
+    <p class="notification-description">{{notification?.description}}</p>
+    <div class="date-time">{{this.notification?.created_at | date: 'medium' }}</div>
     <div class="action-buttons">
         <button [hidden]="notification.read">Mark as read</button>
     </div>

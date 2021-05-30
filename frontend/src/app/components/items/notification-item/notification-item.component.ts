@@ -14,10 +14,4 @@ export class NotificationItemComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  getFormatedDate():string {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return this.notification.dateTime.toLocaleTimeString("en-US", options);
-  }
-
 }
