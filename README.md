@@ -10,6 +10,8 @@ Some of the main features include:
 - Commenting on tasks 
 - Recieving notifications and emails about different events in the system
 
+Demo of the project functionalities: **insert video**
+
 ## Backend (Microservices)
 The project consists of following five main microservices:
 - [User service](/user-service)
@@ -18,7 +20,7 @@ The project consists of following five main microservices:
 - [Notification service](/notification-service)
 - [Email service](/email-service)
 
-Aongside those, there are 4 utility microservices: 
+Alongside those, there are 4 utility microservices: 
 - [Configuration service](/configuration-service) - for centralizing the configuration files for other services
 - [Eureka server](/eureka-server) - load balancer
 - [System events service](/system-events-service) - for in-app logging of all activities
