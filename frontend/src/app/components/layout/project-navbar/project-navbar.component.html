@@ -1,0 +1,8 @@
+<nav class="stroke" *ngIf="userService.isLoggedIn() === true"> 
+    <ul>
+        <li><a routerLink="/dashboard">Dashboard</a></li>
+        <li><a routerLink="/projects/{{projectId}}/collaborators">Collaborators</a></li>
+        <li><a routerLink="/projects/{{projectId}}/tasks">Tasks</a></li>
+        <li><a routerLink="/projects/{{projectId}}/issues">Issues</a></li>
+    </ul>
+</nav>
