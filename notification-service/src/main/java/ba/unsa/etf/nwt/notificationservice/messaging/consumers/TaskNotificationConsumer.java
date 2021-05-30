@@ -6,9 +6,7 @@ import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import ba.unsa.etf.nwt.notificationservice.service.SubscriptionService;
-import com.google.gson.JsonObject;
 import com.pusher.rest.Pusher;
-import com.rabbitmq.tools.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -38,12 +36,20 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
 
         if (change.previous != null) {
             UUID id = UUID.fromString(change.previous);
+            Notification notification = createNotificationForUser(data.getTaskName(),
+                    "You were removed from task " + data.getTaskName());
+            notificationService.createNotificationUser(id, notification);
+            pusher.trigger("private-" + id, "notification", notification);
             subscriptionService.deleteByTask(data.getTaskId(), id);
         }
         if (change.current != null) {
             UUID id = UUID.fromString(change.current);
             try {
                 subscriptionService.create(data.getTaskId(), id);
+                Notification notification = createNotificationForUser(data.getTaskName(),
+                        "You were assigned to task " + data.getTaskName());
+                notificationService.createNotificationUser(id, notification);
+                pusher.trigger("private-" + id, "notification", notification);
             }
             catch (Exception ignore) {
                 System.out.println(data);
@@ -75,6 +81,11 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
         TaskNotificationDTO.Change change = entry.getValue();
         String title = String.format("Task %s updated", taskName);
         String description = String.format("Task %s updated from %s to %s.", key, change.previous, change.current);
+        return notificationService.create(title, description);
+    }
+
+    private Notification createNotificationForUser(String taskName, String description) {
+        String title = String.format("Task %s updated", taskName);
         return notificationService.create(title, description);
     }
 }
