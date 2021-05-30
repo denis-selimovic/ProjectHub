@@ -123,7 +123,7 @@
     </div>
     <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
       <p *ngIf="onTaskSubscribedFlag">Successfully subscribed to task</p>
-      <p *ngIf="onTaskSubscribedErrFlag">Error occurred. Please try again later</p>
+      <p *ngIf="onTaskSubscribedErrFlag">{{onTaskSubscribedErrMessage}}</p>
       <p *ngIf="taskSubscriptionMessage">*By subscribing you agree to receiving notifications for given task</p>
     </div>
   </div>

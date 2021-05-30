@@ -40,6 +40,7 @@ export class TaskDetailsComponent implements OnInit {
   onTaskSubscribedFlag = false;
   onTaskSubscribedErrFlag = false;
   taskSubscriptionMessage = true;
+  onTaskSubscribedErrMessage = '';
 
   constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService,
               private collaboratorService: CollaboratorService, private route: ActivatedRoute,
@@ -241,6 +242,13 @@ export class TaskDetailsComponent implements OnInit {
   private onTaskSubscribedError(err: any): any {
     this.taskSubscriptionMessage = false;
     this.onTaskSubscribedErrFlag = true;
+    console.log(err)
+    if (err.status === 422) {
+      this.onTaskSubscribedErrMessage = 'You are already subscribed to this task';
+    }
+    else{
+      this.onTaskSubscribedErrMessage = 'Error occurred. Please try again later';
+    }
     setTimeout(() => {
       this.taskSubscriptionMessage = true;
       this.onTaskSubscribedErrFlag = false;
