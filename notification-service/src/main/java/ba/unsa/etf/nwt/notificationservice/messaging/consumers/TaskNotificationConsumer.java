@@ -6,6 +6,9 @@ import ba.unsa.etf.nwt.notificationservice.model.Notification;
 import ba.unsa.etf.nwt.notificationservice.model.Subscription;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import ba.unsa.etf.nwt.notificationservice.service.SubscriptionService;
+import com.google.gson.JsonObject;
+import com.pusher.rest.Pusher;
+import com.rabbitmq.tools.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -20,6 +23,7 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
 
     private final SubscriptionService subscriptionService;
     private final NotificationService notificationService;
+    private final Pusher pusher;
 
     @RabbitListener(queues = "task-notification-queue")
     public void receive(TaskNotificationDTO data) {
@@ -54,7 +58,10 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
         Set<Subscription> subscriptions = subscriptionService.findTaskSubscriptions(taskId);
         for(var subscription: subscriptions) {
             if (subscription.getConfig().getUserId().equals(updatedAt)) continue;
-            notificationService.createNotificationUser(subscription.getConfig().getUserId(), notification);
+            UUID userId = subscription.getConfig().getUserId();
+            notificationService.createNotificationUser(userId, notification);
+            pusher.trigger("private-" + userId.toString(), "notification",
+                    notification);
         }
     }
 
