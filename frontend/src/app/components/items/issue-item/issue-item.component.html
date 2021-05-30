@@ -6,7 +6,9 @@
 
     <div class="right">
         <button class="form-button" (click)="detailsClicked(issue)">Details</button>
-        <button class="form-button" (click)="openModal()">Create task</button>
+        <button class="form-button" (click)="createTaskFromIssue(issue)">Create task</button>
         <span><i class='far fa-trash-alt fa-lg' (click)="removeIssue(issue?.id);"></i></span>
+        <p class="info-text error">{{errorMessage}}</p>
+        <p class="info-text">{{successMessage}}</p>
     </div>
 </div>

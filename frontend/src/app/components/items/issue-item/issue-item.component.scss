@@ -3,7 +3,17 @@
 @import "/src/app/components/tables/projects-table/projects-table.component.scss";
 
 ::ng-deep img.images {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
+.info-text {
+  color: $blue;
+  text-decoration: none;
+  font-size: $fs-small;
+  text-align: center;
+}
+
+.error {
+  color: $red;
+}
