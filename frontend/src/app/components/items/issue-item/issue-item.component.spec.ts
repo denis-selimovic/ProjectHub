@@ -4,7 +4,7 @@ import { CommonTestingModule } from 'src/app/common-testing.module';
 
 import { IssueItemComponent } from './issue-item.component';
 
-describe('OneIssueComponent', () => {
+describe('IssueItemComponent', () => {
   let component: IssueItemComponent;
   let fixture: ComponentFixture<IssueItemComponent>;
 
@@ -13,6 +13,16 @@ describe('OneIssueComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IssueItemComponent);
     component = fixture.componentInstance;
+    component.issue = {
+      id: "123456789",
+      name: "Issue name",
+      description: "Issue description",
+      projectId: "555555",
+      priority: {
+        id: "987654321",
+        priority_type: "HIGH"
+      }
+    }
     fixture.detectChanges();
   });
 
