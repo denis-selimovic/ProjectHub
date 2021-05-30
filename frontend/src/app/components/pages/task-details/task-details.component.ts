@@ -52,6 +52,18 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.leftForm = this.formBuilder.group({
+      description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+      comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
+    });   
+
+    this.rightForm = this.formBuilder.group({
+      collaborator: new FormControl(),
+      priority: new FormControl(),
+      status: new FormControl(),
+      type: new FormControl()
+    });
+
     this.currentUser = this.userService.getCurrentUser();
 
     this.route.params.subscribe(params => {
@@ -73,18 +85,7 @@ export class TaskDetailsComponent implements OnInit {
 
   onTaskLoad(data) {
     this.task = data;
-    this.leftForm = this.formBuilder.group({
-      description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
-      comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
-    });
-
-    this.rightForm = this.formBuilder.group({
-      collaborator: new FormControl(),
-      priority: new FormControl(),
-      status: new FormControl(),
-      type: new FormControl()
-    });
-
+    this.leftForm.get("description").setValue(this.task.description);
     this.loadCollaborators();
     this.loadPriorities();
     this.loadStatuses();
