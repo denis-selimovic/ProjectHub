@@ -68,14 +68,16 @@ export class NewIssueFormComponent implements OnInit {
   private success(): void {
     this.loader = false;
     this.successMessage = 'Successfully created an issue.';
-    setTimeout(() => { this.successMessage = '';
-    this.activeModal.close(); }, 1800);
+    setTimeout(() => { 
+      this.activeModal.close(); 
+  }, 1800);
   }
 
   private error(): any {
     this.loader = false;
     this.errorMessage = 'Something went wrong. Please try again.';
-    setTimeout(() => { this.errorMessage = ''; 
-    this.activeModal.close();}, 1800);
+    setTimeout(() => { 
+      this.activeModal.close();
+    }, 1800);
   }
 }
