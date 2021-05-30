@@ -20,7 +20,7 @@ import { TokenService } from './services/token/token.service';
 import { EmailService } from './services/email/email.service';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { NotificationService } from './services/notification/notification.service';
@@ -67,7 +67,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
             MatPaginatorModule,
             MatDialogModule,
             NotificationService,
-            HttpClientModule
+            HttpClientModule,
+            NgbActiveModal
           ],
           declarations: [TestingComponent],
           schemas: [CUSTOM_ELEMENTS_SCHEMA]
