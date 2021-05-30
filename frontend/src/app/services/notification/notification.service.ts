@@ -29,4 +29,15 @@ export class NotificationService {
       (err: any) => error(err)
     );
   }
+
+  markAsRead(id: string, callback, error): any {
+    this.http.patch(`${environment.api}/api/v1/notifications/${id}`, { read: true }, {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(data),
+      (err: any) => error(err)
+    );
+  }
 }

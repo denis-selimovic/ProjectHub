@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Notification } from 'src/app/services/notification/notification.service';
+import {Notification, NotificationService} from 'src/app/services/notification/notification.service';
 
 @Component({
   selector: 'app-notification-item',
@@ -10,8 +10,16 @@ export class NotificationItemComponent implements OnInit {
 
   @Input() notification: Notification;
 
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void {
+  }
+
+  markAsRead(id: string): any {
+    this.notificationService.markAsRead(id, (data: any) => this.update(data), err => {});
+  }
+
+  private update(data): any {
+    this.notification = data.data;
   }
 }

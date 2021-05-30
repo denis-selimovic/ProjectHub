@@ -10,6 +10,6 @@
     <p class="notification-description">{{notification?.description}}</p>
     <div class="date-time">{{this.notification?.created_at | date: 'medium' }}</div>
     <div class="action-buttons">
-        <button [hidden]="notification.read">Mark as read</button>
+        <button [hidden]="notification.read" (click)="markAsRead(notification.id)">Mark as read</button>
     </div>
 </div>
