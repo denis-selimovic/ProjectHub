@@ -51,7 +51,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   createProject(): any {
-    const modal = this.modal.open(NewProjectComponent, { size: 'xl' });
+    const modal = this.modal.open(NewProjectComponent, { size: 'l' });
     modal.result.then(result => {
       if (result === 'success') {
         this.loadProjects();
