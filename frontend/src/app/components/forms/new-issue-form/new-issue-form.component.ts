@@ -56,13 +56,14 @@ export class NewIssueFormComponent implements OnInit {
     )
   }
 
-  private updateForm(): void {
+  updateForm(): FormGroup {
     this.newIssueForm = this.formBuilder.group( {
       name: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
       description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       priority_id: [this.priorities[0].id, Validators.required],
       project_id: new FormControl(this.projectId)
     });
+    return this.newIssueForm;
   }
 
   private success(): void {
