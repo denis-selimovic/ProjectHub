@@ -1,9 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { Issue } from 'src/app/models/Issue';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CreateTaskModalComponent } from '../../modals/create-task-modal/create-task-modal.component';
 import { EventEmitter } from '@angular/core'; 
-import { IssueService } from 'src/app/services/issue/issue.service';
+import { TaskService, Type } from 'src/app/services/task/task.service';
 
 @Component({
   selector: 'app-issue-item',
@@ -17,11 +15,18 @@ export class IssueItemComponent implements OnInit {
   @Output() deleteIssueEvent = new EventEmitter<string>();
 
   imageSrc: string;
+  bugType: Type;
+  errorMessage: string;
+  successMessage: string;
 
-  constructor(private modalService: NgbModal) {
-   }
+  constructor(private taskService: TaskService) {
+    this.successMessage = '';
+    this.errorMessage = '';
+  }
 
   ngOnInit(): void {
+    this.loadTypes();
+
     switch (this.issue.priority.priority_type) {
       case "CRITICAL":
         this.imageSrc = "assets/critical.png";
@@ -41,8 +46,18 @@ export class IssueItemComponent implements OnInit {
     }
   }
 
-  openModal() {
-    const modalRef = this.modalService.open(CreateTaskModalComponent);
+  createTaskFromIssue(issue: any) {
+    const request = {
+      name: issue.name,
+      description: issue.description,
+      project_id: issue.project_id,
+      priority_id: issue.priority.id,
+      typeId: this.bugType.id
+    }
+    this.taskService.createTask(request, 
+      () => this.success(),
+      (err: any) => this.error(err)
+    )
   }
 
   detailsClicked(issue: Issue) {
@@ -51,5 +66,25 @@ export class IssueItemComponent implements OnInit {
 
   removeIssue(id: string) {
     this.deleteIssueEvent.emit(id);
+  }
+
+  loadTypes() {
+    this.taskService.getTypes(
+      (data: any) => {
+        const types = data.data;
+        this.bugType = types.find(t => t.type === "BUG");
+      } 
+    )
+  }
+
+  private success(): void {
+    this.successMessage = 'Successfully created a task.';
+    setTimeout(() => { this.successMessage = ''; }, 1800);
+  }
+
+  private error(err): any {
+    this.errorMessage = err.error.errors.message;
+    // this.errorMessage = 'Something went wrong. Please try again.';
+    setTimeout(() => { this.errorMessage = ''; }, 1800);
   }
 }
