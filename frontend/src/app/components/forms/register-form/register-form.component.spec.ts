@@ -215,14 +215,4 @@ describe('RegisterFormComponent', () => {
     expect(form.valid).toBeTruthy();
   })
 
-
-
-
-
-
-
-
-
-
-
 });
