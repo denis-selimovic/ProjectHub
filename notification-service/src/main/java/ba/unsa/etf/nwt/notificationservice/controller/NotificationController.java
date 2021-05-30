@@ -13,6 +13,7 @@ import ba.unsa.etf.nwt.notificationservice.response.base.SimpleResponse;
 import ba.unsa.etf.nwt.notificationservice.security.ResourceOwner;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationService;
 import ba.unsa.etf.nwt.notificationservice.service.NotificationUserService;
+import com.pusher.rest.Pusher;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final NotificationUserService notificationUserService;
+    private final Pusher pusher;
 
     @PostMapping
     @ApiResponses(value = {
@@ -93,5 +95,14 @@ public class NotificationController {
         notificationUser = notificationUserService.patch(notificationUser, patchNotificationRequest);
         NotificationDTO dto = new NotificationDTO(notification, notificationUser.getRead());
         return ResponseEntity.ok().body(new Response<>(dto));
+    }
+
+    @PostMapping("/socket-subscribe")
+    public ResponseEntity<?> subscribe(ResourceOwner resourceOwner, String channel_name, String socket_id) {
+        String channel = channel_name.substring(8);
+        if (!channel.equals(resourceOwner.getId().toString())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(pusher.authenticate(socket_id, channel_name));
     }
 }

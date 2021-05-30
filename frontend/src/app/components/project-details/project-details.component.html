@@ -6,11 +6,11 @@
   </div>
  </div>
  <label for="projectName">Project name:&nbsp;</label>
- <p id="projectName"> {{project.name}}</p>
+ <p id="projectName"> {{project?.name}}</p>
  <br/>
  <label for="projectOwner">Owner:&nbsp;</label>
- <p id="projectOwner"> {{owner.firstName}} {{owner.lastName}} ({{owner.email}})</p>
+ <p id="projectOwner"> {{owner?.firstName}} {{owner?.lastName}} ({{owner?.email}})</p>
  <br />
  <label for="projectCollaborators">Team members:&nbsp;</label>
- <p id="projectCollaborators">{{collaborators.length}}</p>
+ <p id="projectCollaborators">{{collaborators?.length}}</p>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -9,22 +9,15 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 
 export class NavbarComponent implements OnInit {
-  showNotifications: boolean = false;
-  hasNotifications: boolean = false;
+  showNotifications = false;
+  @Input() hasNotifications = false;
 
-  constructor(public userService: UserService, public router: Router) {
-    
-   }
+  constructor(public userService: UserService, public router: Router) { }
 
-  ngOnInit(): void {
-    //just for testing
-    setTimeout(() => {
-      this.hasNotifications = true;
-    }, 5000);
-  }
+  ngOnInit(): void {  }
 
-  showNotificationsDiv() {
+  showNotificationsDiv(): any {
     this.showNotifications = !this.showNotifications;
-    if(this.hasNotifications) this.hasNotifications = false;
+    if (this.hasNotifications) { this.hasNotifications = false; }
   }
 }
