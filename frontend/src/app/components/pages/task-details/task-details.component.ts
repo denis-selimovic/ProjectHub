@@ -5,6 +5,7 @@ import { Collaborator, CollaboratorService } from 'src/app/services/collaborator
 import { Comment, CommentService } from 'src/app/services/comment/comment.service';
 import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
+import {NotificationService} from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-task-details',
@@ -24,20 +25,26 @@ export class TaskDetailsComponent implements OnInit {
   errorMessage: String;
   currentUser: User;
 
-  comments: Array<Comment> = []
-  commentsMetadata: any = []
+  comments: Array<Comment> = [];
+  commentsMetadata: any = [];
   commentLoader = false;
   deleteCommentLoader = false;
   editCommentLoader = false;
-  commentLoadMoreAvailable: boolean = true;
+  commentLoadMoreAvailable = true;
 
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
   userPriorityStatusSuccessMessage: string;
   userPriorityStatusErrorMessage: string;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, 
-    private collaboratorService: CollaboratorService, private route: ActivatedRoute, private commentService: CommentService) { 
+  onTaskSubscribedFlag = false;
+  onTaskSubscribedErrFlag = false;
+  taskSubscriptionMessage = true;
+  onTaskSubscribedErrMessage = '';
+
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService,
+              private collaboratorService: CollaboratorService, private route: ActivatedRoute,
+              private commentService: CommentService, private notificationService: NotificationService) {
     this.descriptionErrorMessage = '';
     this.descriptionSuccessMessage = '';
     this.userPriorityStatusErrorMessage = '';
@@ -51,11 +58,11 @@ export class TaskDetailsComponent implements OnInit {
       this.projectId = params.projectId;
       this.taskId = params.taskId;
     });
-    
+
     this.loadTask();
     this.loadComments();
 
-    this.errorMessage = "";
+    this.errorMessage = '';
   }
 
   loadTask() {
@@ -69,24 +76,24 @@ export class TaskDetailsComponent implements OnInit {
     this.leftForm = this.formBuilder.group({
       description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
       comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
-    });   
+    });
 
     this.rightForm = this.formBuilder.group({
       collaborator: new FormControl(),
       priority: new FormControl(),
       status: new FormControl(),
       type: new FormControl()
-    });   
+    });
 
-    this.loadCollaborators(); 
+    this.loadCollaborators();
     this.loadPriorities();
     this.loadStatuses();
     this.loadTypes();
   }
 
   loadComments() {
-    this.commentService.getComments(this.taskId, {}, 
-      (response) => this.onLoadComments(response), 
+    this.commentService.getComments(this.taskId, {},
+      (response) => this.onLoadComments(response),
       (error) => console.log(error)
     );
   }
@@ -97,7 +104,7 @@ export class TaskDetailsComponent implements OnInit {
         this.priorities = data.data;
         this.rightForm.patchValue({priority: this.priorities.find(p => p.id === this.task.priority.id)});
       }
-    )
+    );
   }
 
   loadTypes() {
@@ -105,8 +112,8 @@ export class TaskDetailsComponent implements OnInit {
       (data: any) => {
         this.types = data.data;
         this.rightForm.patchValue({type: this.types.find(t => t.id === this.task.type.id)});
-      } 
-    )
+      }
+    );
   }
 
   loadStatuses() {
@@ -114,34 +121,36 @@ export class TaskDetailsComponent implements OnInit {
       (data: any) => {
         this.statuses = data.data;
         this.rightForm.patchValue({status: this.statuses.find(s => s.id === this.task.status.id)});
-      }  
-    )
+      }
+    );
   }
 
   loadCollaborators() {
     this.collaboratorService.getCollaborators(this.projectId,
-      (data: any) => this.onCollaboratorsLoad(data), 
+      (data: any) => this.onCollaboratorsLoad(data),
       () => this.userPriorityStatusErrorMessage = 'Error while loading data. Please try again later.');
   }
 
   onCollaboratorsLoad(data: any): any {
     this.collaborators = data;
-    if (this.task.userId === null) 
+    if (this.task.userId === null) {
       this.rightForm.patchValue({collaborator: null});
-    else 
+    }
+    else {
       this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.collaboratorId === this.task.userId).collaborator});
+    }
   }
 
   patchDescription(description: string) {
-    this.taskService.patchTask(this.taskId, 
+    this.taskService.patchTask(this.taskId,
       {
-        description: description
-      }, 
+        description
+      },
       (data: any) => {
-        this.descriptionSuccessMessage = "Description successfully changed";
+        this.descriptionSuccessMessage = 'Description successfully changed';
         setTimeout(() => this.descriptionSuccessMessage = '', 1800);
       },
-      (err: any) => { 
+      (err: any) => {
         this.descriptionErrorMessage = err.error.errors.message;
         setTimeout(() => this.descriptionErrorMessage = '', 1800);
       }
@@ -150,13 +159,13 @@ export class TaskDetailsComponent implements OnInit {
 
   addComment(commentText: string) {
     this.commentLoader = true;
-    this.commentService.addComment(this.taskId, commentText,  
+    this.commentService.addComment(this.taskId, commentText,
       (response) => {
         this.loadComments();
         this.commentLoader = false;
-        this.leftForm.get("comment").reset();
+        this.leftForm.get('comment').reset();
       },
-      (error) => {console.log(error)})
+      (error) => {console.log(error); });
   }
 
   deleteComment() {
@@ -169,29 +178,30 @@ export class TaskDetailsComponent implements OnInit {
 
   patchUserPriorityStatus() {
     const form  = this.rightForm.getRawValue();
-    this.taskService.patchTask(this.taskId, 
+    this.taskService.patchTask(this.taskId,
       {
         user_id: form.collaborator === null ? null : form.collaborator.id,
         priority_id: form.priority.id,
         status_id: form.status.id
-      }, 
+      },
       (data: any) => {
-        this.userPriorityStatusSuccessMessage = "Task details successfully changed";
+        this.userPriorityStatusSuccessMessage = 'Task details successfully changed';
         setTimeout(() => this.userPriorityStatusSuccessMessage = '', 1800);
       },
-      (err: any) => { 
+      (err: any) => {
         this.userPriorityStatusErrorMessage = err.error.errors.message;
         setTimeout(() => this.userPriorityStatusErrorMessage = '', 1800);
       }
     );
   }
 
-  subscribe() {
-    console.log("subscribe");
+  subscribe(): any {
+    this.notificationService.subscribeToTask(this.task.id, (data: any) => this.onTaskSubscribed(data),
+      (err: any) => this.onTaskSubscribedError(err));
   }
 
   onLoadComments(response: any, reset: boolean = true) {
-    if(reset) this.comments = [];
+    if (reset) { this.comments = []; }
     response.data.forEach(comment => {
       this.comments.push({
         id: comment.id,
@@ -204,19 +214,44 @@ export class TaskDetailsComponent implements OnInit {
     });
 
     this.commentsMetadata = response.metadata;
-    if(!response.metadata.has_next) this.commentLoadMoreAvailable = false;
-    else this.commentLoadMoreAvailable = true;
+    if (!response.metadata.has_next) { this.commentLoadMoreAvailable = false; }
+    else { this.commentLoadMoreAvailable = true; }
   }
 
   paginate() {
-    if(this.commentsMetadata.has_next) {
-      const paginationOptions = {page: this.commentsMetadata.page_number+1, size: this.commentsMetadata.page_size}
-      this.commentService.getComments(this.taskId, paginationOptions, 
-        (response) => this.onLoadComments(response, false), 
+    if (this.commentsMetadata.has_next) {
+      const paginationOptions = {page: this.commentsMetadata.page_number + 1, size: this.commentsMetadata.page_size};
+      this.commentService.getComments(this.taskId, paginationOptions,
+        (response) => this.onLoadComments(response, false),
         (error) => console.log(error)
       );
     }else {
       this.commentLoadMoreAvailable = false;
     }
+  }
+
+  private onTaskSubscribed(data: any): any {
+    this.taskSubscriptionMessage = false;
+    this.onTaskSubscribedFlag = true;
+    setTimeout(() => {
+      this.taskSubscriptionMessage = true;
+      this.onTaskSubscribedFlag = false;
+    }, 2000);
+  }
+
+  private onTaskSubscribedError(err: any): any {
+    this.taskSubscriptionMessage = false;
+    this.onTaskSubscribedErrFlag = true;
+    console.log(err)
+    if (err.status === 422) {
+      this.onTaskSubscribedErrMessage = 'You are already subscribed to this task';
+    }
+    else{
+      this.onTaskSubscribedErrMessage = 'Error occurred. Please try again later';
+    }
+    setTimeout(() => {
+      this.taskSubscriptionMessage = true;
+      this.onTaskSubscribedErrFlag = false;
+    }, 2000);
   }
 }

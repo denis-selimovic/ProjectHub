@@ -42,7 +42,12 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
         }
         if (change.current != null) {
             UUID id = UUID.fromString(change.current);
-            subscriptionService.create(data.getTaskId(), id);
+            try {
+                subscriptionService.create(data.getTaskId(), id);
+            }
+            catch (Exception ignore) {
+                System.out.println(data);
+            }
         }
     }
 

@@ -40,4 +40,15 @@ export class NotificationService {
       (err: any) => error(err)
     );
   }
+
+  subscribeToTask(id: string, callback, error): any {
+    this.http.post(`${environment.api}/api/v1/subscriptions`, { task_id: id }, {
+      headers: {
+        Authorization: this.tokenService.getAccessToken()
+      }
+    }).subscribe(
+      (data: any) => callback(data),
+      (err: any) => error(err)
+    );
+  }
 }

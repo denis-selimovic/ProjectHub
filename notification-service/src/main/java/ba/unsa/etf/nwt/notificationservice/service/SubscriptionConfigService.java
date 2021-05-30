@@ -26,7 +26,7 @@ public class SubscriptionConfigService {
     }
 
     public SubscriptionConfig create(final UserDTO user) {
-        subscriptionConfigRepository.findByEmailOrUserId(user.getEmail(), user.getId()).ifPresent(c -> {
+        subscriptionConfigRepository.findByUserId(user.getId()).ifPresent(c -> {
             throw new UnprocessableEntityException("Config with this email or user id already exists");
         });
 

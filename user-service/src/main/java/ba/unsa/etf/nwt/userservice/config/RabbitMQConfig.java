@@ -44,6 +44,32 @@ public class RabbitMQConfig {
         }
     }
 
+    @Configuration
+    public static class CreateUserNotificationQueueConfig {
+
+        public static final String QUEUE_NAME = "create-user-notif-queue";
+        public static final String EXCHANGE_NAME = "create-user-notif-exchange";
+        public static final String ROUTING_KEY = "create-user-notif-routing-key";
+
+        @Bean
+        public Queue createUserNotifQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange createUserNotifExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding bindingNotif(Queue createUserQueue, DirectExchange createUserExchange) {
+            return BindingBuilder
+                    .bind(createUserQueue)
+                    .to(createUserExchange)
+                    .with(ROUTING_KEY);
+        }
+    }
+
     @Bean
     public MessageConverter messageConverter() {
         ObjectMapper mapper = new ObjectMapper()
