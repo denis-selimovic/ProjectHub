@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
@@ -153,7 +153,7 @@ describe('RegisterFormComponent', () => {
   })
 
   it('should test input erors when password doesn\'t contain a special character', () => {
-    password.setValue('p@ssword');
+    password.setValue('Password1');
     expect(password.valid).toBeFalsy();
     expect(password.errors.pattern).toBeTruthy();
     expect(password.errors.required).toBeFalsy();
@@ -191,13 +191,13 @@ describe('RegisterFormComponent', () => {
 
   it('should test input erors when passwords don\'t match (confirm password field doesn\'t contain an uppercase)', () => {
     password.setValue('P@ssword1');
-    confirmPassword.setValue('Password1');
+    confirmPassword.setValue('p@ssword1');
     expect(confirmPassword.errors.mustMatch).toBeTruthy();
     expect(confirmPassword.errors.required).toBeFalsy();
     expect(form.valid).toBeFalsy();
   })
 
-  it('should test input erors when passwords don\'t match (confirm password field doesn\'t contain an uppercase)', () => {
+  it('should test input erors when passwords match)', () => {
     password.setValue('P@ssword1');
     confirmPassword.setValue('P@ssword1');
     expect(confirmPassword.errors).toBeNull();
@@ -205,7 +205,7 @@ describe('RegisterFormComponent', () => {
     expect(form.valid).toBeFalsy();
   })
 
-  it('should test submit button when form is valid', () => {
+  it('should test for form validity when controls are correct', () => {
     firstName.setValue('Amila');
     lastName.setValue('Zigo');
     emailInput.setValue('amila@gmail.com');
@@ -214,5 +214,21 @@ describe('RegisterFormComponent', () => {
     fixture.detectChanges();
     expect(form.valid).toBeTruthy();
   })
+
+  it('should call onSubmit method', fakeAsync(() => {
+    firstName.setValue('Amila');
+    lastName.setValue('Zigo');
+    emailInput.setValue('amila@gmail.com');
+    password.setValue('P@ssword1');
+    confirmPassword.setValue('P@ssword1');
+    fixture.detectChanges();
+
+    spyOn(component, 'onSubmit');
+  
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
+    tick();
+    expect(component.onSubmit).toHaveBeenCalled();
+  }));
 
 });
