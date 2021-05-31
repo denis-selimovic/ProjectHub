@@ -1,3 +1,4 @@
+import { getLocaleDateTimeFormat } from '@angular/common';
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Issue } from 'src/app/models/Issue';
@@ -20,6 +21,7 @@ export class IssueDetailsFormComponent implements OnChanges {
   successMessage: string;
   priorities: any;
   show: boolean;
+  loader = false;
   
   constructor(private formBuilder: FormBuilder, private issueService: IssueService, private taskService: TaskService) { 
     this.taskService.getPriorities((data: any) => { this.priorities = data.data; })
@@ -44,6 +46,7 @@ export class IssueDetailsFormComponent implements OnChanges {
 
   onSubmit(): void {
     const form = this.issueDetailsForm.getRawValue();
+    this.loader = true;
     this.editIssue(form);
   }
 
@@ -59,6 +62,7 @@ export class IssueDetailsFormComponent implements OnChanges {
   }
 
   success(): void {
+    this.loader = false;
     this.successMessage = 'Issue successfully updated.';
     setTimeout(() => { 
       this.closeEvent.emit(true); 
@@ -67,6 +71,7 @@ export class IssueDetailsFormComponent implements OnChanges {
   }
 
   error(data: any) {
+    this.loader = false;
     this.errorMessage = data.data;
   }
 

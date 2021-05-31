@@ -37,8 +37,11 @@
       {{priority.priority}}
      </option>
     </select>
- 
-   <button type="submit" [disabled]="newIssueForm.invalid" class="form-button">Add issue</button>
+
+   <button type="submit" [disabled]="newIssueForm.invalid" class="form-button">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+    <span *ngIf="!loader">Add issue</span>
+  </button>
 
    <div class="succes">
        <h5>{{successMessage}}</h5>

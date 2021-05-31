@@ -14,7 +14,11 @@
       </div>
      </div>
     </div>
-    
-  <button type="submit" [disabled]="newCollaboratorForm.invalid" class="form-button">Add collaborator</button>
+
+  <button type="submit" [disabled]="newCollaboratorForm?.invalid" class="form-button">
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="loader"></span>
+    <span *ngIf="!loader">Add collaborator</span>
+  </button>
+
  </div>
 </form>
