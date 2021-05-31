@@ -75,4 +75,23 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         });
       });
     }
+
+  public static getElements(element: Element, query: string): HTMLElement[] {
+    return [].slice.call(element.querySelectorAll(query));
+  }
+
+  public static getRows(tableElement: Element): HTMLElement[] {
+    return this.getElements(tableElement, '.mat-row');
+  }
+
+  public static getCells(row: Element): HTMLElement[] {
+      if (!row) {
+        return [];
+      }
+      let cells = this.getElements(row, 'mat-cell');
+      if (!cells.length) {
+        cells = this.getElements(row, 'td.mat-cell');
+      }
+      return cells;
+    }
   }
