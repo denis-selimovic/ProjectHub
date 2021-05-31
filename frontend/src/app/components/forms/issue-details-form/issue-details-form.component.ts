@@ -22,7 +22,7 @@ export class IssueDetailsFormComponent implements OnChanges {
   show: boolean;
   
   constructor(private formBuilder: FormBuilder, private issueService: IssueService, private taskService: TaskService) { 
-    this.taskService.getPriorities((data: any) => { this.priorities = data.data; })
+    this.taskService.getPriorities((data: any) => { this.priorities = data.data; console.log("prioriteti ", this.priorities);});
     this.show = false;
     this.successMessage = '';
     this.errorMessage = '';
@@ -31,7 +31,7 @@ export class IssueDetailsFormComponent implements OnChanges {
   ngOnInit(): void {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if(this.issue !== undefined) {
       this.issueDetailsForm = this.formBuilder.group({
         name: new FormControl(this.issue.name, [Validators.required, Validators.maxLength(50)]),      
