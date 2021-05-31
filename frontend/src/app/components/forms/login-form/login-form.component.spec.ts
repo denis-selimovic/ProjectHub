@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { Router, RouterLinkWithHref } from '@angular/router';
 
 import { CommonTestingModule } from 'src/app/common-testing.module';
+import { UserService } from 'src/app/services/user/user.service';
 
 import { LoginFormComponent } from './login-form.component';
 
@@ -13,6 +14,7 @@ describe('LoginFormComponent', () => {
   let form: FormGroup;
   let emailInput: AbstractControl;
   let passwordInput: AbstractControl;
+  let userService: UserService;
 
   CommonTestingModule.setUpTestBed(LoginFormComponent);
 
@@ -120,5 +122,31 @@ describe('LoginFormComponent', () => {
     expect(routerLinkInstance['commands']).toEqual(['/register']);
     expect(routerLinkInstance['href']).toEqual('/register');
   })
+
+  it('should test error message when credentials are invalid', () => {
+    emailInput.setValue('ajsah@projecthub.com');
+    passwordInput.setValue('123456789');
+    fixture.detectChanges();
+
+    spyOn(component, 'onSubmit');
+  
+    component.login();
+    fixture.detectChanges();
+
+    expect(component.errorMessage).toEqual('Invalid credentials');
+  });
+
+  it('should test error message when credentials are valid', () => {
+    emailInput.setValue('ajsah@projecthub.com');
+    passwordInput.setValue('');
+    fixture.detectChanges();
+
+    spyOn(component, 'onSubmit');
+  
+    component.login();
+    fixture.detectChanges();
+
+    expect(component.errorMessage).toEqual('');
+  });
   
 });

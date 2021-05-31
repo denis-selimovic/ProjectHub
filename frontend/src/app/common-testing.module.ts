@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { NotificationService } from './services/notification/notification.service';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MockUserService } from './mock-services/mock-user.service';
 
 @NgModule({
     declarations: []
@@ -57,7 +58,10 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
           ],
           providers: [
             DatePipe,
-            UserService,
+            {
+              provide: UserService,
+              useClass: MockUserService
+            },
             GuardService,
             CookieService,
             TokenService,
