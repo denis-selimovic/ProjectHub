@@ -10,7 +10,7 @@ Some of the main features include:
 - Commenting on tasks 
 - Recieving notifications and emails about different events in the system
 
-Demo of the project functionalities: **insert video**
+You can watch a short [demo](https://drive.google.com/file/d/1jkLwQ7VK2VK5pnnuWHdDBV38WjKDrldY/view?usp=sharing) of project functionalities. The video shows all the features on the frontend and some backend features. 
 
 ## Backend (Microservices)
 The project consists of following five main microservices:
