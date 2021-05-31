@@ -1,4 +1,5 @@
-<h2 style="margin-left: 20px;">{{task.projectName}}: {{task.name}}</h2>
+<app-project-navbar [projectId]="projectId"></app-project-navbar>
+<h2 style="margin-left: 20px;">{{task?.projectName}}: {{task?.name}}</h2>
 <div class="grid-container">
   <form class="left-form" [formGroup]="leftForm">
    <textarea rows="4" id="description" formControlName="description"></textarea>
@@ -36,17 +37,28 @@
 
    <div class="buttons-container">
     <button type="submit" class="blue-button" [disabled]="!leftForm?.get('comment')?.valid"
-     (click)="addComment(leftForm?.get('comment').value)">Comment</button>
+     (click)="addComment(leftForm?.get('comment').value)">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" *ngIf="commentLoader"></span>
+          <span *ngIf="!commentLoader">Comment</span>
+    </button>
    </div>
 
    <div>
-     <app-comments-list [comments]="comments" [currentUser]="currentUser"></app-comments-list>
+     <app-comments-list [comments]="comments"
+     [currentUser]="currentUser"
+     [deleteCommentLoader]="deleteCommentLoader"
+     [editCommentLoader]="editCommentLoader"
+     [loadMoreAvailable]="commentLoadMoreAvailable"
+     [taskId]="taskId"
+     (onDelete)="deleteComment()"
+     (onPatch)="editComment()"
+     (onPaginate)="paginate()"></app-comments-list>
    </div>
   </form>
 
   <div>
     <form class="right-form" [formGroup]="rightForm" (ngSubmit)="patchUserPriorityStatus()">
-      
+
       <div class="flex-container">
       <div>
         Reporter: {{currentUser.firstName}} {{currentUser.lastName}}
@@ -61,8 +73,8 @@
         Assignee:&nbsp;
         <select formControlName="collaborator" name="collaborators">
           <option [ngValue]="null">None</option>
-          <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator">
-            {{collaborator.firstName}} {{collaborator.lastName}}
+          <option *ngFor="let collaborator of collaborators" [ngValue]="collaborator.collaborator">
+            {{collaborator.collaborator.firstName}} {{collaborator.collaborator.lastName}}
           </option>
         </select>
       </div>
@@ -111,7 +123,9 @@
       <button class="grey-button" (click)="subscribe()">Subscribe</button>
     </div>
     <div style="text-align: right; margin-right: 20px; margin-bottom: 20px;">
-      <p>*By subscribing you agree to receiving notifications for given task</p>
+      <p *ngIf="onTaskSubscribedFlag">Successfully subscribed to task</p>
+      <p *ngIf="onTaskSubscribedErrFlag">{{onTaskSubscribedErrMessage}}</p>
+      <p *ngIf="taskSubscriptionMessage">*By subscribing you agree to receiving notifications for given task</p>
     </div>
   </div>
 </div>

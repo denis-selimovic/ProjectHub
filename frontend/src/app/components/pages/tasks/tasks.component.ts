@@ -31,9 +31,7 @@ export class TasksComponent implements OnInit {
     const modal = this.modal.open(NewTaskFormComponent, { size: 'l' });
     modal.componentInstance.projectId = this.projectId;
     modal.result.then(result => {
-      console.log("Rezultat ", result);
       if (result == 'success') {
-        console.log("uspjesno dodan task");
         this.loadTasks();
         this.changeDetection.detectChanges();
       }

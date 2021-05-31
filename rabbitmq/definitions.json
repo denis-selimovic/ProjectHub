@@ -36,7 +36,25 @@
       "arguments": {}
     },
     {
+      "name": "create-user-notif-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
       "name": "task-notification-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "task-notification-email-exchange",
       "vhost": "/",
       "type": "direct",
       "durable": true,
@@ -88,7 +106,21 @@
       "arguments": {}
     },
     {
+      "name": "create-user-notif-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
       "name": "task-notification-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "task-notification-email-queue",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
@@ -134,11 +166,27 @@
       "arguments": {}
     },
     {
+      "source": "create-user-notif-exchange",
+      "vhost": "/",
+      "destination": "create-user-notif-queue",
+      "destination_type": "queue",
+      "routing_key": "create-user-notif-routing-key",
+      "arguments": {}
+    },
+    {
       "source": "task-notification-exchange",
       "vhost": "/",
       "destination": "task-notification-queue",
       "destination_type": "queue",
       "routing_key": "task-notification-routing-key",
+      "arguments": {}
+    },
+    {
+      "source": "task-notification-email-exchange",
+      "vhost": "/",
+      "destination": "task-notification-email-queue",
+      "destination_type": "queue",
+      "routing_key": "task-notification-email-routing-key",
       "arguments": {}
     },
     {

@@ -2,6 +2,7 @@ package ba.unsa.etf.nwt.userservice.controller;
 
 import ba.unsa.etf.nwt.userservice.client.service.EmailService;
 import ba.unsa.etf.nwt.userservice.dto.UserDTO;
+import ba.unsa.etf.nwt.userservice.messaging.publishers.UserNotificationPublisher;
 import ba.unsa.etf.nwt.userservice.messaging.publishers.UserPublisher;
 import ba.unsa.etf.nwt.userservice.model.Token;
 import ba.unsa.etf.nwt.userservice.model.User;
@@ -43,6 +44,7 @@ public class UsersController {
     private final TokenService tokenService;
     private final EmailService emailService;
     private final UserPublisher userPublisher;
+    private final UserNotificationPublisher userNotificationPublisher;
 
     @PostMapping
     @ApiResponses(value = {
@@ -61,6 +63,7 @@ public class UsersController {
         Token token = tokenService.generateToken(user, Token.TokenType.ACTIVATE_ACCOUNT);
         emailService.sendEmail(user, token, "activation");
         userPublisher.send(new UserDTO(user));
+        userNotificationPublisher.send(new UserDTO(user));
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(new UserDTO(user)));
     }
 

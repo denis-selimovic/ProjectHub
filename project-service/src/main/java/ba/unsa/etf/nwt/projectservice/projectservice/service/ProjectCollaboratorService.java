@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.projectservice.projectservice.service;
 
+import ba.unsa.etf.nwt.projectservice.projectservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.dto.ProjectCollaboratorDTO;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.ForbiddenException;
 import ba.unsa.etf.nwt.projectservice.projectservice.exception.base.NotFoundException;
@@ -10,9 +11,12 @@ import ba.unsa.etf.nwt.projectservice.projectservice.repository.ProjectCollabora
 import ba.unsa.etf.nwt.projectservice.projectservice.security.ResourceOwner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,8 +28,7 @@ public class ProjectCollaboratorService {
     public ProjectCollaborator createCollaborator(ResourceOwner resourceOwner, UUID collaboratorId, Project project) {
         if (resourceOwner.getId().equals(collaboratorId)) {
             throw new UnprocessableEntityException("You are already a collaborator on this project");
-        }
-        projectCollaboratorRepository.findByCollaboratorIdAndProjectId(collaboratorId, project.getId()).ifPresent(pc -> {
+        }        projectCollaboratorRepository.findByCollaboratorIdAndProjectId(collaboratorId, project.getId()).ifPresent(pc -> {
             throw new UnprocessableEntityException("Collaborator already added to this project");
         });
 
@@ -63,5 +66,18 @@ public class ProjectCollaboratorService {
         if (!ownerId.equals(collaboratorId) &&
                 existsByCollaboratorIdAndProjectId(collaboratorId, projectId))
             throw new NotFoundException("Collaborator not found");
+    }
+
+    public Page<ProjectCollaboratorDTO> addElementToPage(Page<ProjectCollaboratorDTO> collaboratorPage, Project project, UserDTO userDTO) {
+        ProjectCollaborator owner  = new ProjectCollaborator();
+        owner.setId(UUID.randomUUID());
+        owner.setProject(project);
+        owner.setCollaboratorId(project.getOwnerId());
+        ProjectCollaboratorDTO ownerDTO = new ProjectCollaboratorDTO(owner);
+        ownerDTO.setCollaborator(userDTO);
+        List<ProjectCollaboratorDTO> projectCollaboratorDTOS = new ArrayList<>();
+        collaboratorPage.forEach(projectCollaboratorDTOS::add);
+        projectCollaboratorDTOS.add(0, ownerDTO);
+        return new PageImpl<>(projectCollaboratorDTOS);
     }
 }

@@ -43,6 +43,32 @@ public class RabbitMQConfig {
     }
 
     @Configuration
+    public static class TaskNotificationEmailQueueConfig {
+
+        public static final String QUEUE_NAME = "task-notification-email-queue";
+        public static final String EXCHANGE_NAME = "task-notification-email-exchange";
+        public static final String ROUTING_KEY = "task-notification-email-routing-key";
+
+        @Bean
+        public Queue taskNotificationEmailQueue() {
+            return new Queue(QUEUE_NAME);
+        }
+
+        @Bean
+        public DirectExchange taskNotificationEmailExchange() {
+            return new DirectExchange(EXCHANGE_NAME);
+        }
+
+        @Bean
+        public Binding bindingEmail(Queue taskNotificationEmailQueue, DirectExchange taskNotificationEmailExchange) {
+            return BindingBuilder
+                    .bind(taskNotificationEmailQueue)
+                    .to(taskNotificationEmailExchange)
+                    .with(ROUTING_KEY);
+        }
+    }
+
+    @Configuration
     public static class RevertProjectDeleteQueueConfig {
 
         public static final String QUEUE_NAME = "revert-project-delete-queue";

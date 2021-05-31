@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Collaborator, CollaboratorService } from 'src/app/services/collaborator/collaborator.service';
+import { Comment, CommentService } from 'src/app/services/comment/comment.service';
 import { Task, TaskService } from 'src/app/services/task/task.service';
 import { User, UserService } from 'src/app/services/user/user.service';
-import { TasksComponent } from '../tasks/tasks.component';
+import {NotificationService} from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-task-details',
@@ -15,8 +16,7 @@ export class TaskDetailsComponent implements OnInit {
   taskId: string;
   task: Task;
   projectId: string;
-  collaborators: Array<User>;
-  comments: any;
+  collaborators: Array<Collaborator>;
   priorities: any;
   statuses: any;
   types: any;
@@ -25,12 +25,26 @@ export class TaskDetailsComponent implements OnInit {
   errorMessage: String;
   currentUser: User;
 
+  comments: Array<Comment> = [];
+  commentsMetadata: any = [];
+  commentLoader = false;
+  deleteCommentLoader = false;
+  editCommentLoader = false;
+  commentLoadMoreAvailable = true;
+
   descriptionSuccessMessage: string;
   descriptionErrorMessage: string;
   userPriorityStatusSuccessMessage: string;
   userPriorityStatusErrorMessage: string;
 
-  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService, private collaboratorService: CollaboratorService, private route: ActivatedRoute) { 
+  onTaskSubscribedFlag = false;
+  onTaskSubscribedErrFlag = false;
+  taskSubscriptionMessage = true;
+  onTaskSubscribedErrMessage = '';
+
+  constructor(private formBuilder: FormBuilder, private taskService: TaskService, private userService: UserService,
+              private collaboratorService: CollaboratorService, private route: ActivatedRoute,
+              private commentService: CommentService, private notificationService: NotificationService) {
     this.descriptionErrorMessage = '';
     this.descriptionSuccessMessage = '';
     this.userPriorityStatusErrorMessage = '';
@@ -38,36 +52,29 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.leftForm = this.formBuilder.group({
+      description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+      comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
+    });   
+
+    this.rightForm = this.formBuilder.group({
+      collaborator: new FormControl(),
+      priority: new FormControl(),
+      status: new FormControl(),
+      type: new FormControl()
+    });
+
     this.currentUser = this.userService.getCurrentUser();
 
     this.route.params.subscribe(params => {
       this.projectId = params.projectId;
       this.taskId = params.taskId;
     });
-    
-    this.loadTask();
- 
-    this.comments = [
-      {
-        id: "id",
-        text: "This is current user's comment.",
-        user: this.currentUser,
-        task: this.task
-      },
-      {
-        id: "id",
-        text: "This is some other user's comment.",
-        user: {
-          id: "neki drugi id",
-          firstName: "Lamija",
-          lastName: "Vrnjak",
-          email: "lvrnjak@gmail.com"
-        },
-        task: this.task
-      }
-    ] 
 
-    this.errorMessage = "";
+    this.loadTask();
+    this.loadComments();
+
+    this.errorMessage = '';
   }
 
   loadTask() {
@@ -78,22 +85,18 @@ export class TaskDetailsComponent implements OnInit {
 
   onTaskLoad(data) {
     this.task = data;
-    this.leftForm = this.formBuilder.group({
-      description: new FormControl(this.task.description, [Validators.required, Validators.maxLength(255)]),
-      comment: new FormControl('', [Validators.required, Validators.maxLength(255)])
-    });   
-
-    this.rightForm = this.formBuilder.group({
-      collaborator: new FormControl(),
-      priority: new FormControl(),
-      status: new FormControl(),
-      type: new FormControl()
-    });   
-
-    this.loadCollaborators(); 
+    this.leftForm.get("description").setValue(this.task.description);
+    this.loadCollaborators();
     this.loadPriorities();
     this.loadStatuses();
     this.loadTypes();
+  }
+
+  loadComments() {
+    this.commentService.getComments(this.taskId, {},
+      (response) => this.onLoadComments(response),
+      (error) => console.log(error)
+    );
   }
 
   loadPriorities() {
@@ -102,7 +105,7 @@ export class TaskDetailsComponent implements OnInit {
         this.priorities = data.data;
         this.rightForm.patchValue({priority: this.priorities.find(p => p.id === this.task.priority.id)});
       }
-    )
+    );
   }
 
   loadTypes() {
@@ -110,8 +113,8 @@ export class TaskDetailsComponent implements OnInit {
       (data: any) => {
         this.types = data.data;
         this.rightForm.patchValue({type: this.types.find(t => t.id === this.task.type.id)});
-      } 
-    )
+      }
+    );
   }
 
   loadStatuses() {
@@ -119,70 +122,137 @@ export class TaskDetailsComponent implements OnInit {
       (data: any) => {
         this.statuses = data.data;
         this.rightForm.patchValue({status: this.statuses.find(s => s.id === this.task.status.id)});
-      }  
-    )
+      }
+    );
   }
 
   loadCollaborators() {
     this.collaboratorService.getCollaborators(this.projectId,
-      (data: any) => this.onCollaboratorsLoad(data), 
+      (data: any) => this.onCollaboratorsLoad(data),
       () => this.userPriorityStatusErrorMessage = 'Error while loading data. Please try again later.');
   }
 
   onCollaboratorsLoad(data: any): any {
     this.collaborators = data;
-    if (this.task.userId === null) 
+    if (this.task.userId === null) {
       this.rightForm.patchValue({collaborator: null});
-    else 
-      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.id === this.task.userId)});
+    }
+    else {
+      this.rightForm.patchValue({collaborator: this.collaborators.find(c => c.collaboratorId === this.task.userId).collaborator});
+    }
   }
 
   patchDescription(description: string) {
-    this.taskService.patchTask(this.taskId, 
+    this.taskService.patchTask(this.taskId,
       {
-        description: description
-      }, 
+        description
+      },
       (data: any) => {
-        this.descriptionSuccessMessage = "Description successfully changed";
+        this.descriptionSuccessMessage = 'Description successfully changed';
         setTimeout(() => this.descriptionSuccessMessage = '', 1800);
       },
-      (err: any) => { 
+      (err: any) => {
         this.descriptionErrorMessage = err.error.errors.message;
         setTimeout(() => this.descriptionErrorMessage = '', 1800);
       }
     );
   }
 
-  addComment(comment: String) {
-    this.comments.push({
-        id: "id",
-        text: comment,
-        user: this.currentUser,
-        task: this.task
-    });
-    this.leftForm.patchValue({comment: ''});
+  addComment(commentText: string) {
+    this.commentLoader = true;
+    this.commentService.addComment(this.taskId, commentText,
+      (response) => {
+        this.loadComments();
+        this.commentLoader = false;
+        this.leftForm.get('comment').reset();
+      },
+      (error) => {console.log(error); });
+  }
+
+  deleteComment() {
+    this.loadComments();
+  }
+
+  editComment() {
+    this.loadComments();
   }
 
   patchUserPriorityStatus() {
     const form  = this.rightForm.getRawValue();
-    this.taskService.patchTask(this.taskId, 
+    this.taskService.patchTask(this.taskId,
       {
         user_id: form.collaborator === null ? null : form.collaborator.id,
         priority_id: form.priority.id,
         status_id: form.status.id
-      }, 
+      },
       (data: any) => {
-        this.userPriorityStatusSuccessMessage = "Task details successfully changed";
+        this.userPriorityStatusSuccessMessage = 'Task details successfully changed';
         setTimeout(() => this.userPriorityStatusSuccessMessage = '', 1800);
       },
-      (err: any) => { 
+      (err: any) => {
         this.userPriorityStatusErrorMessage = err.error.errors.message;
         setTimeout(() => this.userPriorityStatusErrorMessage = '', 1800);
       }
     );
   }
 
-  subscribe() {
-    console.log("subscribe");
+  subscribe(): any {
+    this.notificationService.subscribeToTask(this.task.id, (data: any) => this.onTaskSubscribed(data),
+      (err: any) => this.onTaskSubscribedError(err));
+  }
+
+  onLoadComments(response: any, reset: boolean = true) {
+    if (reset) { this.comments = []; }
+    response.data.forEach(comment => {
+      this.comments.push({
+        id: comment.id,
+        text: comment.text,
+        userId: comment.user_id,
+        userFirstName: comment.user_first_name,
+        userLastName: comment.user_last_name,
+        createdAt: comment.created_at
+      });
+    });
+
+    this.commentsMetadata = response.metadata;
+    if (!response.metadata.has_next) { this.commentLoadMoreAvailable = false; }
+    else { this.commentLoadMoreAvailable = true; }
+  }
+
+  paginate() {
+    if (this.commentsMetadata.has_next) {
+      const paginationOptions = {page: this.commentsMetadata.page_number + 1, size: this.commentsMetadata.page_size};
+      this.commentService.getComments(this.taskId, paginationOptions,
+        (response) => this.onLoadComments(response, false),
+        (error) => console.log(error)
+      );
+    }else {
+      this.commentLoadMoreAvailable = false;
+    }
+  }
+
+  private onTaskSubscribed(data: any): any {
+    this.taskSubscriptionMessage = false;
+    this.onTaskSubscribedFlag = true;
+    setTimeout(() => {
+      this.taskSubscriptionMessage = true;
+      this.onTaskSubscribedFlag = false;
+    }, 2000);
+  }
+
+  private onTaskSubscribedError(err: any): any {
+    this.taskSubscriptionMessage = false;
+    this.onTaskSubscribedErrFlag = true;
+    console.log(err)
+    if (err.status === 422) {
+      this.onTaskSubscribedErrMessage = 'You are already subscribed to this task';
+    }
+    else{
+      this.onTaskSubscribedErrMessage = 'Error occurred. Please try again later';
+    }
+    setTimeout(() => {
+      this.taskSubscriptionMessage = true;
+      this.onTaskSubscribedErrFlag = false;
+    }, 2000);
   }
 }

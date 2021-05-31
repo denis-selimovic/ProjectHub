@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Notification } from 'src/app/services/notification/notification.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Notification, NotificationService} from 'src/app/services/notification/notification.service';
 
 @Component({
   selector: 'app-notifications-list',
@@ -7,28 +7,32 @@ import { Notification } from 'src/app/services/notification/notification.service
   styleUrls: ['./notifications-list.component.scss']
 })
 export class NotificationsListComponent implements OnInit {
+  page = 0;
+  size = 5;
+  canScroll = true;
+  notifications: Array<Notification> = [];
 
-  notifications: Array<Notification> = [
-      {id: "0", title: "Notification 0", description: "This notification has a very long description to see how does it look like on the ui....", dateTime: new Date(), read: false},
-      {id: "1", title: "Notification 1", description: "This is a notification 1", dateTime: new Date(), read: true},
-      {id: "2", title: "Notification 2", description: "This is a notification 2", dateTime: new Date(), read: true},
-      {id: "2", title: "Notification 2", description: "This is a notification 2", dateTime: new Date(), read: false},
-      {id: "2", title: "Notification 2", description: "This is a notification 2", dateTime: new Date(), read: false},
-      {id: "2", title: "Notification 2", description: "This is a notification 2", dateTime: new Date(), read: true}
-  ];
-
-  constructor() { }
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit(): void {
+    this.fetchNotifications();
   }
 
-  onScroll() {
-    //https://www.npmjs.com/package/ngx-infinite-scroll - dokumentacija
-    console.log('scrolled!!');
-    if(this.notifications.length <= 10) {
-      this.notifications.push({id: "2", title: "Notification from scroll", description: "This is a notification 2", dateTime: new Date(), read: false});
-      this.notifications.push({id: "2", title: "Notification 2 from scroll", description: "This is a notification 2", dateTime: new Date(), read: true});
-    }
+  onScroll(): any {
+    if (!this.canScroll) { return; }
+    this.page += 1;
+    this.fetchNotifications();
   }
 
+  private fetchNotifications(): any {
+    this.notificationService.getNotifications(this.page, this.size,
+      (data: any) => this.addNotifications(data),
+      (err: any) => {}
+    );
+  }
+
+  private addNotifications(data: any): any {
+    this.canScroll = data.metadata.has_next;
+    this.notifications = this.notifications.concat(data.data);
+  }
 }

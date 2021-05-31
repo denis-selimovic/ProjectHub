@@ -16,11 +16,13 @@ public class UserConsumer implements Consumer<UserDTO> {
     private final SubscriptionConfigService subscriptionConfigService;
     private final UserPublisher userPublisher;
 
-    @RabbitListener(queues = "create-user-queue")
+    @RabbitListener(queues = "create-user-notif-queue")
     public void receive(UserDTO data) {
         try {
+            System.out.println(data);
             subscriptionConfigService.create(data);
         } catch (UnprocessableEntityException e) {
+            System.out.println("NOT OK");
             userPublisher.send(data);
         }
     }

@@ -1,8 +1,11 @@
+<app-project-navbar [projectId]="projectId"></app-project-navbar>
 <div class="new-collaborator-page">
  <app-project-details [owner]="owner" [collaborators]="collaborators" [project]="project" [isOwner]="isOwner"></app-project-details>
  <div class="title">
   <h2>Collaborators</h2>
  </div>
- <app-collaborators-table (onDelete)="deleteCollaborator($event)"  [collaborators]="collaborators"></app-collaborators-table>
- <app-new-collaborator-form (onAddCollaborator)="addCollaborator($event)"></app-new-collaborator-form>
+ <app-collaborators-table (onDelete)="deleteCollaborator()"  [collaborators]="collaborators"></app-collaborators-table>
+ <p class="info-text error">{{errorMessage}}</p>
+ <p class="info-text">{{successMessage}}</p>
+ <app-new-collaborator-form *ngIf="isOwner" (onAddCollaborator)="addCollaborator($event)"></app-new-collaborator-form>
 </div>

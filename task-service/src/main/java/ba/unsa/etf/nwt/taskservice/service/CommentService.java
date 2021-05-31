@@ -1,5 +1,6 @@
 package ba.unsa.etf.nwt.taskservice.service;
 
+import ba.unsa.etf.nwt.taskservice.client.dto.UserDTO;
 import ba.unsa.etf.nwt.taskservice.dto.CommentDTO;
 import ba.unsa.etf.nwt.taskservice.exception.base.NotFoundException;
 import ba.unsa.etf.nwt.taskservice.model.Comment;
@@ -18,15 +19,17 @@ import java.util.UUID;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public Comment create(final CreateCommentRequest request, final Task task, final UUID authorId) {
-        Comment comment = createCommentFromRequest(request, task, authorId);
+    public Comment create(final CreateCommentRequest request, final Task task, final UserDTO author) {
+        Comment comment = createCommentFromRequest(request, task, author);
         return commentRepository.save(comment);
     }
 
-    private Comment createCommentFromRequest(final CreateCommentRequest request, final Task task, final UUID authorId) {
+    private Comment createCommentFromRequest(final CreateCommentRequest request, final Task task, final UserDTO author) {
         Comment comment = new Comment();
         comment.setText(request.getText());
-        comment.setUserId(authorId);
+        comment.setUserId(author.getId());
+        comment.setUserFirstName(author.getFirstName());
+        comment.setUserLastName(author.getLastName());
         comment.setTask(task);
         return comment;
     }
@@ -42,12 +45,17 @@ public class CommentService {
     }
 
     public Page<CommentDTO> getCommentsForTask(final Task task, final Pageable pageable) {
-        return commentRepository.findAllByTask(task, pageable);
+        return commentRepository.findAllByTaskOrderByCreatedAtDesc(task, pageable);
     }
 
     public Comment findByIdAndTaskId(final UUID commentId, final UUID taskId) {
         return commentRepository.findByIdAndTask_Id(commentId, taskId).orElseThrow(() -> {
             throw new NotFoundException("Comment not found");
         });
+    }
+
+    public Comment patch(final Comment comment, final String text) {
+        comment.setText(text);
+        return commentRepository.save(comment);
     }
 }

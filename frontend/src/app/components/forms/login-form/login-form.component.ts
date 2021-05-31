@@ -10,6 +10,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String;
+  loader = false;
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
     this.loginForm = this.formBuilder.group({
@@ -26,10 +27,12 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.loader = true;
     this.login();
   }
 
   private loginErrorHandler(error: any): void {
+    this.loader = false;
     if (error.status === 400 || error.status === 401) {
       this.errorMessage = 'Invalid credentials';
     } else {

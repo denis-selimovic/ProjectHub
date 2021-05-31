@@ -68,6 +68,7 @@ import { NotificationsListComponent } from './components/lists/notifications-lis
 import { NotificationItemComponent } from './components/items/notification-item/notification-item.component';
 import { NotificationService } from './services/notification/notification.service';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ProjectNavbarComponent } from './components/layout/project-navbar/project-navbar.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +123,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     IssueDetailsFormComponent,
     ActionResultComponent,
     NotificationsListComponent,
-    NotificationItemComponent
+    NotificationItemComponent,
+    ProjectNavbarComponent
   ],
   imports: [
     BrowserModule,

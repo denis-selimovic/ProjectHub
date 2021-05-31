@@ -41,6 +41,12 @@ public class Comment {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
+    @Column(name = "user_first_name")
+    private String userFirstName;
+
+    @Column(name = "user_last_name")
+    private String userLastName;
+
     @NotNull(message = "Task id can't be null")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id", nullable = false)

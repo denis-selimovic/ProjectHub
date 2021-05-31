@@ -12,6 +12,9 @@ import { TaskService } from 'src/app/services/task/task.service';
 })
 
 export class NewTaskFormComponent implements OnInit {
+
+  @Input() projectId: string;
+
   newTaskForm: FormGroup;
   errorMessage: string;
   successMessage: string;
@@ -22,7 +25,8 @@ export class NewTaskFormComponent implements OnInit {
   priority: any;
   type: any;
   collaborator: any;
-  @Input() projectId: string;
+  loader = false;
+
 
   constructor(private formBuilder: FormBuilder, private taskService: TaskService, private collaboratorService: CollaboratorService, private projectService: ProjectService, public activeModal: NgbActiveModal) { 
     this.newTaskForm = this.formBuilder.group( {
@@ -51,7 +55,7 @@ export class NewTaskFormComponent implements OnInit {
     this.taskService.getPriorities(
       (data: any) => {
         this.priorities = data.data;
-        this.priority = this.priorities[0];
+        this.newTaskForm.patchValue({priority: this.priorities[0]});
       }
     )
   }
@@ -60,7 +64,7 @@ export class NewTaskFormComponent implements OnInit {
     this.taskService.getTypes(
       (data: any) => {
         this.types = data.data;
-        this.type = this.types[0];
+        this.newTaskForm.patchValue({type: this.types[0]});
       } 
     )
   }
@@ -83,10 +87,14 @@ export class NewTaskFormComponent implements OnInit {
 
   onCollaboratorsLoad(data: any): any {
     this.collaborators = data;
-    this.collaborator = null;
+    if (data.length === 0) 
+      this.newTaskForm.patchValue({collaborator: null});
+    else 
+      this.newTaskForm.patchValue({collaborator: data[0].collaborator});
   }
 
   onSubmit(): void {
+    this.loader = true;
     const form = this.newTaskForm.getRawValue();
     const requestBody = {
       name: form.taskName,
@@ -103,11 +111,13 @@ export class NewTaskFormComponent implements OnInit {
   }
 
   private success(data: any): any {
+    this.loader = false;
     this.successMessage = 'Successfully created a task.';
     setTimeout(() => this.close('success'), 2000);
   }
 
   private error(res: any): any {
+    this.loader = false;
     if (res?.error?.errors?.message[0]) {
       this.errorMessage = res.error.errors.message[0];
     }

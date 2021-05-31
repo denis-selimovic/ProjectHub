@@ -32,7 +32,7 @@ public class EmailService {
 
     public void sendEmail(SendEmailRequest request) {
         boolean activation = request.getType().equals("activation");
-        String subject = activation ? "Activate your accounts" : "Reset your password";
+        String subject = activation ? "Activate your account" : "Reset your password";
         String template = activation ? "emails/activate" : "emails/reset";
         String route = activation ? "/confirm-email/" : "/reset-password/";
         try {
@@ -42,6 +42,18 @@ public class EmailService {
             ));
         } catch (MessagingException e) {
             throw new BadRequestException("Bad request");
+        }
+    }
+
+    public void sendNotificationEmail(String to, String taskName) {
+        String subject = "Task assignment";
+        String template = "emails/notification";
+        try {
+            sendEmail(subject, to, template, Map.of(
+                    "task", taskName
+            ));
+        } catch (MessagingException ignored) {
+
         }
     }
 

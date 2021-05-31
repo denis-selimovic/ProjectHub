@@ -23,3 +23,9 @@ eureka:
 
 server:
   port: 8084
+
+pusher:
+  app-id: 1211924
+  key: 95d55835ff0ac592cb2d
+  secret: 4f7fe51e2cb10396360d
+  cluster: eu
