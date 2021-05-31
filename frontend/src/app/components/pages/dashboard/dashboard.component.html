@@ -1,3 +1,3 @@
-<app-navbar [hasNotifications]="hasNotifications"></app-navbar>
+<app-navbar [hasNotifications]="hasNotifications" (readNotifications)="hasNotifications = false"></app-navbar>
 <app-projects type="owner" title="List of projects (owner)"></app-projects>
 <app-projects type="collaborator" title="List of projects (collaborator)"></app-projects>

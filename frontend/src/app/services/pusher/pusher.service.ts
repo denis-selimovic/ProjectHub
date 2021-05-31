@@ -13,6 +13,7 @@ export class PusherService {
 
   configure(token): any {
     if (this.pusher) { return; }
+    console.log('Connecting to pusher!');
     this.pusher = new Pusher(environment.pusherKey, {
       cluster: environment.pusherCluster,
       authEndpoint: `${environment.api}/api/v1/notifications/socket-subscribe`,
