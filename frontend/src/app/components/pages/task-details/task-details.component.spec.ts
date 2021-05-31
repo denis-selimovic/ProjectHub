@@ -40,12 +40,6 @@ describe('TaskDetailsComponent', () => {
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    component.currentUser = {
-      id: "123456789",
-      firstName: "Amila",
-      lastName: "Zigo",
-      email: "azigo1@etf.unsa.ba"
-    }
     component.collaborators = [{
         id: "123456789",
         project: {
@@ -63,7 +57,7 @@ describe('TaskDetailsComponent', () => {
           email: "colab@colaboratovic.ba"
         }
       }
-    ]
+    ];
     leftForm = component.leftForm;
     rightForm = component.rightForm;
 
