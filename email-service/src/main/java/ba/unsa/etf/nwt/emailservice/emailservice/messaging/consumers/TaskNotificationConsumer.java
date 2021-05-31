@@ -20,9 +20,15 @@ public class TaskNotificationConsumer implements Consumer<TaskNotificationDTO> {
 
     @RabbitListener(queues = "task-notification-email-queue")
     public void receive(TaskNotificationDTO data) {
-        UUID id = UUID.fromString(data.getChanges().get("userId").current);
-        EmailConfig config = emailConfigService.findByUserId(id);
-        String email = config.getEmail();
-        emailService.sendNotificationEmail(email, data.getTaskName());
+        try {
+            if (data.getChanges().get("userId") == null) return;
+            if (data.getChanges().get("userId").current == null) return;
+            UUID id = UUID.fromString(data.getChanges().get("userId").current);
+            EmailConfig config = emailConfigService.findByUserId(id);
+            String email = config.getEmail();
+            emailService.sendNotificationEmail(email, data.getTaskName());
+        } catch (Exception ignored) {
+
+        }
     }
 }
