@@ -40,7 +40,6 @@ export class CollaboratorsTableComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.dataSource.data = this.dataSource.data.filter(i => i.id !== id);
         this.onDelete.emit(id);
       }
     });
