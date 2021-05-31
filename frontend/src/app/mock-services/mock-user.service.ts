@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { throwError } from "rxjs";
-import { User, UserService } from "../services/user/user.service";
+import { UserService } from "../services/user/user.service";
 
 @Injectable({
   providedIn: 'root',

@@ -13,6 +13,8 @@ describe('CommentsListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CommentsListComponent);
     component = fixture.componentInstance;
+    component.comments = [];
+    component.currentUser = {};
     fixture.detectChanges();
   });
 

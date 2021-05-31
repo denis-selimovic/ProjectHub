@@ -13,6 +13,30 @@ describe('TaskDetailsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TaskDetailsComponent);
     component = fixture.componentInstance;
+    component.task = {
+      id: "id",
+      name: "Task",
+      description: "Task description",
+      userId: null,
+      userFirstName: null,
+      userLastName: null,
+      projectId: "project id",
+      projectName: "Project",
+      priority: {
+        id: "priority id",
+        priority: "HIGH"
+      },
+      type: {
+        id: "type id",
+        type: "BUG"
+      },
+      status: {
+        id: "status id",
+        status: "OPEN"
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
     fixture.detectChanges();
   });
 
