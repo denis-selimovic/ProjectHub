@@ -61,6 +61,7 @@ export class IssuesComponent implements OnInit {
     const modalRef = this.modalService.open(CreateIssueModalComponent);
     modalRef.componentInstance.projectId = this.projectId;
     modalRef.result.then((data) => {
+        this.title = '';
         this.loadIssues();
       },
       (error) => {
