@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { ProjectsTableComponent } from './projects-table.component';
 
 describe('ProjectsTableComponent', () => {
   let component: ProjectsTableComponent;
   let fixture: ComponentFixture<ProjectsTableComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ProjectsTableComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(ProjectsTableComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProjectsTableComponent);

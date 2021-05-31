@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { CookieService } from './cookie.service';
 
 describe('CookieService', () => {

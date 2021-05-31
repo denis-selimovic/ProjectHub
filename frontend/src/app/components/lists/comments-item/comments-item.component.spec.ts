@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { CommentsItemComponent } from './comments-item.component';
 
 describe('CommentsItemComponent', () => {
   let component: CommentsItemComponent;
   let fixture: ComponentFixture<CommentsItemComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ CommentsItemComponent ]
-    })
-    .compileComponents();
-  });
+  CommonTestingModule.setUpTestBed(CommentsItemComponent);
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CommentsItemComponent);

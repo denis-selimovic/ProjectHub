@@ -1,18 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CommonTestingModule } from 'src/app/common-testing.module';
+
 import { NewTaskModalComponent } from './new-task-modal.component';
 
 describe('NewTaskModalComponent', () => {
   let component: NewTaskModalComponent;
   let fixture: ComponentFixture<NewTaskModalComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ NewTaskModalComponent ]
-    })
-    .compileComponents();
-  });
-
+  CommonTestingModule.setUpTestBed(NewTaskModalComponent);
+  
   beforeEach(() => {
     fixture = TestBed.createComponent(NewTaskModalComponent);
     component = fixture.componentInstance;
