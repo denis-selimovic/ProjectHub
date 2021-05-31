@@ -31,7 +31,7 @@ export interface Task {
   status: Status,
   type: Type,
   createdAt: Date,
-  updatedAt: Date,
+  updatedAt: Date
 }
 
 @Injectable({

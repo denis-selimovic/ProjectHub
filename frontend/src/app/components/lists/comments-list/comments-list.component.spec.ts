@@ -14,7 +14,12 @@ describe('CommentsListComponent', () => {
     fixture = TestBed.createComponent(CommentsListComponent);
     component = fixture.componentInstance;
     component.comments = [];
-    component.currentUser = {};
+    component.currentUser = {
+      id: "123456789",
+      firstName: "Amila",
+      lastName: "Zigo",
+      email: "azigo1@etf.unsa.ba"
+    };
     fixture.detectChanges();
   });
 
