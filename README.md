@@ -31,7 +31,7 @@ This project consists of a web application that showcases the functionalities de
 
 ## Startup
 You can run the application utilizing the docker setup. In order to do so, follow the next steps:
-- Make sure you have **docker** installed
+- Make sure you have **docker** installed (and make sure you are registered to Docker Hub)
 - Navigate to the root of the project
 - run `` docker-compose up `` (be aware that the first time you run this, it may take around 15 minutes to build the project)
 - navigate to **localhost** in your browser to start using the web application (make sure that ports 80 and 8080 on your machine are free, because the app uses those ports to serve the webapp and expose the backend)
