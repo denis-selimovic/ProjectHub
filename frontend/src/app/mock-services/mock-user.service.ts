@@ -18,7 +18,4 @@ export class MockUserService extends UserService {
     if (email === this.existingUser.email && password !== this.existingUser.password)
      errorHandler({status: 400});
    }
-
-  
-
 }
