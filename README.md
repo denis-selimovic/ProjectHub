@@ -27,7 +27,7 @@ Alongside those, there are 4 utility microservices:
 - [Gateway service](/gateway-service) - a single-point entry for the backend
 
 ## Web Application
-This project consists of a web application that showcases the functionalities developed on the backed. The web application is developed using Angular framework and you can find the source code [here](/frontend). 
+This project consists of a web application that showcases the functionalities developed on the backend. The web application is developed using Angular framework and you can find the source code [in this folder](/frontend). 
 
 ## Startup
 You can run the application utilizing the docker setup. In order to do so, follow the next steps:
