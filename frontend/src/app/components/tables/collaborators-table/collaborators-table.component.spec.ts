@@ -17,18 +17,7 @@ describe('CollaboratorsTableComponent', () => {
     table = fixture.debugElement.nativeElement.querySelector('table');
     component = fixture.componentInstance;
     component.collaborators = [
-      {
-        id: "id1",
-        firstName: "Ime",
-        lastName: "Prezime",
-        email: "imeprezime@projecthub.com"
-      },
-      {
-        id: "id2",
-        firstName: "Name",
-        lastName: "Last name",
-        email: "username@projecthub.com"
-      }      
+       
     ]; 
     fixture.detectChanges();
   });

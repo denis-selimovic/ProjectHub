@@ -57,14 +57,14 @@ describe('IssueItemComponent', () => {
   }));
 
   it('should call openModal method', fakeAsync(() => {
-    spyOn(component, 'openModal');
+    spyOn(component, 'createTaskFromIssue');
   
     const taskButton = fixture.debugElement.queryAll(By.css('button')).find(
       buttonEl => buttonEl.nativeElement.textContent === 'Create task'
     );
     taskButton.nativeElement.click();
     tick();
-    expect(component.openModal).toHaveBeenCalled();
+    expect(component.createTaskFromIssue).toHaveBeenCalled();
   }));
 
   it('should call removeIssue method', fakeAsync(() => {

@@ -117,7 +117,7 @@ describe('LoginFormComponent', () => {
   })
 
   it('should test router link for register', () => {
-    const linkDebugEl = fixture.debugElement.query(By.css('#register'));
+    const linkDebugEl = fixture.debugElement.query(By.css('a:last-child'));
     const routerLinkInstance = linkDebugEl.injector.get(RouterLinkWithHref);
     expect(routerLinkInstance['commands']).toEqual(['/register']);
     expect(routerLinkInstance['href']).toEqual('/register');

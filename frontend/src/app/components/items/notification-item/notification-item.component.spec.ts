@@ -13,6 +13,14 @@ describe('NotificationItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NotificationItemComponent);
     component = fixture.componentInstance;
+    component.notification = {
+      id: "id",
+      title: "Notification 1",
+      description: "This is one notification.",
+      read: true,
+      created_at: new Date(),
+      updated_at: new Date()
+    }
     fixture.detectChanges();
   });
 
