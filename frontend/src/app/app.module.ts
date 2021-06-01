@@ -52,7 +52,6 @@ import { NewCollaboratorFormComponent } from './components/forms/new-collaborato
 import { TasksComponent } from './components/pages/tasks/tasks.component';
 import { TasksListComponent } from './components/lists/tasks-list/tasks-list.component';
 import { TasksItemComponent } from './components/lists/tasks-item/tasks-item.component';
-import { NewTaskModalComponent } from './components/dialogs/new-task-modal/new-task-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TaskDetailsComponent } from './components/pages/task-details/task-details.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -112,7 +111,6 @@ import { ProjectNavbarComponent } from './components/layout/project-navbar/proje
     TasksComponent,
     TasksListComponent,
     TasksItemComponent,
-    NewTaskModalComponent,
     TaskDetailsComponent,
     CommentsListComponent,
     CommentsItemComponent,
@@ -161,7 +159,6 @@ import { ProjectNavbarComponent } from './components/layout/project-navbar/proje
   bootstrap: [AppComponent],
   entryComponents: [
     ConfirmDeletionComponent,
-    NewTaskModalComponent
   ]
 })
 export class AppModule { }

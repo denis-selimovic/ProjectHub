@@ -13,13 +13,16 @@ describe('CommentsListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CommentsListComponent);
     component = fixture.componentInstance;
-    component.comments = [];
-    component.currentUser = {
-      id: "123456789",
-      firstName: "Amila",
-      lastName: "Zigo",
-      email: "azigo1@etf.unsa.ba"
-    };
+    component.comments = [
+      {
+        id: "id",
+        text: "This is text.",
+        userId: "user id",
+        userFirstName: "Ajsa",
+        userLastName: "H",
+        createdAt: new Date()
+      }
+    ];
     fixture.detectChanges();
   });
 

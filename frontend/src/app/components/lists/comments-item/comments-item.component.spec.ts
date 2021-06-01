@@ -13,6 +13,20 @@ describe('CommentsItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CommentsItemComponent);
     component = fixture.componentInstance;
+    component.comment = {
+      id: "id",
+      text: "This is text.",
+      userId: "user id",
+      userFirstName: "Ajsa",
+      userLastName: "H",
+      createdAt: new Date()
+    };
+    component.currentUser = {
+      id: "id",
+      firstName: "Ajsa",
+      lastName: "Hajradinovic Ajsa",
+      email: "ajsah@projecthub.com"
+    }
     fixture.detectChanges();
   });
 
