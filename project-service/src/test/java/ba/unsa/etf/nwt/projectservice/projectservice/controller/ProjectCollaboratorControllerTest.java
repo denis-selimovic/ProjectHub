@@ -180,10 +180,10 @@ public class ProjectCollaboratorControllerTest {
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
                 .andExpect(jsonPath("$.metadata.page_number", is(0)))
                 .andExpect(jsonPath("$.metadata.total_elements", is(10)))
-                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.page_size", is(6)))
                 .andExpect(jsonPath("$.metadata.has_next", is(true)))
                 .andExpect(jsonPath("$.metadata.has_previous", is(false)))
-                .andExpect(jsonPath("$.data", hasSize(5)));
+                .andExpect(jsonPath("$.data", hasSize(6)));
     }
 
     @Test
@@ -199,10 +199,10 @@ public class ProjectCollaboratorControllerTest {
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
                 .andExpect(jsonPath("$.metadata.page_number", is(1)))
                 .andExpect(jsonPath("$.metadata.total_elements", is(10)))
-                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.page_size", is(6)))
                 .andExpect(jsonPath("$.metadata.has_next", is(false)))
                 .andExpect(jsonPath("$.metadata.has_previous", is(true)))
-                .andExpect(jsonPath("$.data", hasSize(5)));
+                .andExpect(jsonPath("$.data", hasSize(6)));
     }
 
     @Test
@@ -219,10 +219,10 @@ public class ProjectCollaboratorControllerTest {
                 .andExpect(jsonPath("$.metadata").hasJsonPath())
                 .andExpect(jsonPath("$.metadata.page_number", is(1)))
                 .andExpect(jsonPath("$.metadata.total_elements", is(10)))
-                .andExpect(jsonPath("$.metadata.page_size", is(5)))
+                .andExpect(jsonPath("$.metadata.page_size", is(6)))
                 .andExpect(jsonPath("$.metadata.has_next", is(false)))
                 .andExpect(jsonPath("$.metadata.has_previous", is(true)))
-                .andExpect(jsonPath("$.data", hasSize(5)));
+                .andExpect(jsonPath("$.data", hasSize(6)));
     }
 
     @Test

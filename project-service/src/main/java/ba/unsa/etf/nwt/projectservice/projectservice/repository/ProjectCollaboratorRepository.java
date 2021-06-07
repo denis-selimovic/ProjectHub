@@ -31,4 +31,6 @@ public interface ProjectCollaboratorRepository extends PagingAndSortingRepositor
             nativeQuery = true
     )
     long count();
+
+    long countAllByProject(Project project);
 }
