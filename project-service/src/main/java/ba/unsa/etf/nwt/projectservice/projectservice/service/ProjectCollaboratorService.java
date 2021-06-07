@@ -68,7 +68,7 @@ public class ProjectCollaboratorService {
             throw new NotFoundException("Collaborator not found");
     }
 
-    public Page<ProjectCollaboratorDTO> addElementToPage(Page<ProjectCollaboratorDTO> collaboratorPage, Project project, UserDTO userDTO) {
+    public Page<ProjectCollaboratorDTO> addElementToPage(Page<ProjectCollaboratorDTO> collaboratorPage, Project project, UserDTO userDTO, final Pageable pageable) {
         ProjectCollaborator owner  = new ProjectCollaborator();
         owner.setId(UUID.randomUUID());
         owner.setProject(project);
@@ -78,6 +78,11 @@ public class ProjectCollaboratorService {
         List<ProjectCollaboratorDTO> projectCollaboratorDTOS = new ArrayList<>();
         collaboratorPage.forEach(projectCollaboratorDTOS::add);
         projectCollaboratorDTOS.add(0, ownerDTO);
-        return new PageImpl<>(projectCollaboratorDTOS);
+        long total = countCollaboratorsForProject(project);
+        return new PageImpl<>(projectCollaboratorDTOS, pageable, total);
+    }
+
+    public long countCollaboratorsForProject(final Project project) {
+        return projectCollaboratorRepository.countAllByProject(project);
     }
 }
